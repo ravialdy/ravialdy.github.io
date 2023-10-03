@@ -10,4 +10,6 @@ related_posts: false
 related_publications: VisualChatGPT
 ---
 
+Here is the presentation slides that I have created when explaining about Visual ChatGPT paper. 
+
 [Download Slides](/assets/pdf/Paper Review _Visual ChatGPT.pdf)

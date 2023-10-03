@@ -9,5 +9,6 @@ giscus_comments: true
 related_posts: false
 related_publications: GPT-4paper
 ---
+Here is the presentation slides that I have created when explaining about GPT-4. You can download the slides below if you are interested with that topic :)
 
 [Download Slides](/assets/pdf/Paper Review _GPT-4.pdf)
