@@ -1,12 +1,13 @@
 ---
 layout: post
-title: a post with bibliography
+title: GPT-4 Presentation Slides
 date: 2023-07-12 09:56:00-0400
-description: an example of a blog post with bibliography
+description: Here is the presentation slides that I have created when explaining about GPT-4. You can download the slides below if you are interested with that topic :)
 tags: formatting bib
 categories: sample-posts
 giscus_comments: true
 related_posts: false
-related_publications: einstein1950meaning, einstein1905movement
+related_publications: GPT-4paper
 ---
-This post shows how to add bibliography to simple blog posts. If you would like something more academic, check the [distill style post]({% post_url 2018-12-22-distill %}).
+
+[Download Slides](/assets/pdf/Paper Review _GPT-4.pdf)
