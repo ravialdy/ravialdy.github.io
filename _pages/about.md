@@ -19,24 +19,23 @@ selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-### Biography
+### About Me
 
-Hello! I'm Ravialdy Hidayat, a seasoned AI Researcher and Data Scientist with a flair for melding Computer Vision, Natural Language Processing, and Machine Learning into actionable intelligence. 
+Hi! I'm Ravialdy Hidayat. I work in AI and Data Science. I've been doing this for over 3 years.
 
-#### Who Am I?
-I hold over 3 years of professional experience in the realm of Artificial Intelligence. My journey started in the industry as a Data Scientist, where I honed my skills for 2 years, before transitioning to an AI Research role. I am currently affiliated with Vision-Language Intelligence at Sejong University, focusing on research topics that intersect computer vision, NLP, and computer security.
+#### Work Experience
+I started as a Data Scientist and then moved to AI research. Right now, I'm with Vision-Language Intelligence at Sejong University. We look at things like pictures (Computer Vision) and words (NLP) and how to make them safe (Computer Security).
 
-#### Educational Background
-I graduated from Universitas Indonesia in 2022, majoring in Statistics with a final GPA of 3.52/4.00. My academic tenure was enriched with courses like Data Mining, Probability and Statistics, and Regression Analysis. I also completed a machine learning path at Bangkit Academy, led by Google, Gojek, Tokopedia, and Traveloka, earning a Grade "A" and a Google Tensorflow Developer certification.
+#### Big Projects
+I've worked on two big things:
+- [ZOSignSGD Black-Box Attacks](https://github.com/ravialdy/ZOSignSGD-PyTorch)
+- [PETL Black-Box Attacks Library](https://github.com/ravialdy/PETL-Attacks)
 
-#### Industry Experience
-My most recent role was at PT Berau Coal, where I led projects that substantially increased the accuracy of object detection algorithms. Prior to that, I interned as a Data Scientist at PT Niaga Berdikari and served as a Laboratory Assistant at the Department of Mathematics, Universitas Indonesia.
+These are free to use and you can find them on GitHub.
 
-#### Noteworthy Projects
-I have a knack for reproducing machine learning papers and developing robust AI models. Some of my notable projects include the [ZOSignSGD Black-Box Adversarial Attacks](https://github.com/ravialdy/ZOSignSGD-PyTorch) and the [PETL Black-Box Adversarial Attacks Library](https://github.com/ravialdy/PETL-Attacks), both of which are open-sourced on GitHub.
+#### How to Contact Me
+The best way to talk to me is by [Email](mailto:ravialdyhidayat@gmail.com) or [LinkedIn](https://www.linkedin.com/in/ravialdy-hidayat-a617a8156/). You can also see more about my work on [GitHub](https://github.com/ravialdy).
 
-#### Contact
-The best way to reach me is through [Email](mailto:ravialdyhidayat@gmail.com) or [LinkedIn](https://www.linkedin.com/in/ravialdy-hidayat-a617a8156/). Feel free to explore my [GitHub](https://github.com/ravialdy) for more on my projects and research.
 
 <!-- Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `my_profile.jpg` and put it in the `img/` folder.
 
