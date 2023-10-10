@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Prompt Learning with Optimal Transport Presentation Slides
-date: 2023-07-25 08:57:00-0400
+date: 2023-07-31 08:57:00-0400
 description: Here is the presentation slides that I have created when explaining about Prompt Learning with Optimal Transport paper. 
 tags: prompt learning, optimal transport
 categories: slides

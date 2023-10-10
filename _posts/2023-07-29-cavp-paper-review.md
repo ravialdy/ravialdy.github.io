@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Visual Prompting For Adversarial Robustness Presentation Slides
-date: 2023-07-25 08:57:00-0400
+date: 2023-07-29 08:57:00-0400
 description: Here is the presentation slides that I have created when explaining about Visual Prompting For Adversarial Robustness paper. 
 tags: black-box model, visual prompting, adversarial attack
 categories: slides

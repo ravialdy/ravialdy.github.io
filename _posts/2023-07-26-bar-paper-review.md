@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Black-box Adversarial Reprogramming Presentation Slides
-date: 2023-07-25 08:57:00-0400
+date: 2023-07-26 08:57:00-0400
 description: Here is the presentation slides that I have created when explaining about Black-box Adversarial Reprogramming paper. 
 tags: adversarial, attack, black-box model
 categories: slides

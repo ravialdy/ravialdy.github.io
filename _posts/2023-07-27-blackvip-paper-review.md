@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Black-Box Visual Prompting for Robust Transfer Learning Presentation Slides
-date: 2023-07-25 08:57:00-0400
+date: 2023-07-27 08:57:00-0400
 description: Here is the presentation slides that I have created when explaining about Black-Box Visual Prompting for Robust Transfer Learning paper. 
 tags: black-box model, visual prompting
 categories: slides
