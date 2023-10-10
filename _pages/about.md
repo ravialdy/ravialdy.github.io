@@ -21,15 +21,28 @@ social: true  # includes social icons at the bottom of the page
 
 ### About Me
 
-Hi! I'm Ravialdy Hidayat. I work in AI and Data Science. I've been doing this for over 3 years.
+Hello! I'm Ravialdy Hidayat. I work with computers to make them smarter in understanding pictures and words. I've been doing this for over 3 years, both in companies and in a university.
 
-#### Work Experience
-I started as a Data Scientist and then moved to AI research. Right now, I'm with Vision-Language Intelligence at Sejong University. We look at things like pictures (Computer Vision) and words (NLP) and how to make them safe (Computer Security).
+#### What I Do
 
-#### Big Projects
-I've worked on two big things:
-- [ZOSignSGD Black-Box Attacks](https://github.com/ravialdy/ZOSignSGD-PyTorch)
-- [PETL Black-Box Attacks Library](https://github.com/ravialdy/PETL-Attacks)
+- **Current Role**: I am an AI Researcher at Vision-Language Intelligence at Sejong University in South Korea.
+- **Skills**: 
+  - **Computer Vision**: Making computers understand images and videos.
+  - **Natural Language Processing (NLP)**: Helping computers understand and use human language.
+  - **Machine Learning Computer Security**: Making sure our computer programs are safe from adversarial attacks with recent machine learning methods.
+
+#### Where I Learned
+
+- **University**: I got my degree in Statistics from Universitas Indonesia which is the best university in Indonesia according to #QS World University and Times Higher Education (THE) 2024 Rankings. My GPA was 3.52 out of 4.00.
+- **Special Courses**: I took a special Machine Learning course from Bangkit Academy. This course was led by Google and other big tech companies.
+
+#### My Important Work
+
+I like to make new things that help in AI and Data Science. I have two big projects that are free for everyone to use:
+  
+- **ZOSignSGD Black-Box Attacks**: This is a project about reproducing the ZoSignSGD black-box adversarial attack published in ICLR 2019 that is written in pytorch. You can check it [here](https://github.com/ravialdy/ZOSignSGD-PyTorch).
+  
+- **PETL Black-Box Attacks Library**: This is the first python library for evaluating the robustness of Parameter Efficient Transfer-Learning (PETL) models against black-box adversarial attacks. You can check it [here](https://github.com/ravialdy/PETL-Attacks).
 
 These are free to use and you can find them on GitHub.
 
