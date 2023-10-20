@@ -9,9 +9,7 @@ profile:
   image: my_profile.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    <p>Bank Mandiri Housing Area</p>
-    <p>Gatot Subroto street number 62</p>
-    <p>Bandar Lampung, Lampung, Indonesia</p>
+    <p>AI Research, Modeling, and Deployment</p>
 
 news: false  # includes a list of news items
 latest_posts: true  # includes a list of the newest posts
@@ -33,18 +31,8 @@ Hello! I'm Ravialdy Hidayat. I work with computers to make them smarter in under
 
 #### Where I Learned
 
-- **University**: I got my degree in Statistics from Universitas Indonesia which is the best university in Indonesia according to #QS World University and Times Higher Education (THE) 2024 Rankings. My GPA was 3.52 out of 4.00.
+- **University**: I got my degree in Statistics from Universitas Indonesia which is the best university in Indonesia according to #QS World University and Times Higher Education (THE) 2024 Rankings. My GPA was 3.52 out of 4.00 (Top 10%, Cumlaude).
 - **Special Courses**: I took a special Machine Learning course from Bangkit Academy. This course was led by Google and other big tech companies.
-
-#### My Important Work
-
-I like to make new things that help in AI and Data Science. I have two big projects that are free for everyone to use:
-  
-- **ZOSignSGD Black-Box Attacks**: This is a project about reproducing the ZoSignSGD black-box adversarial attack published in ICLR 2019 that is written in pytorch. You can check it [here](https://github.com/ravialdy/ZOSignSGD-PyTorch).
-  
-- **PETL Black-Box Attacks Library**: This is the first python library for evaluating the robustness of Parameter Efficient Transfer-Learning (PETL) models against black-box adversarial attacks. You can check it [here](https://github.com/ravialdy/PETL-Attacks).
-
-These are free to use and you can find them on GitHub.
 
 #### How to Contact Me
 The best way to talk to me is by [Email](mailto:ravialdyhidayat@gmail.com) or [LinkedIn](https://www.linkedin.com/in/ravialdy-hidayat-a617a8156/). You can also see more about my work on [GitHub](https://github.com/ravialdy).
