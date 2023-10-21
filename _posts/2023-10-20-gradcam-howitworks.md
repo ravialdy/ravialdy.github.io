@@ -8,15 +8,22 @@ categories: blogpost
 giscus_comments: true
 related_posts: false
 related_publications: GradCAM
+toc:
+  beginning: true
+  sidebar: left  # or 'right'
 ---
 
 ## Introduction
 
+![Figure Our Grad-CAM](../assets/img/gradcam_our_result.png)
+
+        Figure1. Grad-CAM visualization that we will implement in this blogpost.
+
 Convolutional Neural Networks (CNNs) are amazing. They can recognize cats in pictures, help self-driving cars see, and even beat humans at games. But what most people see about neural networks is this, they're like magic boxes: data goes in, and the answer comes out, without knowing what happens in between. So, how do we know what part of an image the network finds important for its decision? Introducing Grad-CAM method, a technique that helps us "see" what the network is looking at.
 
-![Figure intro Grad-CAM](assets/img/modified-figure-1-dog-cat.jpg)
+![Figure intro Grad-CAM](../assets/img/modified-figure-1-dog-cat.jpg)
 
-        Figure1. Example of how Grad-CAM visualization show important part for model's decision on cat and dog.
+        Figure2. Example of how Grad-CAM visualization show important part for model's decision on cat and dog.
 
 ## What is Grad-CAM?
 
@@ -26,19 +33,19 @@ Grad-CAM stands for Gradient-weighted Class Activation Mapping. Why the name is 
 
 Grad-CAM will use something called "gradients" which can tell us how much each neuron's activity would need to change in order to affect the final decision (class scores or logits that are output by the neural network) of the model. The key intuion here is that if the gradient is large in magnitude, a small change in the neuron's activity will have a significant impact on the final decision. Conversely, if the gradient is small, the neuron's contribution to the final decision is relatively minor. Grad-CAM also often uses deeper layers in order to visualize important part of the image. In a CNN, the early layers usually can only understand simple things like edges or colors. The deeper you go, the more complex the things they understand, like ears or whiskers. Grad-CAM focuses on the last set of these layers because they understand both the important details (like whiskers) and the bigger picture (like the shape of a cat). 
 
-![Figure deeper layers](assets/img/gradcam_different_layers.png)
+![Figure deeper layers](../assets/img/gradcam_different_layers.png)
 
-        Figure2. Illustration of the effect of deeper layers towards Grad-CAM visualization.
+        Figure3. Illustration of the effect of deeper layers towards Grad-CAM visualization.
 
 ## How Does it Work in Quite Detail?
 
-![Figure Grad-CAM detail works](assets/img/gradcam_detail_works.jpg)
+![Figure Grad-CAM detail works](../assets/img/gradcam_detail_works.jpg)
 
-        Figure3. Overview Grad-CAM architecture.
+        Figure4. Overview Grad-CAM architecture.
 
 ### Step 1: Backward Pass
 
-First, we need to find out how much each part of our image contributed to the final decision. So, we go backward through the network, from the output ("this is a cat") toward the input image. As we go back, we calculate something called gradients. Remember that the "gradient" of a neuron with respect to the final decision can give us a measure of sensitivity. Specifically, it tells us how much the final output (e.g., the probability score for the class "cat") would change if the activity of that particular neuron were to change by a small amount. In mathematical terms, if \( y \) is the final output and \( A_{ij}^k \) is the activation of neuron \( k \) at position \( (i, j) \) in some layer, then \( \frac{\partial y}{\partial A_{ij}^k} \) is the gradient that tells us the rate of change of \( y \) with respect to \( A_{ij}^k \). 
+First, we need to find out how much each part of our image contributed to the final decision. So, we go backward through the network, from the output ("this is a cat") toward the input image. As we go back, we calculate something called gradients. Remember that the "gradient" of a neuron with respect to the final decision can give us a measure of sensitivity. Specifically, it tells us how much the final output (e.g., the probability score for the class "cat") would change if the activity of that particular neuron were to change by a small amount. In mathematical terms, if $$ y $$ is the final output and $$ A_{ij}^k $$ is the activation of neuron $$ k $$ at position $$ (i, j) $$ in some layer, then $$ \frac{\partial y}{\partial A_{ij}^k} $$ is the gradient that tells us the rate of change of $$ y $$ with respect to $$ A_{ij}^k $$.
 
 ### Step 2: Average Pooling
 
@@ -46,19 +53,19 @@ We then average these gradients across the spatial dimensions (width and height)
 
 The math looks like this:
 
-\[
+$$
 \alpha_{k}^{c} = \frac{1}{Z} \sum_{i} \sum_{j} \frac{\partial y^{c}}{\partial A_{i j}^{k}}
-\]
+$$
 
-Here, \( \alpha_{k}^{c} \) is the importance weight for feature map \( k \) when identifying class \( c \).
+Here, $$ \alpha_{k}^{c} $$ is the importance weight for feature map $$ k $$ when identifying class $$ c $$.
 
 ### Step 3: Weighted Sum
 
 Next, we take a weighted sum of our original feature maps, using these importance weights. This gives us a rough heatmap.
 
-\[
+$$
 L_{\text{Grad-CAM}}^{c} = \text{ReLU}\left(\sum_{k} \alpha_{k}^{c} A^{k}\right)
-\]
+$$
 
 ### Step 4: ReLU Activation
 
@@ -285,6 +292,10 @@ heatmap = generate_grad_cam(features, gradients, image_shape)
 # Visualize the heatmap
 visualize_heatmap(input_image, heatmap)
 ```
+
+![Figure Our Grad-CAM](../assets/img/gradcam_our_result.png)
+
+        Figure5. Grad-CAM visualization result.
 
 In this example, we focused on the 'bull mastiff' class, which corresponds to index 243 in the ImageNet dataset. You can replace this with the index for any other class you're interested in.
 
