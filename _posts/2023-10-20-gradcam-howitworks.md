@@ -41,7 +41,7 @@ Grad-CAM will use something called "gradients" which can tell us how much each n
 
 ![Figure Grad-CAM detail works](/assets/img/gradcam/gradcam_detail_works.jpg)
 
-        Figure4. Overview Grad-CAM architecture.
+            Figure4. Overview Grad-CAM architecture.
 
 ### Step 1: Backward Pass
 
@@ -295,7 +295,7 @@ visualize_heatmap(input_image, heatmap)
 
 ![Figure Our Grad-CAM](/assets/img/gradcam/gradcam_our_result.png)
 
-        Figure5. Grad-CAM visualization result.
+            Figure5. Grad-CAM visualization result.
 
 In this example, we focused on the 'bull mastiff' class, which corresponds to index 243 in the ImageNet dataset. You can replace this with the index for any other class you're interested in.
 
