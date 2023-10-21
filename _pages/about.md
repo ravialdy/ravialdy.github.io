@@ -31,7 +31,7 @@ Hello! I'm Ravialdy Hidayat. I work with computers to make them smarter in under
 
 #### Where I Learned
 
-- **University**: I got my degree in Statistics from Universitas Indonesia which is the best university in Indonesia according to #QS World University and Times Higher Education (THE) 2024 Rankings. My GPA was 3.52 out of 4.00 (Top 10%, Cumlaude).
+- **University**: I got my degree in Statistics from Universitas Indonesia which is the best university in Indonesia according to #QS World University and Times Higher Education (THE) 2024 Rankings. My GPA was 3.52/4.00 (Top 10%, Cumlaude).
 - **Special Courses**: I took a special Machine Learning course from Bangkit Academy. This course was led by Google and other big tech companies.
 
 #### How to Contact Me
