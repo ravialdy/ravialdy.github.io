@@ -23,17 +23,17 @@ Before diving into the core method, it's important to get some basics right. In 
 
 The agent follows a "policy" $$ \pi(s, a) $$, which tells it what action $$ a $$ to take when in state $$ s $$. This policy is controlled by some parameters $$ \theta $$, which we adjust to make the policy better. Here are the more formal definitions of important terms in RL:
 
-  - **Environment**: The space or setting in which the agent operates.
-  
-  - **State**: The condition of the environment at a given time point, often denoted as $$ s $$ or $$ s_t $$ to indicate its time-dependence.
-  
-  - **Agent**: An entity that observes the state of the environment and takes actions to achieve a specific objective.
-  
-  - **Action**: A specific operation that an agent can execute, typically denoted by $$ a $$ or $$ a_t $$.
-  
-  - **Policy**: A policy, denoted by $$ \pi(a|s) $$ or $$ \pi(s, a) $$, is a mapping from states to actions, or to probabilities of selecting each action.
-  
-  - **Reward**: A scalar value, often denoted by $$ r $$ or $$ r_t $$, that the environment returns in response to the agent's action.
+- **Environment**: The space or setting in which the agent operates.
+
+- **State**: The condition of the environment at a given time point, often denoted as $$ s $$ or $$ s_t $$ to indicate its time-dependence.
+
+- **Agent**: An entity that observes the state of the environment and takes actions to achieve a specific objective.
+
+- **Action**: A specific operation that an agent can execute, typically denoted by $$ a $$ or $$ a_t $$.
+
+- **Policy**: A policy, denoted by $$ \pi(a \mid s) $$ or $$ \pi(s, a) $$, is a mapping from states to actions, or to probabilities of selecting each action.
+
+- **Reward**: A scalar value, often denoted by $$ r $$ or $$ r_t $$, that the environment returns in response to the agent's action.
 
 #### What Are We Trying to Optimize?
 
