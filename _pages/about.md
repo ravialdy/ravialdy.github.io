@@ -21,13 +21,18 @@ social: true  # includes social icons at the bottom of the page
 
 Hello! I'm Ravialdy Hidayat. I work with computers to make them smarter in understanding pictures and words. I've been doing this for over 3 years, both in companies and in a university.
 
-#### What I Do
+#### My Skills and Technical Tools:
 
-- **Current Role**: I am an AI Researcher at Vision-Language Intelligence at Sejong University in South Korea.
 - **Skills**: 
   - **Computer Vision**: Making computers understand images and videos.
   - **Natural Language Processing (NLP)**: Helping computers understand and use human language.
   - **Machine Learning Computer Security**: Making sure our computer programs are safe from adversarial attacks with recent machine learning methods.
+
+- **Technical Tools**:
+  - **Programming Language**: Python, JavaScript, MATLAB, SQL.
+  - **Deep Learning Frameworks**: Pytorch, Tensorflow, JAX.
+  - **Deep Learning Monitoring Tools**: Tensorboard, Weights and Biases.
+  - **Deep Learning Deployment**: Docker, Flask.
 
 #### Where I Learned
 
