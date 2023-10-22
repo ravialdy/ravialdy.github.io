@@ -19,7 +19,7 @@ social: true  # includes social icons at the bottom of the page
 
 ### About Me
 
-Hello! I'm Ravialdy Hidayat. I work with computers to make them smarter in understanding pictures and words. I've been doing this for over 3 years, both in companies and in a university.
+Hello! I'm Ravialdy Hidayat. I work with computers to make them smarter and safer in understanding pictures and words. I've been doing this for over 3 years, both in companies and in a university.
 
 #### My Skills and Technical Tools:
 
@@ -31,6 +31,7 @@ Hello! I'm Ravialdy Hidayat. I work with computers to make them smarter in under
 - **Technical Tools**:
   - **Programming Language**: Python, JavaScript, MATLAB, SQL.
   - **Deep Learning Frameworks**: Pytorch, Tensorflow, JAX.
+  - **Additional Deep Learning Tools**: OpenCV, Sklearn, Tesseract, Darknet, LabelImg, Flax.
   - **Deep Learning Monitoring Tools**: Tensorboard, Weights and Biases.
   - **Deep Learning Deployment**: Docker, Flask.
 
