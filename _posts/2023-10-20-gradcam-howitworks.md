@@ -17,13 +17,13 @@ toc:
 
 ![Figure Our Grad-CAM](/assets/img/gradcam/gradcam_our_result.png)
 
-        Figure1. Grad-CAM visualization that we will implement in this blogpost.
+        Figure 1. Grad-CAM visualization that we will implement in this blogpost.
 
 Convolutional Neural Networks (CNNs) are amazing. They can recognize cats in pictures, help self-driving cars see, and even beat humans at games. But what most people see about neural networks is this, they're like magic boxes: data goes in, and the answer comes out, without knowing what happens in between. So, how do we know what part of an image the network finds important for its decision? Introducing Grad-CAM method, a technique that helps us "see" what the network is looking at.
 
 ![Figure intro Grad-CAM](/assets/img/modified-figure-1-dog-cat.jpg)
 
-        Figure2. Example of how Grad-CAM visualization show important part for model's decision on cat and dog.
+        Figure 2. Example of how Grad-CAM visualization show important part for model's decision on cat and dog.
 
 ## What is Grad-CAM?
 
@@ -35,13 +35,13 @@ Grad-CAM will use something called "gradients" which can tell us how much each n
 
 ![Figure deeper layers](/assets/img/gradcam/gradcam_different_layers.png)
 
-        Figure3. Illustration of the effect of deeper layers towards Grad-CAM visualization.
+        Figure 3. Illustration of the effect of deeper layers towards Grad-CAM visualization.
 
 ## How Does it Work in Quite Detail?
 
 ![Figure Grad-CAM detail works](/assets/img/gradcam/gradcam_detail_works.jpg)
 
-            Figure4. Overview Grad-CAM architecture.
+            Figure 4. Overview Grad-CAM architecture.
 
 ### Step 1: Backward Pass
 
@@ -295,7 +295,7 @@ visualize_heatmap(input_image, heatmap)
 
 ![Figure Our Grad-CAM](/assets/img/gradcam/gradcam_our_result.png)
 
-            Figure5. Grad-CAM visualization result.
+            Figure 5. Grad-CAM visualization result.
 
 In this example, we focused on the 'bull mastiff' class, which corresponds to index 243 in the ImageNet dataset. You can replace this with the index for any other class you're interested in.
 
