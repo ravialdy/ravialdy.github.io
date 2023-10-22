@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Understanding Phenomenal REINFORCE Policy Gradient Method
-date: 2023-10-20 09:56:00-0400
+date: 2023-10-15 09:56:00-0400
 description:
 tags: Reinforcement Learning (RL), REINFORCE, Policy Gradient
 categories: blogpost
@@ -21,25 +21,25 @@ Welcome to my blog post! Today we're going to discuss about a very fascinating t
 
 Before diving into the core method, it's important to get some basics right. In RL, an agent (for simplicity, you can imagine this like a robot that learns something) interacts with an environment (like a maze). At each time $$ t $$, the agent is in a state $$ s_t $$, takes an action $$ a_t $$, and receives a reward $$ r_t $$.
 
-The agent follows a "policy" $$ \pi(s, a) $$, which tells it what action $$ a $$ to take when in state $$ s $$. This policy is controlled by some parameters $$ \theta $$, which we adjust to make the policy better. Here are the more formal definition of important terms in RL : 
+The agent follows a "policy" $$ \pi(s, a) $$, which tells it what action $$ a $$ to take when in state $$ s $$. This policy is controlled by some parameters $$ \theta $$, which we adjust to make the policy better. Here are the more formal definitions of important terms in RL:
 
   - **Environment**: The space or setting in which the agent operates.
-
-  - **State**: The condition of environment at a given time point, often denoted as \( s \) or \( s_t \) to indicate its time-dependence.
-
+  
+  - **State**: The condition of the environment at a given time point, often denoted as $$ s $$ or $$ s_t $$ to indicate its time-dependence.
+  
   - **Agent**: An entity that observes the state of the environment and takes actions to achieve a specific objective.
-
-  - **Action**: A specific operation that an agent can execute, typically denoted by \( a \) or \( a_t \).
-
-  - **Policy**: A policy, denoted by \( \pi(a|s) \) or \( \pi(s, a) \), is a mapping from states to actions, or to probabilities of selecting each action.
-
-  - **Reward**: A scalar value, often denoted by \( r \) or \( r_t \), that the environment returns in response to the agent's action.
+  
+  - **Action**: A specific operation that an agent can execute, typically denoted by $$ a $$ or $$ a_t $$.
+  
+  - **Policy**: A policy, denoted by $$ \pi(a|s) $$ or $$ \pi(s, a) $$, is a mapping from states to actions, or to probabilities of selecting each action.
+  
+  - **Reward**: A scalar value, often denoted by $$ r $$ or $$ r_t $$, that the environment returns in response to the agent's action.
 
 #### What Are We Trying to Optimize?
 
 The ultimate goal in the RL method is to maximize the long-term reward. We often denote this as $$ \rho(\pi) $$. This is the average reward the agent expects to get over time while following policy $$ \pi $$.
 
-### The Problem with Traditional Methods
+## The Problem with Traditional Methods
 
 In RL, we often want a computer to learn how to make decisions by itself. For instance, think of a game where a robot must find its way out of a maze. The robot learns by trying different paths and seeing which ones get it out of the maze faster. Sounds simple, right? But when the maze is large and complicated, the number of decisions the robot must make becomes huge. This is where function approximators like neural networks come in handy; they help the robot generalize from its experience to make better decisions.
 
@@ -52,7 +52,7 @@ For a long time, people used something called a "value-function approach" to do 
   - **Convergence Issues**: Looks like a fancy term, but it simply means that using the value-function approach does not always guarantee that the robot will find the best way to act in all situations.
 
 
-### The Math Magic: Policy Gradient Theorem
+## The Math Magic: Policy Gradient Theorem
 
 Now, the heart of REINFORCE is the Policy Gradient Theorem. It tells us how to change the policy parameters $$ \theta $$ to increase the long-term reward $$ \rho $$.
 
