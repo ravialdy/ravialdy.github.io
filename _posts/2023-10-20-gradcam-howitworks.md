@@ -15,33 +15,54 @@ toc:
 
 ## Introduction
 
-![Figure Our Grad-CAM](/assets/img/gradcam/gradcam_our_result.png)
-
-        Figure 1. Grad-CAM visualization that we will implement in this blogpost.
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="/assets/img/gradcam/gradcam_our_result.png" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+<div class="caption">
+    Figure 1. Grad-CAM visualization that we will implement in this blogpost.
+</div>
 
 Convolutional Neural Networks (CNNs) are amazing. They can recognize cats in pictures, help self-driving cars see, and even beat humans at games. But what most people see about neural networks is this, they're like magic boxes: data goes in, and the answer comes out, without knowing what happens in between. So, how do we know what part of an image the network finds important for its decision? Introducing Grad-CAM method, a technique that helps us "see" what the network is looking at.
 
-![Figure intro Grad-CAM](/assets/img/modified-figure-1-dog-cat.jpg)
-
-        Figure 2. Example of how Grad-CAM visualization show important part for model's decision on cat and dog.
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="/assets/img/modified-figure-1-dog-cat.jpg" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+<div class="caption">
+    Figure 2. Example of how Grad-CAM visualization shows the important part for the model's decision on cat and dog.
+</div>
 
 ## What is Grad-CAM?
 
-Grad-CAM stands for Gradient-weighted Class Activation Mapping. Why the name is like that? In short, we use gradient to help us understand how neural networks behave in certain circumstances, while activation here is analogous with the level of excitement or interest the neural network has when it comes to certain features used in recognizing the important part in the image (we will discuss in detail about it later). How it does that? In short, Grad-CAM will create what we call a "heatmap." Imagine you have your cat picture. Now, think of putting a see-through red paper over it. This red paper will have some areas darker and some areas lighter. The darker areas show where the neural network looked the most. Maybe the network looked a lot at the cat's eyes and a little at the tail. This heatmap will help you "see" what parts of the picture made the neural network decide it's looking at a cat. It's like the network is saying, "Look, I think this is a cat because of these parts of the picture."
+Grad-CAM stands for Gradient-weighted Class Activation Mapping. Why the name is like that? In short, we use gradient to help us understand how neural networks behave in certain circumstances, while activation here is analogous with the level of excitement or interest the neural network has when it comes to certain features used in recognizing the important part in the image (we will discuss in detail about it later). How it does that? Basically, Grad-CAM will create what we call a "heatmap." Imagine you have your cat picture. Now, think of putting a see-through red paper over it. This red paper will have some areas darker and some areas lighter. The darker areas show where the neural network looked the most. Maybe the network looked a lot at the cat's eyes and a little at the tail. This heatmap will help you "see" what parts of the picture made the neural network decide it's looking at a cat. It's like the network is saying, "Look, I think this is a cat because of these parts of the picture."
 
 ## The Core Idea
 
-Grad-CAM will use something called "gradients" which can tell us how much each neuron's activity would need to change in order to affect the final decision (class scores or logits that are output by the neural network) of the model. The key intuion here is that if the gradient is large in magnitude, a small change in the neuron's activity will have a significant impact on the final decision. Conversely, if the gradient is small, the neuron's contribution to the final decision is relatively minor. Grad-CAM also often uses deeper layers in order to visualize important part of the image. In a CNN, the early layers usually can only understand simple things like edges or colors. The deeper you go, the more complex the things they understand, like ears or whiskers. Grad-CAM focuses on the last set of these layers because they understand both the important details (like whiskers) and the bigger picture (like the shape of a cat). 
+Grad-CAM will use something called "gradients" which can tell us how much each neuron's activity would need to change in order to affect the final decision (class scores or logits that are output by the neural network) of the model. The key intuition here is that if the gradient is large in magnitude, a small change in the neuron's activity will have a significant impact on the final decision. Conversely, if the gradient is small, the neuron's contribution to the final decision is relatively minor. Grad-CAM also often uses deeper layers in order to visualize important part of the image. In a CNN, the early layers usually can only understand simple things like edges or colors. The deeper you go, the more complex the things they understand, like ears or whiskers. Grad-CAM focuses on the last set of these layers because they understand both the important details (like whiskers) and the bigger picture (like the shape of a cat).
 
-![Figure deeper layers](/assets/img/gradcam/gradcam_different_layers.png)
-
-        Figure 3. Illustration of the effect of deeper layers towards Grad-CAM visualization.
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="/assets/img/gradcam/gradcam_different_layers.png" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+<div class="caption">
+    Figure 3. Illustration of the effect of deeper layers towards Grad-CAM visualization.
+</div>
 
 ## How Does it Work in Quite Detail?
 
-![Figure Grad-CAM detail works](/assets/img/gradcam/gradcam_detail_works.jpg)
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="/assets/img/gradcam/gradcam_detail_works.jpg" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+<div class="caption">
+    Figure 4. Overview Grad-CAM architecture.
+</div>
 
-            Figure 4. Overview Grad-CAM architecture.
 
 ### Step 1: Backward Pass
 
@@ -293,9 +314,14 @@ heatmap = generate_grad_cam(features, gradients, image_shape)
 visualize_heatmap(input_image, heatmap)
 ```
 
-![Figure Our Grad-CAM](/assets/img/gradcam/gradcam_our_result.png)
-
-            Figure 5. Grad-CAM visualization result.
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="/assets/img/gradcam/gradcam_our_result.png" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+<div class="caption">
+    Figure 5. Grad-CAM visualization result.
+</div>
 
 In this example, we focused on the 'bull mastiff' class, which corresponds to index 243 in the ImageNet dataset. You can replace this with the index for any other class you're interested in.
 
