@@ -17,7 +17,7 @@ toc:
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="/assets/img/gradcam/gradcam_our_result.png" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="/assets/img/gradcam/gradcam_our_result.png" class="img-fluid rounded z-depth-1" % zoomable=true %}
     </div>
 </div>
 <div class="caption">
@@ -28,7 +28,7 @@ Convolutional Neural Networks (CNNs) are amazing. They can recognize cats in pic
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="/assets/img/modified-figure-1-dog-cat.jpg" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="/assets/img/modified-figure-1-dog-cat.jpg" class="img-fluid rounded z-depth-1" % zoomable=true %}
     </div>
 </div>
 <div class="caption">
@@ -45,7 +45,7 @@ Grad-CAM will use something called "gradients" which can tell us how much each n
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="/assets/img/gradcam/gradcam_different_layers.png" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="/assets/img/gradcam/gradcam_different_layers.png" class="img-fluid rounded z-depth-1" % zoomable=true %}
     </div>
 </div>
 <div class="caption">
@@ -56,7 +56,7 @@ Grad-CAM will use something called "gradients" which can tell us how much each n
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="/assets/img/gradcam/gradcam_detail_works.jpg" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="/assets/img/gradcam/gradcam_detail_works.jpg" class="img-fluid rounded z-depth-1" % zoomable=true %}
     </div>
 </div>
 <div class="caption">
@@ -316,7 +316,7 @@ visualize_heatmap(input_image, heatmap)
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="/assets/img/gradcam/gradcam_our_result.png" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="/assets/img/gradcam/gradcam_our_result.png" class="img-fluid rounded z-depth-1" % zoomable=true %}
     </div>
 </div>
 <div class="caption">
