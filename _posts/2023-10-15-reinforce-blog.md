@@ -17,7 +17,7 @@ toc:
 
 Welcome to my blog post! Today we're going to discuss about a very fascinating topic in the world of AI and Reinforcement Learning (RL) — the Policy Gradient REINFORCE Method. This method is quite famous for solving some complex problems in RL. Don't worry if you're new to this field; I'll try to keep things simple and easy to understand. First of all, I will be focusing on the background of the REINFORCE method and why it was proposed in the first place.
 
-### Brief Recap about Reinforcement Learning Framework
+### Brief Recap about Reinforcement Learning
 
 Before diving into the core method, it's important to get some basics right. In RL, an agent (for simplicity, you can imagine this like a robot that learns something) interacts with an environment (like a maze). At each time $$ t $$, the agent is in a state $$ s_t $$, takes an action $$ a_t $$, and receives a reward $$ r_t $$.
 
@@ -148,15 +148,17 @@ Notice that $$ \nabla_{\theta} \log \pi(a \mid s) $$ is usually easier to comput
 By understanding the Policy Gradient Theorem and its underlying principles, you'll find that it's a fundamental building block for more advanced algorithms in the RL domain. Not only does it provide a method to directly optimize the policy, but it also offers the flexibility, stability, and efficiency required for real-world applications.
 
 
-## Introducing Phenomenal REINFORCE Algorithm
+## Introducing REINFORCE Algorithm
 
 After understanding the power and flexibility of Policy Gradient methods, it's time to delve into one of its most famous implementations: the REINFORCE algorithm which stands for REward Increment = Nonnegative Factor x Offset Reinforcement x Characteristic Eligibility, this algorithm is not just a fancy acronym; it's often considered as one of the fundamental building block in the world of Reinforcement Learning.
+
+### Main Idea of REINFORCE
 
 Remember that the Policy Gradient methods aim to optimize the policy in a way that increases the expected return from any state $$ s $$. However, calculating the true gradient of this expected return is often computationally infeasible or requires a model of the environment, which we usually don't have. REINFORCE is one of the Policy Gradient algorithms that makes us possible to directly optimizing the policy function $$ \pi(a \mid s) $$ to maximize the cumulative reward. While there are many algorithms under the Policy Gradient category, REINFORCE stands out for its simplicity and directness in estimating the gradient.
 
 The core idea of REINFORCE that differentiate it with other methods is in its utilization of Monte Carlo methods to estimate the gradients needed for policy optimization. By taking sample paths through the state and action space, REINFORCE avoids the need for a model of the environment and sidesteps the computational bottleneck of calculating the true gradients. This is particularly useful when the state and/or action spaces are large or continuous, making other methods infeasible.
 
-### Relation between REINFORCE and Policy Gradient Theorem
+### REINFORCE & Policy Gradient Theorem
 
 Recall that the Policy Gradient Theorem provides an expression for the gradient of the expected return with respect to the policy parameters. REINFORCE directly employs this theorem but takes it a step further by providing a practical way to estimate this gradient through sampling. The mathematical equation for obtaining expected return $$ J(\theta) $$ using this theorem can be written as:
 
@@ -172,7 +174,7 @@ $$
 
 In essence, REINFORCE is a concrete implementation of the Policy Gradient method that uses Monte Carlo sampling to estimate the otherwise intractable or unknown quantities in the Policy Gradient Theorem. By doing so, it provides a computationally efficient, model-free method to optimize policies in complex environments.
 
-### Mathematical Details of REINFORCE Algorithm
+### Mathematical Details of REINFORCE
 
 The REINFORCE algorithm can be understood through a sequence of mathematical steps, which are as follows:
 
@@ -193,3 +195,9 @@ $$
 $$
 
 Here, $$ G_t $$ is the return obtained using a Monte Carlo estimate, providing a sample-based approximation of $$ Q^\pi(S_t, A_t) $$.
+
+### Conclusion and Limitations
+
+While REINFORCE is oftenly used for its simplicity and directness, it's also essential to recognize its limitations. The method tends to have high variance in its gradient estimates, which could lead to unstable training. However, various techniques, like using a baseline or employing advanced variance reduction methods, can alleviate these issues to some extent.
+
+REINFORCE is often the easy choice when you need a simple yet effective method for policy optimization, especially in high-dimensional or continuous action spaces.
