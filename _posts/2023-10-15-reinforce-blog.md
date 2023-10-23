@@ -148,40 +148,48 @@ Notice that $$ \nabla_{\theta} \log \pi(a \mid s) $$ is usually easier to comput
 By understanding the Policy Gradient Theorem and its underlying principles, you'll find that it's a fundamental building block for more advanced algorithms in the RL domain. Not only does it provide a method to directly optimize the policy, but it also offers the flexibility, stability, and efficiency required for real-world applications.
 
 
-## The Magic: Policy Gradient Theorem
+## Introducing Phenomenal REINFORCE Algorithm
 
-Now, the heart of REINFORCE is the Policy Gradient Theorem. It tells us how to change the policy parameters $$ \theta $$ to increase the long-term reward $$ \rho $$.
+After understanding the power and flexibility of Policy Gradient methods, it's time to delve into one of its most famous implementations: the REINFORCE algorithm which stands for REward Increment = Nonnegative Factor x Offset Reinforcement x Characteristic Eligibility, this algorithm is not just a fancy acronym; it's often considered as one of the fundamental building block in the world of Reinforcement Learning.
 
-$$
-\frac{\partial \rho}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \frac{\partial \pi(s, a)}{\partial \theta} Q^{\pi}(s, a)
-$$
+Remember that the Policy Gradient methods aim to optimize the policy in a way that increases the expected return from any state $$ s $$. However, calculating the true gradient of this expected return is often computationally infeasible or requires a model of the environment, which we usually don't have. REINFORCE is one of the Policy Gradient algorithms that makes us possible to directly optimizing the policy function $$ \pi(a|s) $$ to maximize the cumulative reward. While there are many algorithms under the Policy Gradient category, REINFORCE stands out for its simplicity and directness in estimating the gradient.
 
-Sounds complicated? Let's break it down:
+The core idea of REINFORCE that differentiate it with other methods is in its utilization of Monte Carlo methods to estimate the gradients needed for policy optimization. By taking sample paths through the state and action space, REINFORCE avoids the need for a model of the environment and sidesteps the computational bottleneck of calculating the true gradients. This is particularly useful when the state and/or action spaces are large or continuous, making other methods infeasible.
 
-- $$ \frac{\partial \rho}{\partial \theta} $$: This is what we're interested in. It tells us how a tiny change in $$ \theta $$ will affect the long-term reward $$ \rho $$.
-  
-- $$ d^{\pi}(s) $$: This is the chance of landing in a state $$ s $$ while following the policy $$ \pi $$.
+### Relation between REINFORCE and Policy Gradient Theorem
 
-- $$ Q^{\pi}(s, a) $$: This represents the value of taking an action $$ a $$ in state $$ s $$ under policy $$ \pi $$.
-
-By calculating this expression, we know how to update $$ \theta $$ to make our policy $$ \pi $$ better.
-
-### Policy Gradient with Function Approximation
-
-In real-world problems, calculating $$ Q^{\pi}(s, a) $$ exactly is often impossible. Imagine a simple game where the screen is 100x100 pixels, and each pixel can be either black or white. The number of possible states is $$ 2^{(100 \times 100)} $$, which is a staggeringly large number. If you had to store a $$ Q $$-value for each of these states, you'd quickly run out of memory. This is just a black-and-white example; modern games often have high-resolution, full-color frames, making the state space even larger. So, we approximate it with a function $$ f_w(s, a) $$, controlled by parameters $$ w $$.
-
-The theorem extends to this case, and the new update rule becomes:
+Recall that the Policy Gradient Theorem provides an expression for the gradient of the expected return with respect to the policy parameters. REINFORCE directly employs this theorem but takes it a step further by providing a practical way to estimate this gradient through sampling. The mathematical equation for obtaining expected return $$ J(\theta) $$ using this theorem can be written as:
 
 $$
-\frac{\partial \rho}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \frac{\partial \pi(s, a)}{\partial \theta} f_{w}(s, a)
+\nabla J(\theta) = \mathbb{E}_{\pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(A_t|S_t) Q^{\pi}(S_t, A_t) \right]
 $$
 
-This approximation allows us to handle more complex problems without knowing everything about the environment.
+REINFORCE simplifies this expression by utilizing the Monte Carlo estimate for $$ Q^{\pi}(S_t, A_t) $$, which is the sampled return $$ G_t $$:
 
-### Why Is This Important?
+$$
+\nabla J(\theta) = \mathbb{E}_{\pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(A_t|S_t) G_t \right]
+$$
 
-1. **Efficiency**: The theorem allows us to improve the policy without knowing how each change will affect every state. We only need to calculate the effect on the long-term reward, which is more efficient.
+In essence, REINFORCE is a concrete implementation of the Policy Gradient method that uses Monte Carlo sampling to estimate the otherwise intractable or unknown quantities in the Policy Gradient Theorem. By doing so, it provides a computationally efficient, model-free method to optimize policies in complex environments.
 
-2. **Stability**: The method provides a stable way to improve the policy gradually. It avoids big jumps that could destabilize the learning process.
+### Mathematical Details of REINFORCE Algorithm
 
-3. **Flexibility**: The approximation allows us to tackle problems where it's hard or impossible to know everything about the environment.
+The REINFORCE algorithm can be understood through a sequence of mathematical steps, which are as follows:
+
+1. **Initialize Policy Parameters**: Randomly initialize the policy parameters $$ \theta $$.
+
+2. **Generate Episode**: Using the current policy $$ \pi_\theta $$, generate an episode $$ S_1, A_1, R_2, \ldots, S_T $$.
+
+3. **Compute Gradients**: For each step $$ t $$ in the episode,
+    - Compute the return $$ G_t $$.
+    - Compute the policy gradient $$ \Delta \theta_t = \alpha \gamma^t G_t \nabla_\theta \log \pi_\theta(A_t | S_t) $$.
+    
+4. **Update Policy**: Update the policy parameters $$ \theta $$ using $$ \Delta \theta $$.
+
+The key equation that governs this update is:
+
+$$
+\nabla J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \sum_{t=0}^{T-1} \nabla_\theta \log \pi_\theta(A_t|S_t) G_t \right]
+$$
+
+Here, $$ G_t $$ is the return obtained using a Monte Carlo estimate, providing a sample-based approximation of $$ Q^\pi(S_t, A_t) $$.
