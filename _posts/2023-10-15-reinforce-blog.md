@@ -51,8 +51,104 @@ For a long time, people used something called a "value-function approach" to do 
 
   - **Convergence Issues**: Looks like a fancy term, but it simply means that using the value-function approach does not always guarantee that the robot will find the best way to act in all situations.
 
+## The Policy Gradient Theorem
 
-## The Math Magic: Policy Gradient Theorem
+Before we delve into the details of REINFORCE algorithm, let's clarify why policy gradients can be a game-changer in the world of RL. The reason for this is that REINFORCE itself belongs to this approach. Unlike traditional value-based methods which assess the "goodness" of states or state-action pairs, policy gradients aim to directly tweak the policy—a mapping from states to actions. This approach can avoid at least three potential problems:
+
+  - **Curse of Dimensionality**: Value-based methods often suffer from the "curse of dimensionality." The state-action space can grow exponentially with the number of features describing the state and the range of actions available. This makes the computational cost expensive.
+
+  - **Non-Markovian Environments**: In some cases, the environment is not following the Markov Property, where the future state depends only on the current state and action. In that case, using a value function to capture the "goodness" of a state can be misleading or incomplete.
+
+  - **Exploration vs. Exploitation**: Value-based methods often cause the agent to stick to known high-value states and actions, missing out on potentially better options. While exploration strategies exist, they add another layer of complexity to the algorithm.
+
+In simpler terms, by focusing directly on optimizing the policy, policy gradient methods can sidestep many of these issues. They are particularly well-suited for high-dimensional or continuous action spaces, can naturally accommodate stochastic policies, and are less sensitive to the challenges associated with value function approximation.
+
+### The Formal Objective
+
+The objective is to maximize the expected return $$ \rho(\pi) $$, defined as the average sum of rewards an agent can expect to receive while following a specific policy $$ \pi $$.
+
+$$
+\max_{\theta} \mathbb{E}_{\pi_{\theta}}\left[\sum_{t=0}^{T-1} \gamma^{t} r_{t}\right]
+$$
+
+In this equation, $$ \gamma $$ is the discount factor, $$ \theta $$ are the parameters governing the policy $$ \pi $$, and $$ T $$ is the time horizon.
+
+### The Policy Gradient Theorem in Detail
+
+To find the maximum of this objective function, we need its gradient concerning $$ \theta $$. The Policy Gradient Theorem provides this invaluable piece of information. Formally, it is expressed as:
+
+$$
+\frac{\partial \rho(\pi)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \frac{\partial \pi(s, a)}{\partial \theta} Q^{\pi}(s, a)
+$$
+
+Here, $$ d^{\pi}(s) $$ represents the stationary distribution of states when following policy $$ \pi $$, and $$ Q^{\pi}(s, a) $$ is the expected return of taking action $$ a $$ in state $$ s $$ while following $$ \pi $$.
+
+This equation essentially tells us how a minute change in $$ \theta $$ will influence the expected return $$ \rho(\pi) $$.
+
+### The Log-Derivative Trick
+
+For effective computation of the gradient, the log-derivative trick is often employed. This trick allows us to rephrase the gradient as an expectation:
+
+$$
+\frac{\partial \rho(\pi)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) Q^{\pi}(s_t, a_t) \right]
+$$
+
+This is essentially a restatement of the gradient of a function with respect to its logarithm, which can be formally described as:
+
+$$
+\nabla_{\theta} \pi(a \mid s) = \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s)
+$$
+
+To prove this, we'll take the derivative of $$ \log \pi(a \mid s) $$ with respect to $$ \theta $$:
+
+$$
+\nabla_{\theta} \log \pi(a \mid s) = \frac{\nabla_{\theta} \pi(a \mid s)}{\pi(a \mid s)}
+$$
+
+Rearranging the terms gives:
+
+$$
+\nabla_{\theta} \pi(a \mid s) = \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s)
+$$
+
+Now, let's see how this trick fits into the policy gradient equation. The original policy gradient theorem can be expressed as:
+
+$$
+\frac{\partial \rho(\pi)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \nabla_{\theta} \pi(s, a) Q^{\pi}(s, a)
+$$
+
+Here, $$ d^{\pi}(s) $$ represents the stationary distribution of states when following the policy $$ \pi $$.
+
+When you apply the Log-Derivative Trick to $$ \nabla_{\theta} \pi(s, a) $$, it becomes $$ \pi(s, a) \nabla_{\theta} \log \pi(s, a) $$. Substituting this into the policy gradient theorem, and then rewriting the sum as an expectation, we obtain:
+
+$$
+\frac{\partial \rho(\pi)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) Q^{\pi}(s_t, a_t) \right]
+$$
+
+In this expression, $$ \tau $$ symbolizes a trajectory, and $$ \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) $$ is the gradient of the log-probability of the action taken at time $$ t $$.
+
+This brings us to the policy gradient equation that I mentioned earlier. But why is this necessary? Computing gradients directly can be computationally expensive or even infeasible, especially when you are dealing with complex policies parameterized by neural networks.
+
+Let's say you have a term like $$ \pi(a \mid s) $$ that depends on some parameters $$ \theta $$. Taking the derivative of this term directly with respect to $$ \theta $$ might be challenging. However, the Log-Derivative Trick provides a workaround. It transforms this term into:
+
+$$
+\nabla_{\theta} \pi(a \mid s) = \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s)
+$$
+
+Notice that $$ \nabla_{\theta} \log \pi(a \mid s) $$ is usually easier to compute. Also, this trick allows us to rephrase the Policy Gradient Theorem in a more computationally friendly manner.
+
+### Why Should We Care About Policy Gradients?
+
+1. **Direct Optimization**: Unlike value-based methods, policy gradients directly tweak what actually matters—the policy itself.
+
+2. **Stochasticity Handling**: Policy gradients can optimize stochastic policies, crucial for situations where the optimal action can differ due to inherent randomness.
+
+3. **Sample Efficiency**: Because the focus is on policy improvement, fewer samples are often required to learn a good policy, making the method generally more efficient.
+
+By understanding the Policy Gradient Theorem and its underlying principles, you'll find that it's a fundamental building block for more advanced algorithms in the RL domain. Not only does it provide a method to directly optimize the policy, but it also offers the flexibility, stability, and efficiency required for real-world applications.
+
+
+## The Magic: Policy Gradient Theorem
 
 Now, the heart of REINFORCE is the Policy Gradient Theorem. It tells us how to change the policy parameters $$ \theta $$ to increase the long-term reward $$ \rho $$.
 
@@ -81,52 +177,6 @@ $$
 $$
 
 This approximation allows us to handle more complex problems without knowing everything about the environment.
-
-### Diving Deeper into the Policy Gradient Theorem
-
-Before we delve into the mathematical details, let's clarify why policy gradients can be a game-changer in the world of RL. Unlike traditional value-based methods which assess the "goodness" of states or state-action pairs, policy gradients aim to directly tweak the policy—a mapping from states to actions. In simpler terms, we adjust the policy parameters in such a way that maximizes our expected rewards over time. This is the also one of the main part of the REINFORCE algorithm.
-
-#### The Formal Objective
-
-The objective is to maximize the expected return $$ \rho(\pi) $$, defined as the average sum of rewards an agent can expect to receive while following a specific policy $$ \pi $$.
-
-$$
-\max_{\theta} \mathbb{E}_{\pi_{\theta}}\left[\sum_{t=0}^{T-1} \gamma^{t} r_{t}\right]
-$$
-
-In this equation, $$ \gamma $$ is the discount factor, $$ \theta $$ are the parameters governing the policy $$ \pi $$, and $$ T $$ is the time horizon.
-
-#### The Policy Gradient Theorem in Detail
-
-To find the maximum of this objective function, we need its gradient concerning $$ \theta $$. The Policy Gradient Theorem provides this invaluable piece of information. Formally, it is expressed as:
-
-$$
-\frac{\partial \rho(\pi)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \frac{\partial \pi(s, a)}{\partial \theta} Q^{\pi}(s, a)
-$$
-
-Here, $$ d^{\pi}(s) $$ represents the stationary distribution of states when following policy $$ \pi $$, and $$ Q^{\pi}(s, a) $$ is the expected return of taking action $$ a $$ in state $$ s $$ while following $$ \pi $$.
-
-This equation essentially tells us how a minute change in $$ \theta $$ will influence the expected return $$ \rho(\pi) $$.
-
-#### The Log-Derivative Trick
-
-For effective computation of the gradient, the log-derivative trick is often employed. This trick allows us to rephrase the gradient as an expectation:
-
-$$
-\frac{\partial \rho(\pi)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) Q^{\pi}(s_t, a_t) \right]
-$$
-
-In this expression, $$ \tau $$ symbolizes a trajectory, and $$ \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) $$ is the gradient of the log-probability of the action taken at time $$ t $$.
-
-#### Why Should We Care About Policy Gradients?
-
-1. **Direct Optimization**: Unlike value-based methods, policy gradients directly tweak what actually matters—the policy itself.
-
-2. **Stochasticity Handling**: Policy gradients can optimize stochastic policies, crucial for situations where the optimal action can differ due to inherent randomness.
-
-3. **Sample Efficiency**: Because the focus is on policy improvement, fewer samples are often required to learn a good policy, making the method generally more efficient.
-
-By understanding the Policy Gradient Theorem and its underlying principles, you'll find that it's a fundamental building block for more advanced algorithms in the RL domain. Not only does it provide a method to directly optimize the policy, but it also offers the flexibility, stability, and efficiency required for real-world applications.
 
 ### Why Is This Important?
 
