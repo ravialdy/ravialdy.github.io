@@ -113,10 +113,10 @@ This equation essentially tells us how a minute change in $$ \theta $$ will infl
 For effective computation of the gradient, the log-derivative trick is often employed. This trick allows us to rephrase the gradient as an expectation:
 
 $$
-\frac{\partial \rho(\pi)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t|s_t) Q^{\pi}(s_t, a_t) \right]
+\frac{\partial \rho(\pi)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) Q^{\pi}(s_t, a_t) \right]
 $$
 
-In this expression, $$ \tau $$ symbolizes a trajectory, and $$ \nabla_{\theta} \log \pi_{\theta}(a_t|s_t) $$ is the gradient of the log-probability of the action taken at time $$ t $$.
+In this expression, $$ \tau $$ symbolizes a trajectory, and $$ \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) $$ is the gradient of the log-probability of the action taken at time $$ t $$.
 
 #### Why Should We Care About Policy Gradients?
 
