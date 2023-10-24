@@ -32,7 +32,7 @@ Convolutional Neural Networks (CNNs) are amazing. They can recognize cats in pic
     </div>
 </div>
 <div class="caption">
-    Figure 2. Example of how Grad-CAM visualization shows the important part for the model's decision on different classes.
+    Figure 2. Example of how Grad-CAM visualization shows the important part for the model's decision on different classes (Image source : https://github.com/kazuto1011/grad-cam-pytorch).
 </div>
 
 ## What is Grad-CAM?
