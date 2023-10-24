@@ -19,7 +19,16 @@ Welcome to my blog post! Today we're going to discuss about a very fascinating t
 
 ### Brief Recap about Reinforcement Learning
 
-Before diving into the core method, it's important to get some basics right. In RL, an agent (for simplicity, you can imagine this like a robot that learns something) interacts with an environment (like a maze). At each time $$ t $$, the agent is in a state $$ s_t $$, takes an action $$ a_t $$, and receives a reward $$ r_t $$.
+Before diving into the core method, it's important to get some basics right. Imagine we have a small robot placed at the entrance of a maze. The maze is simple: it has walls, open passages, and a cheese located at the exit. The robot's ultimate goal is to find the most efficient path to reach the cheese. In RL, an agent (a robot in this case) interacts with an environment (like a maze). At each time $$ t $$, the agent is in a state $$ s_t $$, takes an action $$ a_t $$, and receives a reward $$ r_t $$.
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="/assets/img/reinforce/DALL·E 2023-10-24 15.38.59 - Vector design of a playful scene where a cartoon robot is gearing up to enter a maze. The maze's pathways are clear, with walls separating the routes.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+<div class="caption">
+    Figure 1. Illustration of an agent (robot) tries to reach the cheese as soon as possible (Image source : DALLE-3).
+</div>
 
 The agent follows a "policy" $$ \pi(s, a) $$, which tells it what action $$ a $$ to take when in state $$ s $$. This policy is controlled by some parameters $$ \theta $$, which we adjust to make the policy better. Here are the more formal definitions of important terms in RL:
 
