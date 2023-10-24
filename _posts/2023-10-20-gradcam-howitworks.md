@@ -28,11 +28,11 @@ Convolutional Neural Networks (CNNs) are amazing. They can recognize cats in pic
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="/assets/img/modified-figure-1-dog-cat.jpg" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.html path="/assets/img/gradcam/GradCAM-Example.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 <div class="caption">
-    Figure 2. Example of how Grad-CAM visualization shows the important part for the model's decision on cat and dog.
+    Figure 2. Example of how Grad-CAM visualization shows the important part for the model's decision on different classes.
 </div>
 
 ## What is Grad-CAM?
