@@ -92,6 +92,26 @@ $$
 
 Finally, we apply a ReLU (Rectified Linear Unit) function to this heatmap. Why? Because we're only interested in the parts of the image that positively influence the final decision.
 
+### Step 5: Understanding the Heatmap
+
+At this point, you might wonder, "How exactly does the weighted sum of feature maps and ReLU activation contribute to generating a heatmap?" 
+
+The heatmap $$ L_{\text{Grad-CAM}}^{c} $$ is essentially a 2D spatial map of the image that highlights the important regions, which have been "weighted" based on their contribution to the class score. This weighted sum can be formally represented as:
+
+$$
+L_{\text{Grad-CAM}}^{c} = \text{ReLU}\left(\sum_{k} \alpha_{k}^{c} A^{k}\right)
+$$
+
+Here, $$ \alpha_{k}^{c} $$ serves as a weight indicating the importance of feature map $$ A^{k} $$ for the particular class $$ c $$. So, when we multiply $$ \alpha_{k}^{c} $$ with the feature map $$ A^{k} $$, we're essentially weighing the feature map based on its importance for class $$ c $$.
+
+After the weighted sum, we apply the ReLU (Rectified Linear Unit) function. Why ReLU? This is to ensure that only the features that have a positive influence on the class of interest are kept. ReLU zeroes out negative values, leaving only the positive regions that are important for identifying the specific class. The ReLU function can be represented mathematically as:
+
+$$
+\text{ReLU}(x) = \max(0, x)
+$$
+
+Thus, the heatmap generated is a filtered version of the weighted sum of feature maps, where only the 'positively contributing' features are illuminated. This enables you to see which regions in the image were pivotal in making the final class decision.
+
 ## A Simple PyTorch Grad-CAM Implementation
 
 To see Grad-CAM in action, let's walk through a straightforward example using PyTorch. We'll use a pretrained VGG16 model for this demonstration.
