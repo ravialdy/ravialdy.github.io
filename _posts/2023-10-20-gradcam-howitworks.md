@@ -32,7 +32,7 @@ Convolutional Neural Networks (CNNs) are amazing. They can recognize cats in pic
     </div>
 </div>
 <div class="caption">
-    Figure 2. Example of how Grad-CAM visualization shows the important part for the model's decision on different classes (Image source : [Kazuto](https://github.com/kazuto1011/grad-cam-pytorch)).
+    Figure 2. Example of how Grad-CAM visualization shows the important part for the model's decision on different classes (Image source : <a href="https://github.com/kazuto1011/grad-cam-pytorch">Kazuto</a>).
 </div>
 
 ## What is Grad-CAM?
@@ -49,7 +49,7 @@ Grad-CAM will use something called "gradients" which can tell us how much each n
     </div>
 </div>
 <div class="caption">
-    Figure 3. Illustration of how CNN and common NN architecture can learn more complex features as the layer goes deeper (Image source : [Julien Vitay](https://julien-vitay.net/lecturenotes-neurocomputing/3-deeplearning/3-CNN.html))
+    Figure 3. Illustration of how CNN and common NN architecture can learn more complex features as the layer goes deeper (Image source : <a href="https://julien-vitay.net/lecturenotes-neurocomputing/3-deeplearning/3-CNN.html">Julien Vitay</a>).
 </div>
 
 <div class="row mt-3">
