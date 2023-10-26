@@ -32,7 +32,7 @@ Convolutional Neural Networks (CNNs) are amazing. They can recognize cats in pic
     </div>
 </div>
 <div class="caption">
-    Figure 2. Example of how Grad-CAM visualization shows the important part for the model's decision on different classes (Image source : https://github.com/kazuto1011/grad-cam-pytorch).
+    Figure 2. Example of how Grad-CAM visualization shows the important part for the model's decision on different classes (Image source : [Kazuto](https://github.com/kazuto1011/grad-cam-pytorch)).
 </div>
 
 ## What is Grad-CAM?
@@ -41,7 +41,16 @@ Grad-CAM stands for Gradient-weighted Class Activation Mapping. Why the name is 
 
 ## The Core Idea
 
-Grad-CAM will use something called "gradients" which can tell us how much each neuron's activity would need to change in order to affect the final decision (class scores or logits that are output by the neural network) of the model. The key intuition here is that if the gradient is large in magnitude, a small change in the neuron's activity will have a significant impact on the final decision. Conversely, if the gradient is small, the neuron's contribution to the final decision is relatively minor. Grad-CAM also often uses deeper layers in order to visualize important part of the image. In a CNN, the early layers usually can only understand simple things like edges or colors. The deeper you go, the more complex the things they understand, like ears or whiskers. Grad-CAM focuses on the last set of these layers because they understand both the important details (like whiskers) and the bigger picture (like the shape of a cat).
+Grad-CAM will use something called "gradients" which can tell us how much each neuron's activity would need to change in order to affect the final decision (class scores or logits that are output by the neural network) of the model. The key intuition here is that if the gradient is large in magnitude, a small change in the neuron's activity will have a significant impact on the final decision. Conversely, if the gradient is small, the neuron's contribution to the final decision is relatively minor. Grad-CAM also often uses deeper layers in order to visualize important part of the image. In a CNN, the early layers usually can only understand simple things like edges or colors. The deeper you go, the more complex the things they understand, like ears or whiskers. Grad-CAM focuses on the last set of these layers because they understand both the important details (like whiskers) and the bigger picture (like the shape of a cat). Remember that in the context of CNN, feature maps in the early layers of can only capture basic features like edges and textures. But, as you move deeper into the network, the feature maps begin to assemble these into more complex structures, capturing higher-level features like shapes, patterns, and even entire objects in some cases.
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="/assets/img/gradcam/deeplearning_featuremaps.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+<div class="caption">
+    Figure 3. Illustration of how CNN and common NN architecture can learn more complex features as the layer goes deeper (Image source : [Julien Vitay](https://julien-vitay.net/lecturenotes-neurocomputing/3-deeplearning/3-CNN.html))
+</div>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -49,7 +58,7 @@ Grad-CAM will use something called "gradients" which can tell us how much each n
     </div>
 </div>
 <div class="caption">
-    Figure 3. Illustration of the effect of deeper layers towards Grad-CAM visualization.
+    Figure 4. Illustration of the effect of deeper layers towards Grad-CAM visualization (Image source : Selvaraju et al, 2017 [1]).
 </div>
 
 ## How Does it Work in Quite Detail?
@@ -60,7 +69,7 @@ Grad-CAM will use something called "gradients" which can tell us how much each n
     </div>
 </div>
 <div class="caption">
-    Figure 4. Overview Grad-CAM architecture.
+    Figure 5. Overview Grad-CAM architecture (Image source : Selvaraju et al, 2017 [1]).
 </div>
 
 
@@ -82,7 +91,7 @@ Here, $$ \alpha_{k}^{c} $$ is the importance weight for feature map $$ k $$ when
 
 ### Step 3: Weighted Sum
 
-Next, we take a weighted sum of our original feature maps, using these importance weights. This gives us a rough heatmap.
+Next, we take a weighted sum of our original feature maps, using these importance weights. This gives us a rough heatmap. We will explain that in more detail about how it is used in the step 5.
 
 $$
 L_{\text{Grad-CAM}}^{c} = \text{ReLU}\left(\sum_{k} \alpha_{k}^{c} A^{k}\right)
@@ -96,7 +105,7 @@ Finally, we apply a ReLU (Rectified Linear Unit) function to this heatmap. Why? 
 
 At this point, you might wonder, "How exactly does the weighted sum of feature maps and ReLU activation contribute to generating a heatmap?" 
 
-The heatmap $$ L_{\text{Grad-CAM}}^{c} $$ is essentially a 2D spatial map of the image that highlights the important regions, which have been "weighted" based on their contribution to the class score. This weighted sum can be formally represented as:
+The heatmap $$ L_{\text{Grad-CAM}}^{c} $$ is essentially a 2D spatial map of the image that highlights the important regions, which have been "weighted" based on their contribution to the class score. Recall that this weighted sum can be formally represented as:
 
 $$
 L_{\text{Grad-CAM}}^{c} = \text{ReLU}\left(\sum_{k} \alpha_{k}^{c} A^{k}\right)
@@ -104,7 +113,7 @@ $$
 
 Here, $$ \alpha_{k}^{c} $$ serves as a weight indicating the importance of feature map $$ A^{k} $$ for the particular class $$ c $$. So, when we multiply $$ \alpha_{k}^{c} $$ with the feature map $$ A^{k} $$, we're essentially weighing the feature map based on its importance for class $$ c $$.
 
-After the weighted sum, we apply the ReLU (Rectified Linear Unit) function. Why ReLU? This is to ensure that only the features that have a positive influence on the class of interest are kept. ReLU zeroes out negative values, leaving only the positive regions that are important for identifying the specific class. The ReLU function can be represented mathematically as:
+After the weighted sum, we apply the ReLU non-linearity function. Why ReLU? This is to ensure that only the features that have a positive influence on the class of interest are kept. ReLU zeroes out negative values, leaving only the positive regions that are important for identifying the specific class. The ReLU function can be represented mathematically as:
 
 $$
 \text{ReLU}(x) = \max(0, x)
@@ -340,7 +349,7 @@ visualize_heatmap(input_image, heatmap)
     </div>
 </div>
 <div class="caption">
-    Figure 5. Grad-CAM visualization result.
+    Figure 6. Grad-CAM visualization result.
 </div>
 
 In this example, we focused on the 'bull mastiff' class, which corresponds to index 243 in the ImageNet dataset. You can replace this with the index for any other class you're interested in.
