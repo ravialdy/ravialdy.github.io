@@ -22,7 +22,7 @@ h2 {
 
 ## Introduction
 
-Welcome to my in-depth review of the paper titled "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting." I think this research paper is very important for the field of autonomous driving, especially in the trajectory forecasting.  Before we go into the paper's architecture, algorithms, and experimental results, let's first understand the challenges that the authors aim to address and the novel approaches they have introduced.
+I'm very excited to present a review of the paper titled "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting" [1] authored by Dooseop Choi and KyoungWook Min. This paper is a very good work proved by its acceptance at the European Conference on Computer Vision (ECCV) 2022. For you who are not familiar with academia world in the AI field yet, ECCV is one of the most prestigious conferences in the domain of computer vision and having a paper accepted there speaks volumes about the quality and relevance of the research. I truly believe this research is important for the autonomous driving, particularly in trajectory forecasting.
 
 <div class="row mt-4 justify-content-center">
     <div class="col-12 col-md-8 mx-auto mt-4">
