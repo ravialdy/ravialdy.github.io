@@ -13,13 +13,9 @@ toc:
   sidebar: left  # or 'right'
 ---
 
-h2 {
-    margin-bottom: 2em; /* Adjust the value as per preference */
-}
-
 <style>
 h2 {
-    margin-bottom: 2em;
+    margin-bottom: 1em;
 }
 </style>
 
