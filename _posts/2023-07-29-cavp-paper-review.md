@@ -12,4 +12,4 @@ related_publications: CAVP
 
 Here is the presentation slides when I did paper review about Visual Prompting For Adversarial Robustness paper. 
 
-[Download Slides](/assets/pdf/(Ravialdy) Paper Review of Visual Prompting For Adversarial Robustness, Current Progress, and Next Plan.pdf)
+[Download Slides](/assets/pdf/(Ravialdy) Paper Review of Visual Prompting For Adversarial Robustness.pdf)
