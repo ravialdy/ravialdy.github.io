@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Detailed Paper Review "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting"
+title: Paper Review "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting"
 date: 2023-10-31 09:56:00-0400
 description:
 tags: Autonomous Driving, Trajectory Planning
@@ -13,20 +13,29 @@ toc:
   sidebar: left  # or 'right'
 ---
 
+h2 {
+    margin-bottom: 2em; /* Adjust the value as per preference */
+}
+
+<style>
+h2 {
+    margin-bottom: 2em;
+}
+</style>
+
 ## Introduction
 
 Welcome to my in-depth review of the paper titled "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting." I think this research paper is very important for the field of autonomous driving, especially in the trajectory forecasting.  Before we go into the paper's architecture, algorithms, and experimental results, let's first understand the challenges that the authors aim to address and the novel approaches they have introduced.
 
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
+<div class="row mt-4 mb-4">
+    <div class="col-sm mt-4 mb-4">
         {% include figure.html path="/assets/img/HLS_Paper/HLS.gif" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
-<div class="caption">
+<div class="caption mb-4">
     Figure 1. Illustration of how the proposed Hierarchical Latent Structure (HLS) is used in the trajectory forecasting (Image source : D. Choi & K. Min [1]).
 </div>
 
-<br>
 
 ## Notations and Definitions
 
@@ -51,29 +60,28 @@ Welcome to my in-depth review of the paper titled "Hierarchical Latent Structure
 | VLI                                  | Vehicle-lane interaction |
 | V2I                                  | Vehicle-to-vehicle interaction |
 
-<br>
 
-## The Core Problem : "Mode Blur"
+## The Main Problem : "Mode Blur"
 
-The paper aims to overcome a specific limitation in vehicle trajectory forecasting models that leverage Variational Autoencoders (VAEs) concept called as the "mode blur" problem. For clearer illustration, please take a look at the figure below (this corresponds to the figure 1 in the reference paper [1]) : 
+The paper aims to overcome a specific limitation in vehicle trajectory forecasting models that leverage Variational Autoencoders (VAEs) concept called as the "mode blur" problem. For clearer illustration, please take a look at the figure below (this corresponds to the figure 1 in the reference paper [1]) :
 
-<div class="row mt-3 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-3 mt-md-0">
+<div class="row mt-4 mb-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4 mb-4">
         {% include figure.html path="/assets/img/HLS_Paper/figure1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
-<div class="caption text-center">
+<div class="caption text-center mb-4">
     Figure 2. Illustration of the "mode blur" problem in VAE-based generated trajectory forecasts (Image source : D. Choi & K. Min [1]).
 </div>
 
 As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are more often on a "central" path, representing an average of all potential future paths rather than distinct possibilities. This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
 
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
+<div class="row mt-4 mb-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4 mb-4">
         {% include figure.html path="/assets/img/HLS_Paper/modeblur-previousSOTA.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
-<div class="caption">
+<div class="caption text-center mb-4">
     Figure 3. Example of "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
 </div>
 
@@ -91,13 +99,13 @@ Two components in the ELBO:
    - The first term $$ \mathbb{E}_{q_\phi(\mathbf{z} \mid \mathbf{x})}[\log p_\theta(\mathbf{x} \mid \mathbf{z})] $$ is the reconstruction loss which measures how well the VAE reconstructs the original data when sampled from the approximate posterior $$ q_\phi $$.
    - The second term $$ D_{KL}(q_\phi(\mathbf{z} \mid \mathbf{x}) \| p_\theta(\mathbf{z})) $$ is the Kullback-Leibler divergence between the approximate posterior $$ q_\phi $$ and the prior $$ p_\theta $$. This term acts as a regularizer, pushing the approximate posterior towards the prior.
 
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
+<div class="row mt-4 mb-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4 mb-4">
         {% include figure.html path="/assets/img/HLS_Paper/VAE-graphical-model.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
-<div class="caption">
-    Figure 4. Variational Autoencoder (VAE) which uses variational bayesian principle ((Image source : <a href="https://lilianweng.github.io/posts/2018-08-12-vae">Weng's Blog</a>)).
+<div class="caption text-center mb-4">
+    Figure 4. Variational Autoencoder (VAE) which uses variational bayesian principle ((Image source : <a href="https://lilianweng.github.io/posts/2018-08-12-vae">Lil'Log</a>)).
 </div>
 
 For more detailed understanding, you can take a look at this very good blogpost [Lil'Log](https://lilianweng.github.io/posts/2018-08-12-vae/).
@@ -106,7 +114,6 @@ As you can see from the objective function above, the VAE wants to minimize reco
 
 So in the context of trajectory planning, the "mode blur" problem is most likely happened due to the balance between reconstruction loss (how well the trajectory is reconstructed) and the KL divergence (pushing the trajectory's latent representation towards the prior). When generating data (like trajectories or images), VAE might be uncertain about which mode (or cluster) of the latent space a particular data point belongs to. 
 
-<br>
 
 ## Key Contributions
 
@@ -120,7 +127,6 @@ Based on my understanding so far, there are 4 major contributions of this paper:
 
 4. **Benchmark Performance**: The state-of-the-art performance on two large-scale real-world datasets.
 
-<br>
 
 ## Hierarchical Latent Structure (HLS)
 
@@ -140,16 +146,16 @@ $$
 
 As you can see from the mathematical equation above, it shows the trajectory distribution as a weighted sum of simpler distributions. Each mode represents a likely future trajectory.
 
-### HLS as a Method to Avoid "Mode Blur"
+### HLS to Avoid "Mode Blur"
 
 The key intuition here is that instead of predicting a single trajectory that's an average of all possible futures, the proposed model considers each possible trajectory (mode) separately. By modeling each mode with a latent variable, the model can sample trajectories from these modes based on their weights or importance. This allows for diverse trajectory predictions rather than a blurred average.
 
-<div class="row mt-3 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-3 mt-md-0">
+<div class="row mt-4 mb-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4 mb-4">
         {% include figure.html path="/assets/img/HLS_Paper/figure1b_mode-separately.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
-<div class="caption text-center">
+<div class="caption text-center mb-4">
     Figure 5. Illustration of the trajectory forecasting distribution generated by HLS model (Image source : D. Choi & K. Min [1]).
 </div>
 
@@ -158,5 +164,7 @@ The HLS approach consists of two latent variables, a low-level latent variable $
 The hierarchical latent structure allows the model to capture the different levels of variability in the data. The low-level captures the possible trajectories, and the high-level captures their probabilities. This layered approach ensures that the model doesn't simply average out all possibilities but respects the diversity and uncertainty inherent in predicting future trajectories.
 
 The paper emphasizes the importance of scene context. The future motion of a vehicle is influenced both by its past motions and by the scene context, which includes surrounding vehicles and the geometry of the road. By incorporating this context into the model, the authors ensure that each predicted mode is feasible and respects the constraints and influences of the environment.
+
+### Conclusion
 
 In short, the proposed approach addresses the mode blur problem by representing the trajectory distribution as a weighted sum of modes. Instead of blurring all possibilities together, it uses latent variables to capture the inherent variability and uncertainty in trajectory forecasting. This results in predictions that respect the diversity of potential futures while being influenced by past data and scene context.
