@@ -26,7 +26,7 @@ Welcome to my in-depth review of the paper titled "Hierarchical Latent Structure
     Figure 1. Illustration of how the proposed Hierarchical Latent Structure (HLS) is used in the trajectory forecasting (Image source : D. Choi & K. Min [1]).
 </div>
 
-<br><br>
+<br>
 
 ## Notations and Definitions
 
@@ -51,7 +51,7 @@ Welcome to my in-depth review of the paper titled "Hierarchical Latent Structure
 | VLI                                  | Vehicle-lane interaction |
 | V2I                                  | Vehicle-to-vehicle interaction |
 
-<br><br>
+<br>
 
 ## The Core Problem : "Mode Blur"
 
@@ -106,7 +106,7 @@ As you can see from the objective function above, the VAE wants to minimize reco
 
 So in the context of trajectory planning, the "mode blur" problem is most likely happened due to the balance between reconstruction loss (how well the trajectory is reconstructed) and the KL divergence (pushing the trajectory's latent representation towards the prior). When generating data (like trajectories or images), VAE might be uncertain about which mode (or cluster) of the latent space a particular data point belongs to. 
 
-<br><br>
+<br>
 
 ## Key Contributions
 
@@ -120,7 +120,7 @@ Based on my understanding so far, there are 4 major contributions of this paper:
 
 4. **Benchmark Performance**: The state-of-the-art performance on two large-scale real-world datasets.
 
-<br><br>
+<br>
 
 ## Hierarchical Latent Structure (HLS)
 
@@ -140,7 +140,7 @@ $$
 
 As you can see from the mathematical equation above, it shows the trajectory distribution as a weighted sum of simpler distributions. Each mode represents a likely future trajectory.
 
-### HLS as a Method to Avoid "Mode Blur" Problem
+### HLS as a Method to Avoid "Mode Blur"
 
 The key intuition here is that instead of predicting a single trajectory that's an average of all possible futures, the proposed model considers each possible trajectory (mode) separately. By modeling each mode with a latent variable, the model can sample trajectories from these modes based on their weights or importance. This allows for diverse trajectory predictions rather than a blurred average.
 
