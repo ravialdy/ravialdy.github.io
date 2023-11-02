@@ -26,6 +26,8 @@ Welcome to my in-depth review of the paper titled "Hierarchical Latent Structure
     Figure 1. Illustration of how the proposed Hierarchical Latent Structure (HLS) is used in the trajectory forecasting (Image source : D. Choi & K. Min [1]).
 </div>
 
+<br><br>
+
 ## Notations and Definitions
 
 | Notation                             | Definition |
@@ -49,17 +51,18 @@ Welcome to my in-depth review of the paper titled "Hierarchical Latent Structure
 | VLI                                  | Vehicle-lane interaction |
 | V2I                                  | Vehicle-to-vehicle interaction |
 
+<br><br>
 
 ## The Core Problem : "Mode Blur"
 
 The paper aims to overcome a specific limitation in vehicle trajectory forecasting models that leverage Variational Autoencoders (VAEs) concept called as the "mode blur" problem. For clearer illustration, please take a look at the figure below (this corresponds to the figure 1 in the reference paper [1]) : 
 
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
+<div class="row mt-3 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-3 mt-md-0">
         {% include figure.html path="/assets/img/HLS_Paper/figure1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
-<div class="caption">
+<div class="caption text-center">
     Figure 2. Illustration of the "mode blur" problem in VAE-based generated trajectory forecasts (Image source : D. Choi & K. Min [1]).
 </div>
 
@@ -81,12 +84,12 @@ In scenario 2, a clear observation here is the overlapping and intersecting traj
 The reason for this problem is the use of Variational Autoencoders (VAEs) in the trajectory forecasting models. Even though VAEs are theoretically elegant, simple to train, and can produce quite good manifold representations (meaning they can capture complex patterns and relationships in data), they have a well-known limitation: the outputs that they generate can often be "blurry", particularly in tasks involving image reconstruction and synthesis. This is the result of the VAE trying to generate an output that's an average representation of potential outcomes. Remember that the main objective of the VAE is to optimize the evidence lower bound (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
 
 $$ 
-\text{ELBO} = \mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})] - D_{KL}(q_\phi(\mathbf{z}|\mathbf{x}) || p_\theta(\mathbf{z})) 
+\text{ELBO} = \mathbb{E}_{q_\phi(\mathbf{z} \mid \mathbf{x})}[\log p_\theta(\mathbf{x} \mid \mathbf{z})] - D_{KL}(q_\phi(\mathbf{z}|\mathbf{x}) \| p_\theta(\mathbf{z})) 
 $$
 
 Two components in the ELBO:
-   - The first term $$ \mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})] $$ is the reconstruction loss which measures how well the VAE reconstructs the original data when sampled from the approximate posterior $$ q_\phi $$.
-   - The second term $$ D_{KL}(q_\phi(\mathbf{z}|\mathbf{x}) || p_\theta(\mathbf{z})) $$ is the Kullback-Leibler divergence between the approximate posterior $$ q_\phi $$ and the prior $$ p_\theta $$. This term acts as a regularizer, pushing the approximate posterior towards the prior.
+   - The first term $$ \mathbb{E}_{q_\phi(\mathbf{z} \mid \mathbf{x})}[\log p_\theta(\mathbf{x} \mid \mathbf{z})] $$ is the reconstruction loss which measures how well the VAE reconstructs the original data when sampled from the approximate posterior $$ q_\phi $$.
+   - The second term $$ D_{KL}(q_\phi(\mathbf{z} \mid \mathbf{x}) \| p_\theta(\mathbf{z})) $$ is the Kullback-Leibler divergence between the approximate posterior $$ q_\phi $$ and the prior $$ p_\theta $$. This term acts as a regularizer, pushing the approximate posterior towards the prior.
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -103,6 +106,7 @@ As you can see from the objective function above, the VAE wants to minimize reco
 
 So in the context of trajectory planning, the "mode blur" problem is most likely happened due to the balance between reconstruction loss (how well the trajectory is reconstructed) and the KL divergence (pushing the trajectory's latent representation towards the prior). When generating data (like trajectories or images), VAE might be uncertain about which mode (or cluster) of the latent space a particular data point belongs to. 
 
+<br><br>
 
 ## Key Contributions
 
@@ -116,12 +120,11 @@ Based on my understanding so far, there are 4 major contributions of this paper:
 
 4. **Benchmark Performance**: The state-of-the-art performance on two large-scale real-world datasets.
 
+<br><br>
 
-## Proposed Method
+## Hierarchical Latent Structure (HLS)
 
-### Hierarchical Latent Structure (HLS)
-
-#### Introduction to HLS
+### Introduction to HLS
 
 In complex traffic scenes with `N` vehicles, predicting the future trajectory of each vehicle can be challenging. The Hierarchical Latent Structure (HLS) proposed by D. Choi & K. Min [1] aims to generate plausible trajectory distributions, taking into consideration both individual vehicle history and the overall scene.
 
@@ -137,16 +140,16 @@ $$
 
 As you can see from the mathematical equation above, it shows the trajectory distribution as a weighted sum of simpler distributions. Each mode represents a likely future trajectory.
 
-#### HLS as a Method to Avoid "Mode Blur" Problem
+### HLS as a Method to Avoid "Mode Blur" Problem
 
 The key intuition here is that instead of predicting a single trajectory that's an average of all possible futures, the proposed model considers each possible trajectory (mode) separately. By modeling each mode with a latent variable, the model can sample trajectories from these modes based on their weights or importance. This allows for diverse trajectory predictions rather than a blurred average.
 
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
+<div class="row mt-3 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-3 mt-md-0">
         {% include figure.html path="/assets/img/HLS_Paper/figure1b_mode-separately.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
-<div class="caption">
+<div class="caption text-center">
     Figure 5. Illustration of the trajectory forecasting distribution generated by HLS model (Image source : D. Choi & K. Min [1]).
 </div>
 
