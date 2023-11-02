@@ -24,21 +24,23 @@ h2 {
 
 Welcome to my in-depth review of the paper titled "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting." I think this research paper is very important for the field of autonomous driving, especially in the trajectory forecasting.  Before we go into the paper's architecture, algorithms, and experimental results, let's first understand the challenges that the authors aim to address and the novel approaches they have introduced.
 
-<div class="row mt-4 mb-4">
-    <div class="col-sm mt-4 mb-4">
+<div class="row mt-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4">
         {% include figure.html path="/assets/img/HLS_Paper/HLS.gif" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
-<div class="caption mb-4">
+<div class="caption text-center mb-4">
     Figure 1. Illustration of how the proposed Hierarchical Latent Structure (HLS) is used in the trajectory forecasting (Image source : D. Choi & K. Min [1]).
 </div>
-
 
 ## Notations and Definitions
 
 | Notation                             | Definition |
 |--------------------------------------|------------|
 | $$ N $$                              | Number of vehicles in the traffic scene |
+| $$ T $$                              | Total number of timesteps for which trajectories are forecasted |
+| $$ H $$                              | Number of previous timesteps considered for positional history |
+| $$ V_{i} $$                          | The $$ i^{th} $$ vehicle in the traffic scene |
 | $$ \mathbf{Y}_{i} $$                 | Future positions of $$ V_{i} $$ for the next $$ T $$ timesteps |
 | $$ \mathbf{X}_{i} $$                 | Positional history of $$ V_{i} $$ for the previous $$ H $$ timesteps at time $$ t $$ |
 | $$ \mathcal{C}_{i} $$                | Additional scene information available to $$ V_{i} $$ |
@@ -51,7 +53,7 @@ Welcome to my in-depth review of the paper titled "Hierarchical Latent Structure
 | $$ p_{\gamma} $$                     | Prior network |
 | $$ \mathcal{C}_{i}^{m} $$            | Scene information relevant to $$ \mathbf{L}^{m} $$ |
 | $$ \mathcal{L}_{E L B O} $$          | Modified ELBO objective |
-| $$ \beta $$                          | A constant |
+| $$ \beta $$                          | A hyperparameter constant |
 | $$ q_{\phi} $$                       | Approximated posterior network |
 | $$ f_{\varphi} $$                    | Proposed mode selection network |
 | VLI                                  | Vehicle-lane interaction |
@@ -62,8 +64,8 @@ Welcome to my in-depth review of the paper titled "Hierarchical Latent Structure
 
 The paper aims to overcome a specific limitation in vehicle trajectory forecasting models that leverage Variational Autoencoders (VAEs) concept called as the "mode blur" problem. For clearer illustration, please take a look at the figure below (this corresponds to the figure 1 in the reference paper [1]) :
 
-<div class="row mt-4 mb-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4 mb-4">
+<div class="row mt-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4">
         {% include figure.html path="/assets/img/HLS_Paper/figure1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
@@ -73,8 +75,8 @@ The paper aims to overcome a specific limitation in vehicle trajectory forecasti
 
 As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are more often on a "central" path, representing an average of all potential future paths rather than distinct possibilities. This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
 
-<div class="row mt-4 mb-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4 mb-4">
+<div class="row mt-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4">
         {% include figure.html path="/assets/img/HLS_Paper/modeblur-previousSOTA.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
@@ -96,8 +98,8 @@ Two components in the ELBO:
    - The first term $$ \mathbb{E}_{q_\phi(\mathbf{z} \mid \mathbf{x})}[\log p_\theta(\mathbf{x} \mid \mathbf{z})] $$ is the reconstruction loss which measures how well the VAE reconstructs the original data when sampled from the approximate posterior $$ q_\phi $$.
    - The second term $$ D_{KL}(q_\phi(\mathbf{z} \mid \mathbf{x}) \| p_\theta(\mathbf{z})) $$ is the Kullback-Leibler divergence between the approximate posterior $$ q_\phi $$ and the prior $$ p_\theta $$. This term acts as a regularizer, pushing the approximate posterior towards the prior.
 
-<div class="row mt-4 mb-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4 mb-4">
+<div class="row mt-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4">
         {% include figure.html path="/assets/img/HLS_Paper/VAE-graphical-model.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
@@ -147,8 +149,8 @@ As you can see from the mathematical equation above, it shows the trajectory dis
 
 The key intuition here is that instead of predicting a single trajectory that's an average of all possible futures, the proposed model considers each possible trajectory (mode) separately. By modeling each mode with a latent variable, the model can sample trajectories from these modes based on their weights or importance. This allows for diverse trajectory predictions rather than a blurred average.
 
-<div class="row mt-4 mb-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4 mb-4">
+<div class="row mt-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4">
         {% include figure.html path="/assets/img/HLS_Paper/figure1b_mode-separately.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
