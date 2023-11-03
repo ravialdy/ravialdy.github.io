@@ -45,19 +45,15 @@ I'm very excited to present a review of the paper titled "Hierarchical Latent St
 | $$ \mathbf{X}_{i} $$                 | Positional history of $$ V_{i} $$ for the previous $$ H $$ timesteps at time $$ t $$ |
 | $$ \mathcal{C}_{i} $$                | Additional scene information available to $$ V_{i} $$ |
 | $$ \mathbf{L}^{(1: M)} $$            | Lane candidates available for $$ V_{i} $$ at time $$ t $$ |
-| $$ \mathbf{L}^{m} $$                 | $$ F $$ equally spaced coordinate points on the centerline of the $$ m $$-th lane |
-| $$ E_{m} $$                          | The event that $$ \mathbf{L}^{m} $$ becomes the reference lane for $$ V_{i} $$ |
 | $$ \mathbf{z}_{l} $$                 | Low-level latent variable used to model the modes |
 | $$ \mathbf{z}_{h} $$                 | High-level latent variable used to model the weights for the modes |
 | $$ p_{\theta} $$                     | Decoder network |
 | $$ p_{\gamma} $$                     | Prior network |
-| $$ \mathcal{C}_{i}^{m} $$            | Scene information relevant to $$ \mathbf{L}^{m} $$ |
 | $$ \mathcal{L}_{E L B O} $$          | Modified ELBO objective |
-| $$ \beta $$                          | A hyperparameter constant |
 | $$ q_{\phi} $$                       | Approximated posterior network |
 | $$ f_{\varphi} $$                    | Proposed mode selection network |
-| VLI                                  | Vehicle-lane interaction |
-| V2I                                  | Vehicle-to-vehicle interaction |
+| VLI                                  | Vehicle-Lane Interaction |
+| V2I                                  | Vehicle-to-Vehicle Interaction |
 
 
 ## The Main Problem : "Mode Blur"
@@ -84,9 +80,27 @@ As you can see from the figure above, the red vehicle is attempting to forecast 
     Figure 3. Example of "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
 </div>
 
-If you wonder why the "mode blur" problem can be very important, consider the above figure example taken from the previous SOTA model as observed by D. Choi & K. Min [1]. Before analyzing that figure in more detail, assume that the green bounding box represents the Autonomous Vehicle (AV), the light blue bounding boxes represent surrounding vehicles, and the trajectories (path predictions) of the surrounding vehicles are shown using the solid lines with light blue dots. 
+If you wonder why the "mode blur" problem can be very important, consider the above figure example taken from the previous SOTA model as observed by D. Choi & K. Min [1]. Before analyzing that figure in more detail, assume that the green bounding box represents the Autonomous Vehicle (AV), the light blue bounding boxes represent surrounding vehicles, and the trajectories (path predictions) of the surrounding vehicles are shown using the solid lines with light blue dots.
+
+<div class="row mt-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4">
+        {% include figure.html path="/assets/img/HLS_Paper/scenario2_ModeBlur.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+<div class="caption text-center mb-4">
+    Figure 4. Scenario 2 of the "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
+</div>
 
 In scenario 2, a clear observation here is the overlapping and intersecting trajectories, especially around the intersection. These trajectories seem to be "blurred" between the lanes rather than being clearly defined in one lane or another. While in the scenario 3, despite the more linear environment, we can still observe "mode blur" problems, especially with the trajectories of the vehicle immediately in front of the AV. The trajectories seem to be dispersed across the lane without a distinct path. This issue can lead to the Autonomous Vehicle (AV) having to make frequent adjustments to its path. This is indeed problematic as the AV might need to execute sudden brakes and make abrupt steering changes. This not only results in an uncomfortable ride for the passengers but also raises safety concerns.
+
+<div class="row mt-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4">
+        {% include figure.html path="/assets/img/HLS_Paper/scenario3_ModeBlur.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+<div class="caption text-center mb-4">
+    Figure 5. Scenario 3 of the "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
+</div>
 
 The reason for this problem is the use of Variational Autoencoders (VAEs) in the trajectory forecasting models. Even though VAEs are theoretically elegant, simple to train, and can produce quite good manifold representations (meaning they can capture complex patterns and relationships in data), they have a well-known limitation: the outputs that they generate can often be "blurry", particularly in tasks involving image reconstruction and synthesis. This is the result of the VAE trying to generate an output that's an average representation of potential outcomes. Remember that the main objective of the VAE is to optimize the evidence lower bound (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
 
@@ -104,7 +118,7 @@ Two components in the ELBO:
     </div>
 </div>
 <div class="caption text-center mb-4">
-    Figure 4. Variational Autoencoder (VAE) which uses variational bayesian principle ((Image source : <a href="https://lilianweng.github.io/posts/2018-08-12-vae">Lil'Log</a>)).
+    Figure 6. Variational Autoencoder (VAE) which uses variational bayesian principle ((Image source : <a href="https://lilianweng.github.io/posts/2018-08-12-vae">Lil'Log</a>)).
 </div>
 
 For more detailed understanding, you can take a look at this very good blogpost [Lil'Log](https://lilianweng.github.io/posts/2018-08-12-vae/).
@@ -120,11 +134,21 @@ Based on my understanding so far, there are 4 major contributions of this paper:
 
 1. **Mitigating Mode Blur**: Propose a hierarchical latent structure within a VAE-based forecasting model to avoid "mode blur" problem, enabling clearer and more precise trajectory predictions.
   
-2. **Context Vectors**: Two lane-level context vectors (Vehicle-Lane Interaction (VLI) and Vehichle-Vehicle Interaction (V2I)) are conditioned on the low-level latent variables for more accurate trajectory predictions.
+2. **Context Vectors**: Two lane-level context vectors (VLI and V2I) are conditioned on the low-level latent variables for more accurate trajectory predictions.
 
 3. **Additional Methods**: Introduce positional data preprocessing and GAN-based regularization to further enhance the performance.
 
 4. **Benchmark Performance**: The state-of-the-art performance on two large-scale real-world datasets.
+
+
+<div class="row mt-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4">
+        {% include figure.html path="/assets/img/HLS_Paper/VLI-visualization.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+<div class="caption text-center mb-4">
+    Figure 7. Visualization of VLI (Image source : D. Choi & K. Min [1]).
+</div>
 
 
 ## Hierarchical Latent Structure (HLS)
@@ -155,7 +179,7 @@ The key intuition here is that instead of predicting a single trajectory that's 
     </div>
 </div>
 <div class="caption text-center mb-4">
-    Figure 5. Illustration of the trajectory forecasting distribution generated by HLS model (Image source : D. Choi & K. Min [1]).
+    Figure 8. Illustration of the trajectory forecasting distribution generated by HLS model (Image source : D. Choi & K. Min [1]).
 </div>
 
 The HLS approach consists of two latent variables, a low-level latent variable $$\mathbf{z}_{l}$$ and a high-level latent variable $$\mathbf{z}_{h}$$. The low-level latent variable, $$\mathbf{z}_{l}$$, helps the forecasting model define the mode distribution. The conditional VAE framework is employed, making the model generate realistic trajectories based on the provided past data and scene context. The high-level latent variable, $$\mathbf{z}_{h}$$, models the weights of the modes, determining which lane or trajectory is more probable.
