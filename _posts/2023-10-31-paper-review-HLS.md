@@ -134,7 +134,7 @@ Based on my understanding so far, there are 4 major contributions of this paper:
 
 1. **Mitigating Mode Blur**: Propose a hierarchical latent structure within a VAE-based forecasting model to avoid "mode blur" problem, enabling clearer and more precise trajectory predictions.
   
-2. **Context Vectors**: Two lane-level context vectors (VLI and V2I) are conditioned on the low-level latent variables for more accurate trajectory predictions.
+2. **Context Vectors**: Two lane-level context vectors `VLI` and `V2I` are conditioned on the low-level latent variables for more accurate trajectory predictions.
 
 3. **Additional Methods**: Introduce positional data preprocessing and GAN-based regularization to further enhance the performance.
 
@@ -189,6 +189,44 @@ The HLS approach consists of two latent variables, a low-level latent variable $
 The hierarchical latent structure allows the model to capture the different levels of variability in the data. The low-level captures the possible trajectories, and the high-level captures their probabilities. This layered approach ensures that the model doesn't simply average out all possibilities but respects the diversity and uncertainty inherent in predicting future trajectories.
 
 The paper emphasizes the importance of scene context. The future motion of a vehicle is influenced both by its past motions and by the scene context, which includes surrounding vehicles and the geometry of the road. By incorporating this context into the model, the authors ensure that each predicted mode is feasible and respects the constraints and influences of the environment.
+
+### HLS Overall Architecture
+
+<div class="row mt-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4">
+        {% include figure.html path="/assets/img/HLS_Paper/HLS_Architecture.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+<div class="caption text-center mb-4">
+    Figure 9. Diagram of HLS Architecture (Image source : D. Choi & K. Min [1]).
+</div>
+
+The proposed method from the paper focuses on predicting the future trajectory of vehicles by considering the interaction with the surrounding environment, particularly lanes and other vehicles. The approach is organized into the following modules:
+
+1. **Feature Extraction Module**: 
+   - This module uses three LSTM networks to encode positional data for vehicles and lanes.
+   - Data preprocessing involves calculating speed, heading for vehicles, and tangent vectors for lanes. This is to capture the motion history and lane's orientation, making predictions more accurate.
+
+2. **Scene Context Extraction Module**:
+   - It considers the interactions of a vehicle with its reference lane `VLI` and other surrounding vehicles `V2I`.
+   - For the lane interaction, it uses attention mechanisms to weigh the importance of surrounding lanes relative to the reference lane.
+   - For vehicle-to-vehicle interactions, a Graph Neural Network (GNN) is employed. Only vehicles within a certain distance from the reference lane are considered. The interactions are captured through multiple rounds of message passing, and the final context vector represents the interaction history.
+   - There's an emphasis on the distance threshold, which is empirically set to 5 meters, representing the typical distance between two nearby lane centerlines in straight roads.
+
+3. **Mode Selection Network**:
+   - Determines the weights for different modes of trajectory distribution. Each mode corresponds to a lane, capturing the assumption that the lanes heavily influence the vehicle's motion.
+   - It uses lane-level scene context vectors, which contain information about both lane and vehicle interactions.
+   - A softmax operation is applied to get the final weights, representing the probability distribution over different modes.
+
+4. **Encoder, Prior, and Decoder**:
+   
+   - **Encoder**: This is often referred to as the recognition network. It is responsible for approximating the posterior distribution and is implemented as Multi-Layer Perceptrons (MLPs) with the encoding of the future trajectory $$\tilde{\mathbf{Y}}_{i}$$ and the lane-level scene context vector $$\mathbf{c}_{i}^{m}$$ as inputs. The encoder outputs two vectors, mean $$\mu_{e}$$ and standard deviation $$\sigma_{e}$$. Notably, the encoder is used only during the training phase because the future trajectory $$\mathbf{Y}_{i}$$ is not available during inference.
+
+   - **Prior**: This represents the prior distribution over the latent variable and is also implemented as MLPs. It takes the lane-level scene context vector $$\mathbf{c}_{i}^{m}$$ as its input and outputs mean $$\mu_{p}$$ and standard deviation $$\sigma_{p}$$ vectors.
+
+   - **Decoder**: This network is responsible for generating predictions for the future trajectory $$\hat{\mathbf{Y}}_{i}$$. It does so via an LSTM network. The input to the LSTM consists of an embedding of the predicted position $$\mathbf{e}_{i}^{t}$$ along with the lane-level scene context vector $$\mathbf{c}_{i}^{m}$$ and the latent variable $$\mathbf{z}_{l}$$. The LSTM updates its hidden state $$\mathbf{h}_{i}^{t+1}$$ based on these inputs, and the new predicted position $$\hat{\mathbf{p}}_{i}^{t+1}$$ is generated from this hidden state.
+
+The design of this method aims to provide a holistic understanding of the vehicle's motion by considering both lane and vehicle interactions. Lanes guide the general direction of movement, while nearby vehicles influence more immediate decisions like lane changes or speed adjustments.
 
 ## Conclusion
 
