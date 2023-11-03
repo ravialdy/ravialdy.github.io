@@ -167,7 +167,9 @@ $$
 p\left(\mathbf{Y}_{i} \mid \mathbf{X}_{i}, \mathcal{C}_{i}\right)=\sum_{m=1}^{M} \underbrace{p\left(\mathbf{Y}_{i} \mid E_{m}, \mathbf{X}_{i}, \mathcal{C}_{i}\right)}_{\text {mode }} \underbrace{p\left(E_{m} \mid \mathbf{X}_{i}, \mathcal{C}_{i}\right)}_{\text {weight }}
 $$
 
-As you can see from the mathematical equation above, it shows the trajectory distribution as a weighted sum of simpler distributions. Each mode represents a likely future trajectory.
+The equation above indicates that the trajectory distribution $$ p(\mathbf{Y}_{i} \mid \mathbf{X}_{i}, \mathcal{C}_{i}) $$ can be expressed as a weighted sum of distributions called modes. The term "mode" represents a plausible path, and the term "weight" represents the probability of each mode occurring. 
+
+So, the paper is not only "mixing all possible paths"; it is also considering each possible path (mode) and associating a weight with it to represent its likelihood. 
 
 ### HLS to Avoid "Mode Blur"
 
@@ -188,6 +190,6 @@ The hierarchical latent structure allows the model to capture the different leve
 
 The paper emphasizes the importance of scene context. The future motion of a vehicle is influenced both by its past motions and by the scene context, which includes surrounding vehicles and the geometry of the road. By incorporating this context into the model, the authors ensure that each predicted mode is feasible and respects the constraints and influences of the environment.
 
-### Conclusion
+## Conclusion
 
-In short, the proposed approach addresses the mode blur problem by representing the trajectory distribution as a weighted sum of modes. Instead of blurring all possibilities together, it uses latent variables to capture the inherent variability and uncertainty in trajectory forecasting. This results in predictions that respect the diversity of potential futures while being influenced by past data and scene context.
+This paper proposes a novel and unique way to tackle the problem of "mode blur" predictions in trajectory forecasting. Instead of just mixing all possible paths, it uses a system of weights to represent different possible futures. This is achieved by introducing a hierarchy in latent variables which can make the model to be more accurate in representing different possible outcomes. The use of lane-level context vectors can add more precision, especially in understanding vehicle-lane and vehicle-vehicle interactions. With the additional techniques like positional data processing and GAN-based regularization, this work not only sharpens the predictions but also can outperform the previous SOTA models in terms of accuracy.
