@@ -216,19 +216,21 @@ The proposed method from the paper focuses on predicting the future trajectory o
    - This module uses three LSTM networks to encode positional data for vehicles and lanes.
    - Data preprocessing involves calculating speed, heading for vehicles, and tangent vectors for lanes. This is to capture the motion history and lane's orientation, making predictions more accurate.
 
+
 2. **Scene Context Extraction Module**:
    - It considers the interactions of a vehicle with its reference lane `VLI` and other surrounding vehicles `V2I`.
    - For the lane interaction, it uses attention mechanisms to weigh the importance of surrounding lanes relative to the reference lane.
    - For vehicle-to-vehicle interactions, a Graph Neural Network (GNN) is employed. Only vehicles within a certain distance from the reference lane are considered. The interactions are captured through multiple rounds of message passing, and the final context vector represents the interaction history.
    - There's an emphasis on the distance threshold, which is empirically set to 5 meters, representing the typical distance between two nearby lane centerlines in straight roads.
 
+
 3. **Mode Selection Network**:
    - Determines the weights for different modes of trajectory distribution. Each mode corresponds to a lane, capturing the assumption that the lanes heavily influence the vehicle's motion.
    - It uses lane-level scene context vectors, which contain information about both lane and vehicle interactions.
    - A softmax operation is applied to get the final weights, representing the probability distribution over different modes.
+   
 
 4. **Encoder, Prior, and Decoder**:
-   
    - **Encoder**: This is often referred to as the recognition network. It is responsible for approximating the posterior distribution and is implemented as Multi-Layer Perceptrons (MLPs) with the encoding of the future trajectory $$\tilde{\mathbf{Y}}_{i}$$ and the lane-level scene context vector $$\mathbf{c}_{i}^{m}$$ as inputs. The encoder outputs two vectors, mean $$\mu_{e}$$ and standard deviation $$\sigma_{e}$$. Notably, the encoder is used only during the training phase because the future trajectory $$\mathbf{Y}_{i}$$ is not available during inference.
 
    - **Prior**: This represents the prior distribution over the latent variable and is also implemented as MLPs. It takes the lane-level scene context vector $$\mathbf{c}_{i}^{m}$$ as its input and outputs mean $$\mu_{p}$$ and standard deviation $$\sigma_{p}$$ vectors.
