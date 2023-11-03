@@ -69,7 +69,7 @@ The paper aims to overcome a specific limitation in vehicle trajectory forecasti
     Figure 2. Illustration of the "mode blur" problem in VAE-based generated trajectory forecasts (Image source : D. Choi & K. Min [1]).
 </div>
 
-As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are more often on a "central" path, representing an average of all potential future paths rather than distinct possibilities. This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
+As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are more often or tend on a "central" path, representing an average of all potential future paths rather than distinct possibilities. This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
 
 <div class="row mt-4 justify-content-center">
     <div class="col-12 col-md-8 mx-auto mt-4">
@@ -91,7 +91,7 @@ If you wonder why the "mode blur" problem can be very important, consider the ab
     Figure 4. Scenario 2 of the "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
 </div>
 
-In scenario 2, a clear observation here is the overlapping and intersecting trajectories, especially around the intersection. These trajectories seem to be "blurred" between the lanes rather than being clearly defined in one lane or another. While in the scenario 3, despite the more linear environment, we can still observe "mode blur" problems, especially with the trajectories of the vehicle immediately in front of the AV. The trajectories seem to be dispersed across the lane without a distinct path. This issue can lead to the Autonomous Vehicle (AV) having to make frequent adjustments to its path. This is indeed problematic as the AV might need to execute sudden brakes and make abrupt steering changes. This not only results in an uncomfortable ride for the passengers but also raises safety concerns.
+In scenario 2, a clear observation here is the overlapping and intersecting trajectories, especially around the intersection. These trajectories seem to be "blurred" between the lanes rather than being clearly defined in one lane or another. While in the scenario 3, despite the more linear environment, we can still observe "mode blur" problems, especially with the trajectories of the vehicle immediately in front of the AV. Some trajectories seem to be dispersed across the lane without a distinct path. This issue can lead to the Autonomous Vehicle (AV) having to make frequent adjustments to its path. This is indeed problematic as the AV might need to execute sudden brakes and make abrupt steering changes. This not only results in an uncomfortable ride for the passengers but also raises safety concerns.
 
 <div class="row mt-4 justify-content-center">
     <div class="col-12 col-md-8 mx-auto mt-4">
@@ -102,7 +102,7 @@ In scenario 2, a clear observation here is the overlapping and intersecting traj
     Figure 5. Scenario 3 of the "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
 </div>
 
-The reason for this problem is the use of Variational Autoencoders (VAEs) in the trajectory forecasting models. Even though VAEs are theoretically elegant, simple to train, and can produce quite good manifold representations (meaning they can capture complex patterns and relationships in data), they have a well-known limitation: the outputs that they generate can often be "blurry", particularly in tasks involving image reconstruction and synthesis. This is the result of the VAE trying to generate an output that's an average representation of potential outcomes. Remember that the main objective of the VAE is to optimize the evidence lower bound (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
+The reason for this problem is the use of Variational Autoencoders (VAEs) in the trajectory forecasting models. Even though VAEs are theoretically beautiful, simple to train, and can produce quite good manifold representations (meaning they can capture complex patterns and relationships in data), they have a well-known limitation: the outputs that they generate can often be "blurry", particularly in tasks involving image reconstruction and synthesis. This is the result of the VAE trying to generate an output that's an average representation of potential outcomes. Remember that the main objective of the VAE is to optimize the Evidence Lower Bound Objective (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
 
 $$ 
 \text{ELBO} = \mathbb{E}_{q_\phi(\mathbf{z} \mid \mathbf{x})}[\log p_\theta(\mathbf{x} \mid \mathbf{z})] - D_{KL}(q_\phi(\mathbf{z}|\mathbf{x}) \| p_\theta(\mathbf{z})) 
@@ -228,7 +228,7 @@ The proposed method from the paper focuses on predicting the future trajectory o
    - Determines the weights for different modes of trajectory distribution. Each mode corresponds to a lane, capturing the assumption that the lanes heavily influence the vehicle's motion.
    - It uses lane-level scene context vectors, which contain information about both lane and vehicle interactions.
    - A softmax operation is applied to get the final weights, representing the probability distribution over different modes.
-   
+
 
 4. **Encoder, Prior, and Decoder**:
    - **Encoder**: This is often referred to as the recognition network. It is responsible for approximating the posterior distribution and is implemented as Multi-Layer Perceptrons (MLPs) with the encoding of the future trajectory $$\tilde{\mathbf{Y}}_{i}$$ and the lane-level scene context vector $$\mathbf{c}_{i}^{m}$$ as inputs. The encoder outputs two vectors, mean $$\mu_{e}$$ and standard deviation $$\sigma_{e}$$. Notably, the encoder is used only during the training phase because the future trajectory $$\mathbf{Y}_{i}$$ is not available during inference.
