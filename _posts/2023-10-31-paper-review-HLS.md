@@ -71,12 +71,12 @@ The paper aims to overcome a specific limitation in vehicle trajectory forecasti
 
 As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are more often or tend on a "central" path, representing an average of all potential future paths rather than distinct possibilities. This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
 
-<div class="row mt-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4">
-        {% include figure.html path="/assets/img/HLS_Paper/modeblur-previousSOTA.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+<div class="row mt-4">
+    <div class="col-sm mt-4 mt-md-0">
+        {% include figure.html path="/assets/img/HLS_Paper/modeblur-previousSOTA.png" zoomable=true %}
     </div>
 </div>
-<div class="caption text-center mb-4">
+<div class="caption">
     Figure 3. Example of "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
 </div>
 
@@ -112,12 +112,12 @@ Two components in the ELBO:
    - The first term $$ \mathbb{E}_{q_\phi(\mathbf{z} \mid \mathbf{x})}[\log p_\theta(\mathbf{x} \mid \mathbf{z})] $$ is the reconstruction loss which measures how well the VAE reconstructs the original data when sampled from the approximate posterior $$ q_\phi $$.
    - The second term $$ D_{KL}(q_\phi(\mathbf{z} \mid \mathbf{x}) \| p_\theta(\mathbf{z})) $$ is the Kullback-Leibler divergence between the approximate posterior $$ q_\phi $$ and the prior $$ p_\theta $$. This term acts as a regularizer, pushing the approximate posterior towards the prior.
 
-<div class="row mt-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4">
-        {% include figure.html path="/assets/img/HLS_Paper/VAE_Image.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+<div class="row mt-4">
+    <div class="col-sm mt-4 mt-md-0">
+        {% include figure.html path="/assets/img/HLS_Paper/VAE_Image.png" zoomable=true %}
     </div>
 </div>
-<div class="caption text-center mb-4">
+<div class="caption">
     Figure 6. Variational Autoencoder (VAE) which uses variational bayesian principle ((Image source : <a href="https://sebastianraschka.com/teaching/stat453-ss2021/">Sebastian Raschka slide</a>)).
 </div>
 
@@ -141,24 +141,24 @@ Based on my understanding so far, there are 4 major contributions of this paper:
 4. **Benchmark Performance**: The state-of-the-art performance on two large-scale real-world datasets.
 
 
-<div class="row mt-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4">
-        {% include figure.html path="/assets/img/HLS_Paper/VLI-visualization.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+<div class="row mt-4">
+    <div class="col-sm mt-4 mt-md-0">
+        {% include figure.html path="/assets/img/HLS_Paper/VLI-visualization.png" zoomable=true %}
     </div>
 </div>
-<div class="caption text-center mb-4">
+<div class="caption">
     Figure 7. Visualization of VLI (Image source : D. Choi & K. Min [1]).
 </div>
 
 
 ## Hierarchical Latent Structure (HLS)
 
-<div class="row mt-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4">
-        {% include figure.html path="/assets/img/HLS_Paper/HLS-Avoid-ModeBlur_Example-fotor-20231104133653.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+<div class="row mt-4">
+    <div class="col-sm mt-4 mt-md-0">
+        {% include figure.html path="/assets/img/HLS_Paper/HLS-Avoid-ModeBlur_Example-fotor-20231104133653.png" zoomable=true %}
     </div>
 </div>
-<div class="caption text-center mb-4">
+<div class="caption">
     Figure 8. Example of how HLS avoids "mode blur" problem (Image source : D. Choi & K. Min [1]).
 </div>
 
@@ -201,12 +201,12 @@ The paper emphasizes the importance of scene context. The future motion of a veh
 
 ### HLS Overall Architecture
 
-<div class="row mt-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4">
-        {% include figure.html path="/assets/img/HLS_Paper/HLS_Architecture-fotor-20231104133313.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+<div class="row mt-4">
+    <div class="col-sm mt-4 mt-md-0">
+        {% include figure.html path="/assets/img/HLS_Paper/HLS_Architecture-fotor-20231104133313.png" zoomable=true %}
     </div>
 </div>
-<div class="caption text-center mb-4">
+<div class="caption">
     Figure 10. Diagram of HLS architecture (Image source : D. Choi & K. Min [1]).
 </div>
 
@@ -241,12 +241,12 @@ The design of this method aims to provide a holistic understanding of the vehicl
 
 ## Conclusion
 
-<div class="row mt-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4">
-        {% include figure.html path="/assets/img/HLS_Paper/Example_HLS_nuScene.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+<div class="row mt-4">
+    <div class="col-sm mt-4 mt-md-0">
+        {% include figure.html path="/assets/img/HLS_Paper/Example_HLS_nuScene.png" zoomable=true %}
     </div>
 </div>
-<div class="caption text-center mb-4">
+<div class="caption">
     Figure 11. Example of trajectory forecasting generated by HLS on nuScenes dataset (Image source : D. Choi & K. Min [1]).
 </div>
 
