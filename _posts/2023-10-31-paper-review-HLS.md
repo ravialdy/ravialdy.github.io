@@ -15,7 +15,11 @@ toc:
 
 <style>
 h2 {
-    margin-top: 0.5em;
+    margin-top: 1.25em; /* Increased margin-top */
+    margin-bottom: 0.5em;
+}
+h3 {
+    margin-top: 1.0em; /* Added margin-top for h3 */
     margin-bottom: 0.5em;
 }
 </style>
@@ -200,15 +204,6 @@ The hierarchical latent structure allows the model to capture the different leve
 The paper emphasizes the importance of scene context. The future motion of a vehicle is influenced both by its past motions and by the scene context, which includes surrounding vehicles and the geometry of the road. By incorporating this context into the model, the authors ensure that each predicted mode is feasible and respects the constraints and influences of the environment.
 
 ### HLS Overall Architecture
-
-<div class="row mt-4">
-    <div class="col-sm mt-4 mt-md-0">
-        {% include figure.html path="/assets/img/HLS_Paper/HLS_Architecture-fotor-20231104133313.png" zoomable=true %}
-    </div>
-</div>
-<div class="caption">
-    Figure 10. Diagram of HLS architecture (Image source : D. Choi & K. Min [1]).
-</div>
 
 <div class="row mt-4">
     <div class="col-sm mt-4 mt-md-0">
