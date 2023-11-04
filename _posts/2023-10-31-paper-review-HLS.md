@@ -114,11 +114,11 @@ Two components in the ELBO:
 
 <div class="row mt-4 justify-content-center">
     <div class="col-12 col-md-8 mx-auto mt-4">
-        {% include figure.html path="/assets/img/HLS_Paper/VAE-graphical-model.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.html path="/assets/img/HLS_Paper/VAE_Image.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 <div class="caption text-center mb-4">
-    Figure 6. Variational Autoencoder (VAE) which uses variational bayesian principle ((Image source : <a href="https://lilianweng.github.io/posts/2018-08-12-vae">Lil'Log</a>)).
+    Figure 6. Variational Autoencoder (VAE) which uses variational bayesian principle ((Image source : <a href="https://sebastianraschka.com/teaching/stat453-ss2021/">Sebastian Raschka slide</a>)).
 </div>
 
 For more detailed understanding, you can take a look at this very good blogpost [Lil'Log](https://lilianweng.github.io/posts/2018-08-12-vae/).
@@ -155,7 +155,7 @@ Based on my understanding so far, there are 4 major contributions of this paper:
 
 <div class="row mt-4 justify-content-center">
     <div class="col-12 col-md-8 mx-auto mt-4">
-        {% include figure.html path="/assets/img/HLS_Paper/HLS-Avoid-ModeBlur_Example.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.html path="/assets/img/HLS_Paper/HLS-Avoid-ModeBlur_Example-fotor-20231104133653.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 <div class="caption text-center mb-4">
@@ -203,7 +203,7 @@ The paper emphasizes the importance of scene context. The future motion of a veh
 
 <div class="row mt-4 justify-content-center">
     <div class="col-12 col-md-8 mx-auto mt-4">
-        {% include figure.html path="/assets/img/HLS_Paper/HLS_Architecture.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.html path="/assets/img/HLS_Paper/HLS_Architecture-fotor-20231104133313.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 <div class="caption text-center mb-4">
