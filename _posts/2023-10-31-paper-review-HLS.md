@@ -72,12 +72,12 @@ The paper aims to overcome a specific limitation in vehicle trajectory forecasti
 As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are more often or tend on a "central" path, representing an average of all potential future paths rather than distinct possibilities. This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
 
 <div class="row mt-4">
-    <div class="col-sm mt-4 mt-md-0">
-        {% include figure.html path="/assets/img/HLS_Paper/modeblur-previousSOTA.png" zoomable=true %}
+    <div class="col-12 col-lg mt-4 img-container">
+        {% include figure.html path="/assets/img/HLS_Paper/modeblur-previousSOTA.png" class="img-fluid" zoomable=true %}
     </div>
 </div>
-<div class="caption">
-    Figure 3. Example of "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
+<div class="caption text-center mb-4">
+    Figure 3. Example of "mode blur" problem that exists in the previous SOTA model (Image source: Cui et al, 2021 [2]).
 </div>
 
 If you wonder why the "mode blur" problem can be very important, consider the above figure example taken from the previous SOTA model as observed by D. Choi & K. Min [1]. Before analyzing that figure in more detail, assume that the green bounding box represents the Autonomous Vehicle (AV), the light blue bounding boxes represent surrounding vehicles, and the trajectories (path predictions) of the surrounding vehicles are shown using the solid lines with light blue dots.
@@ -113,11 +113,11 @@ Two components in the ELBO:
    - The second term $$ D_{KL}(q_\phi(\mathbf{z} \mid \mathbf{x}) \| p_\theta(\mathbf{z})) $$ is the Kullback-Leibler divergence between the approximate posterior $$ q_\phi $$ and the prior $$ p_\theta $$. This term acts as a regularizer, pushing the approximate posterior towards the prior.
 
 <div class="row mt-4">
-    <div class="col-sm mt-4 mt-md-0">
-        {% include figure.html path="/assets/img/HLS_Paper/VAE_Image.png" zoomable=true %}
+    <div class="col-12 col-lg mt-4 img-container">
+        {% include figure.html path="/assets/img/HLS_Paper/VAE_Image.png" class="img-fluid" zoomable=true %}
     </div>
 </div>
-<div class="caption">
+<div class="caption text-center mb-4">
     Figure 6. Variational Autoencoder (VAE) which uses variational bayesian principle ((Image source : <a href="https://sebastianraschka.com/teaching/stat453-ss2021/">Sebastian Raschka slide</a>)).
 </div>
 
@@ -200,6 +200,15 @@ The hierarchical latent structure allows the model to capture the different leve
 The paper emphasizes the importance of scene context. The future motion of a vehicle is influenced both by its past motions and by the scene context, which includes surrounding vehicles and the geometry of the road. By incorporating this context into the model, the authors ensure that each predicted mode is feasible and respects the constraints and influences of the environment.
 
 ### HLS Overall Architecture
+
+<div class="row mt-4">
+    <div class="col-sm mt-4 mt-md-0">
+        {% include figure.html path="/assets/img/HLS_Paper/HLS_Architecture-fotor-20231104133313.png" zoomable=true %}
+    </div>
+</div>
+<div class="caption">
+    Figure 10. Diagram of HLS architecture (Image source : D. Choi & K. Min [1]).
+</div>
 
 <div class="row mt-4">
     <div class="col-sm mt-4 mt-md-0">
