@@ -15,13 +15,13 @@ toc:
 
 ## Introduction
 
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="/assets/img/gradcam/gradcam_our_result.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+<div class="row mt-4">
+    <div class="col-12 col-lg mt-4 img-container">
+        {% include figure.html path="/assets/img/HLS_Paper/modeblur-previousSOTA.png" class="img-fluid" zoomable=true %}
     </div>
 </div>
-<div class="caption">
-    Figure 1. Grad-CAM visualization that we will implement in this blogpost.
+<div class="caption text-center mb-4">
+    Figure 3. Example of "mode blur" problem that exists in the previous SOTA model (Image source: Cui et al, 2021 [2]).
 </div>
 
 Convolutional Neural Networks (CNNs) are amazing. They can recognize cats in pictures, help self-driving cars see, and even beat humans at games. But what most people see about neural networks is this, they're like magic boxes: data goes in, and the answer comes out, without knowing what happens in between. So, how do we know what part of an image the network finds important for its decision? Introducing Grad-CAM method, a technique that helps us "see" what the network is looking at.
