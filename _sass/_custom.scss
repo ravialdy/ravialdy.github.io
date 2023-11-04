@@ -3,4 +3,8 @@
     max-width: 100%; // Image max width is 100% of the container
     height: auto; // Height is set to auto to maintain aspect ratio
     max-height: 500px; // Set a max-height if needed
-  }  
+  } 
+  
+  .img-container {
+    text-align: center;
+  }

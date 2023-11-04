@@ -24,12 +24,12 @@ h2 {
 
 I'm very excited to present a review of the paper titled "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting" [1] authored by Dooseop Choi and KyoungWook Min. This paper is a very good work proved by its acceptance at the European Conference on Computer Vision (ECCV) 2022. For you who are not familiar with academia world in the AI field yet, ECCV is one of the most prestigious conferences in the domain of computer vision and having a paper accepted there speaks volumes about the quality and relevance of the research. I truly believe this research is important for the autonomous driving, particularly in trajectory forecasting.
 
-<div class="row mt-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4">
-        {% include figure.html path="/assets/img/HLS_Paper/HLS.gif" class="img-fluid rounded z-depth-1" zoomable=true %}
+<div class="row mt-4">
+    <div class="col-sm mt-4 mt-md-0">
+        {% include figure.html path="/assets/img/HLS_Paper/HLS.gif" zoomable=true %}
     </div>
 </div>
-<div class="caption text-center mb-4">
+<div class="caption">
     Figure 1. Illustration of how the proposed Hierarchical Latent Structure (HLS) is used in the trajectory forecasting (Image source : D. Choi & K. Min [1]).
 </div>
 
@@ -61,7 +61,7 @@ I'm very excited to present a review of the paper titled "Hierarchical Latent St
 The paper aims to overcome a specific limitation in vehicle trajectory forecasting models that leverage Variational Autoencoders (VAEs) concept called as the "mode blur" problem. For clearer illustration, please take a look at the figure below (this corresponds to the figure 1 in the reference paper [1]) :
 
 <div class="row mt-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4">
+    <div class="col-12 col-md-8 mx-auto mt-4 img-container">
         {% include figure.html path="/assets/img/HLS_Paper/figure1.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
@@ -185,7 +185,7 @@ So, the paper is not only "mixing all possible paths"; it is also considering ea
 The key intuition here is that instead of predicting a single trajectory that's an average of all possible futures, the proposed model considers each possible trajectory (mode) separately. By modeling each mode with a latent variable, the model can sample trajectories from these modes based on their weights or importance. This allows for diverse trajectory predictions rather than a blurred average.
 
 <div class="row mt-4 justify-content-center">
-    <div class="col-12 col-md-8 mx-auto mt-4">
+    <div class="col-12 col-md-8 mx-auto mt-4 img-container">
         {% include figure.html path="/assets/img/HLS_Paper/figure1b_mode-separately.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
