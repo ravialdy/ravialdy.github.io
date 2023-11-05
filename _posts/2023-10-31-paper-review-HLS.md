@@ -190,6 +190,8 @@ $$
 
 The equation above indicates that the trajectory distribution $$ p(\mathbf{Y}_{i} \mid \mathbf{X}_{i}, \mathcal{C}_{i}) $$ can be expressed as a weighted sum of distributions called modes. The term "mode" represents a plausible path, and the term "weight" represents the probability of each mode occurring. 
 
+Remember that in a standard VAE, the generation process can sometimes collapse to the mean, resulting in less diverse samples. However, in a hierarchical Conditional VAE (C-VAE) which we will discuss later, the lower levels of the hierarchy are responsible for generating multiple potential trajectories and the higher levels can assign probabilities to the generated trajectories given a certain condition (like the current state of the car and its environment). This doesn’t mean picking the "average" path but selecting from a distribution of paths where each path is weighted according to its fit to the current context.
+
 So, the paper is not only "mixing all possible paths"; it is also considering each possible path (mode) and associating a weight with it to represent its likelihood. 
 
 ### HLS to Avoid "Mode Blur"
@@ -213,7 +215,7 @@ The HLS approach consists of two latent variables within a conditional VAE frame
 
 The low-level latent variable helps the forecasting model define the mode distribution. This captures the variation within a mode – essentially the variety of possible trajectories given that a vehicle has chosen a particular lane. The high-level latent variable models the weights of the modes, deciding which trajectories are more likely than others based on the current situation.
 
-The conditional VAE framework is applied, making the model generate realistic trajectories based on the provided past data and scene context by optimizing a modified ELBO. This is done by training the model to reconstruct the future trajectories ($$ \mathbf{Y}_i $$) from the latent variables, while also ensuring that the latent variables are regularized to follow a prior distribution. Here is the mathematical equation of that new objective function :
+The C-VAE framework is applied, making the model generate realistic trajectories based on the provided past data and scene context by optimizing a modified ELBO. This is done by training the model to reconstruct the future trajectories ($$ \mathbf{Y}_i $$) from the latent variables, while also ensuring that the latent variables are regularized to follow a prior distribution. Here is the mathematical equation of that new objective function :
 
 $$
 \begin{aligned}
@@ -227,10 +229,6 @@ As you can see from the equation above, the expectation $$ \mathbb{E}_{\mathbf{z
 In addition to that, the KL divergence term in the modified ELBO is weighted by a factor $$ \beta $$. By adjusting this parameter, we can find a trade-off between reconstruction and KL divergence aspects, potentially avoiding the mode collapse problem, where the model generates outputs that are too similar to each other, or the blurring issue, where the details in the reconstructed outputs become indistinct. Adjusting $$ \beta $$ allows for a more flexible and controlled latent space representation, which is crucial for generating diverse and sharp outputs.
 
 Moreover, if the prior $$ p_{\gamma}(\mathbf{z}_l \mid \mathbf{X}_i, \mathcal{C}_i^{m}) $$ is conditioned on the input data $$ \mathbf{X}_i $$ and additional context $$ \mathcal{C}_i^{m} $$, as suggested by the modified ELBO, it becomes a conditional prior. This implies that the model learns a different prior for different subsets of the data, which is guided by the input and the context. When the conditional prior is a complex distribution such as a mixture of Gaussians, it has multiple modes corresponding to different data variations. Thus, it can produce a richer variety of outputs, addressing the mode blur issue that is often seen when the model collapses to a few dominant modes.
-
-This hierarchical approach utilizes the concept of the conditional prior, enabling the model to not only generate diverse trajectories but also to evaluate and weight them according to their likelihood in given conditions, which is the essence of the modified ELBO's objective.
-
-Remember that in a standard VAE, the generation process can sometimes collapse to the mean, resulting in less diverse samples. However, in a hierarchical C-VAE, the lower levels of the hierarchy are responsible for generating multiple potential trajectories and the higher levels can assign probabilities to the generated trajectories given a certain condition (like the current state of the car and its environment). This doesn’t mean picking the "average" path but selecting from a distribution of paths where each path is weighted according to its fit to the current context.
 
 By having a hierarchical structure, the C-VAE can separate the task of generating trajectories (done by low-level latent variables) from the task of weighting them according to their likelihood (achieved with high-level latent variables). Thus, when it generates a sample, it's not just picking the average or most common path but rather sampling from a distribution of paths that are likely under current conditions.
 
