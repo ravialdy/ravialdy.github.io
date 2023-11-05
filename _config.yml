@@ -101,7 +101,7 @@ zotero_username: # your zotero username
 wechat_qr: # filename of your wechat qr-code saved as an image (e.g., wechat-qr.png if saved to assets/img/wechat-qr.png)
 
 contact_note: >
-  You can even add a little note about which of these is the best way to reach you.
+  If you are interested with my work, let me know :)
 
 # -----------------------------------------------------------------------------
 # Analytics and search engine verification
@@ -113,22 +113,26 @@ cronitor_analytics:  # cronitor RUM analytics site ID (format: XXXXXXXXX)
 google_site_verification:  # your google-site-verification ID (Google Search Console)
 bing_site_verification:  # out your bing-site-verification ID (Bing Webmaster)
 
-# -----------------------------------------------------------------------------
-# Blog
-# -----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+Blog
+-----------------------------------------------------------------------------
 
-# blog_name: Ravialdy's Blog # blog_name will be displayed in your blog page
-# blog_nav_title: blog # your blog must have a title for it to be displayed in the nav bar
-# blog_description: a simple whitespace theme for academics
-# permalink: /blog/:year/:title/
+blog_name: Ravialdy's Blog # blog_name will be displayed in your blog page
+blog_nav_title: blog # your blog must have a title for it to be displayed in the nav bar
+blog_description: a simple whitespace theme for academics
+permalink: /blog/:year/:title/
 
-# # Pagination
-# pagination:
-#   enabled: true
+# Pagination
+pagination:
+  enabled: true
+  per_page: 10 # Adjust the number of posts per page as desired
+  limit: 0 # Limit of total posts to show (0 for unlimited)
+  sort_field: 'date'
+  sort_reverse: true
 
-# related_blog_posts:
-#   enabled: true
-#   max_related: 5
+related_blog_posts:
+  enabled: true
+  max_related: 5
 
 # Giscus comments (RECOMMENDED)
 # Follow instructions on https://giscus.app/ to setup for your repo to fill out
