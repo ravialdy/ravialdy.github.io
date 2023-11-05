@@ -26,7 +26,9 @@ h3 {
 
 ## Introduction
 
-I'm very excited to present a review of the paper titled "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting" [1] authored by Dooseop Choi and KyoungWook Min. This paper is a very good work proved by its acceptance at the European Conference on Computer Vision (ECCV) 2022. For you who are not familiar with academia world in the AI field yet, ECCV is one of the most prestigious conferences in the domain of computer vision and having a paper accepted there speaks volumes about the quality and relevance of the research. I truly believe this research is important for the autonomous driving, particularly in trajectory forecasting.
+I'm very excited to present a review of the paper titled "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting" [1] authored by Dooseop Choi and KyoungWook Min. This paper is a very good work proved by its acceptance at the European Conference on Computer Vision (ECCV) 2022. 
+
+For you who are not familiar with academia world in the AI field yet, ECCV is one of the most prestigious conferences in the domain of computer vision and having a paper accepted there speaks volumes about the quality and relevance of the research. I truly believe this research is important for the autonomous driving, particularly in trajectory forecasting.
 
 <div class="row mt-4">
     <div class="col-sm mt-4 mt-md-0">
@@ -209,8 +211,8 @@ The conditional VAE framework is applied, making the model generate realistic tr
 
 $$
 \begin{aligned}
-\mathcal{L}_{E L B O}=-\mathbb{E}_{\mathbf{z}_{l} \sim q_{\phi}}\left[\operatorname { l o g } p _ { \theta } \left(\mathbf{Y}_{i} \mid \mathbf{z}_{l},\right.\right. & \left.\left.\mathbf{X}_{i}, \mathcal{C}_{i}^{m}\right)\right] \\
-& +\beta K L\left(q_{\phi}\left(\mathbf{z}_{l} \mid \mathbf{Y}_{i}, \mathbf{X}_{i}, \mathcal{C}_{i}^{m}\right) \| p_{\gamma}\left(\mathbf{z}_{l} \mid \mathbf{X}_{i}, \mathcal{C}_{i}^{m}\right)\right),
+\mathcal{L}_{ELBO} = & -\mathbb{E}_{\mathbf{z}_{l} \sim q_{\phi}}\left[\log p_{\theta}\left(\mathbf{Y}_{i} \mid \mathbf{z}_{l}, \mathbf{X}_{i}, \mathcal{C}_{i}^{m}\right)\right] \\
+& + \beta KL\Big(q_{\phi}\left(\mathbf{z}_{l} \mid \mathbf{Y}_{i}, \mathbf{X}_{i}, \mathcal{C}_{i}^{m}\right)\| p_{\gamma}\left(\mathbf{z}_{l} \mid \mathbf{X}_{i}, \mathcal{C}_{i}^{m}\right)\Big),
 \end{aligned}
 $$
 
