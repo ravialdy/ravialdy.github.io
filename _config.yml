@@ -113,9 +113,9 @@ cronitor_analytics:  # cronitor RUM analytics site ID (format: XXXXXXXXX)
 google_site_verification:  # your google-site-verification ID (Google Search Console)
 bing_site_verification:  # out your bing-site-verification ID (Bing Webmaster)
 
------------------------------------------------------------------------------
-Blog
------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Blog
+# -----------------------------------------------------------------------------
 
 blog_name: Ravialdy's Blog # blog_name will be displayed in your blog page
 blog_nav_title: blog # your blog must have a title for it to be displayed in the nav bar
