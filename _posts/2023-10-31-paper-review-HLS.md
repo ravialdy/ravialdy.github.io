@@ -127,9 +127,13 @@ Two components in the ELBO:
 
 For more detailed understanding, you can take a look at this very good blogpost [Lil'Log](https://lilianweng.github.io/posts/2018-08-12-vae/).
 
-As you can see from the objective function above, the VAE wants to minimize reconstruction loss, while the KL divergence term encourages the VAE not to create very distinct and separate clusters for each mode in the latent space but to keep them close to the prior. This might cause different modes to be close in the latent space, instead of committing to a particular mode, which might results in generating something in-between, leading to blurry results in the case of the reference paper [1], generated trajectories that lie between adjacent lanes.
+As you can see from the objective function above, the VAE wants to minimize reconstruction loss, while the KL divergence term encourages the VAE not to create very distinct and separate clusters for each mode in the latent space but to keep them close to the prior. When the VAE learns to represent data in the latent space, it must balance these two terms. It wants to spread out the representations to minimize reconstruction loss but is also constrained by the KL divergence to keep these representations from getting too dispersed.
 
-So in the context of trajectory planning, the "mode blur" problem is most likely happened due to the balance between reconstruction loss (how well the trajectory is reconstructed) and the KL divergence (pushing the trajectory's latent representation towards the prior). When generating data (like trajectories or images), VAE might be uncertain about which mode (or cluster) of the latent space a particular data point belongs to. 
+If the model emphasize too much on minimizing the KL divergence (i.e., ensuring that the latent representations stay close to a standard Gaussian prior), it might not create very distinct clusters for different modes in the latent space. In other words, it might exceed the amount of dispersion needed to clearly separate distinct data modalities or "modes."
+
+As a consequence, during the generation phase, when the model samples from these latent representations, it may end up sampling from "in-between" spaces if the distinct modes are not well-separated. This results in outputs that are a blend of several possible outcomes rather than committing to a single, distinct outcome.
+
+So in the context of trajectory planning, the "mode blur" problem is most likely happened due to the balancing act between reconstruction loss and the KL divergence done by the ELBO objective function. When generating data, the VAE may generate a predicted trajectory that doesn't clearly commit to any of the possible paths (like staying in the lane, changing lanes, turning, etc.). Instead, it generates a trajectory that lies somewhere in between.
 
 
 ## Key Contributions
