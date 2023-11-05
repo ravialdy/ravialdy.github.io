@@ -138,7 +138,7 @@ So in the context of trajectory planning, the "mode blur" problem is most likely
 
 ## Key Contributions
 
-Based on my understanding so far, there are 4 major contributions of this paper:
+Based on my understanding so far, there are 4 major contributions of this paper [1]:
 
 1. **Mitigating Mode Blur**: Propose a hierarchical latent structure within a VAE-based forecasting model to avoid "mode blur" problem, enabling clearer and more precise trajectory predictions.
   
@@ -172,9 +172,9 @@ Based on my understanding so far, there are 4 major contributions of this paper:
 
 ### Introduction to HLS
 
-In complex traffic scenes with `N` vehicles, predicting the future trajectory of each vehicle can be challenging. The Hierarchical Latent Structure (HLS) proposed by D. Choi & K. Min [1] aims to generate plausible trajectory distributions, taking into consideration both individual vehicle history and the overall scene.
+In the complex traffic scenes with `N` vehicles, predicting the future trajectory of each vehicle can be challenging. The Hierarchical Latent Structure (HLS) proposed by D. Choi & K. Min [1] aims to generate plausible trajectory distributions, taking into consideration both individual vehicle history and the overall scene.
 
-You may wonder how that kind of approach can avoid the "mode blur" problem that happens in the previous work. To answer that, we need to first recall that the mode blur problem arises when a model averages over possible future trajectories, resulting in a prediction that is a mix of multiple plausible outcomes.
+You may wonder how that kind of approach can avoid the "mode blur" problem that happens in the previous work. To answer that, we need to first recall that the mode blur problem arises when a model seeks to reconstruct complex distributions but is constrained by a regularization term (the KL divergence) which can lead to an averaging effect over possible future trajectories, resulting in a prediction that is a mix of multiple plausible outcomes.
 
 This paper aims to generate a trajectory distribution $$p\left(\mathbf{Y}_{i} \mid \mathbf{X}_{i}, \mathcal{C}_{i}\right)$$ for vehicles. This distribution is supposed to predict the future positions $$\mathbf{Y}_{i}$$ based on the past positional history $$\mathbf{X}_{i}$$ and the scene context $$\mathcal{C}_{i}$$.
 
