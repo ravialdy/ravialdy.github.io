@@ -69,15 +69,19 @@ For a long time, people used something called a "value-function approach" to do 
 
 ## The Policy Gradient Theorem
 
-Before we delve into the details of REINFORCE algorithm, let's clarify why policy gradients can be a game-changer in the world of RL. The reason for this is that REINFORCE itself belongs to this approach. Unlike traditional value-based methods which assess the "goodness" of states or state-action pairs, policy gradients aim to directly tweak the policy—a mapping from states to actions. This approach can avoid at least three potential problems:
+Before we delve into the details of REINFORCE algorithm, let's clarify why policy gradients can be a game-changer in the world of RL. The reason for this is that REINFORCE itself belongs to this approach. Unlike traditional value-based methods which assess the "goodness" of states or state-action pairs, policy gradients aim to directly optimize the policy. This approach can avoid at least three potential problems:
 
-  - **Curse of Dimensionality**: Value-based methods often suffer from the "curse of dimensionality." The state-action space can grow exponentially with the number of features describing the state and the range of actions available. This makes the computational cost expensive.
+  - **Curse of Dimensionality**: Value-based methods require you to estimate a value for every possible state or state-action pair. As the number of states and actions increases, the size of the value function grows exponentially.
 
-  - **Non-Markovian Environments**: In some cases, the environment is not following the Markov Property, where the future state depends only on the current state and action. In that case, using a value function to capture the "goodness" of a state can be misleading or incomplete.
+  - **Non-Markovian Environments**: In some cases, the environment is not following the Markov Property, where the future state depends only on the current state and action. Policy gradient methods do not rely on the Markov property because they do not predict future values; they only need to evaluate the outcomes of current actions.
 
-  - **Exploration vs. Exploitation**: Value-based methods often cause the agent to stick to known high-value states and actions, missing out on potentially better options. While exploration strategies exist, they add another layer of complexity to the algorithm.
+  - **Exploration vs. Exploitation**: Value-based methods often cause the agent to stick to known high-value states and actions, missing out on potentially better options. By adjusting the policy parameters, policy gradient methods can encourage the agent to explore different actions with probabilities, rather than committing to the action with the highest estimated value.
 
-In simpler terms, by focusing directly on optimizing the policy, policy gradient methods can sidestep many of these issues. They are particularly well-suited for high-dimensional or continuous action spaces, can naturally accommodate stochastic policies, and are less sensitive to the challenges associated with value function approximation.
+In simpler terms, by focusing directly on optimizing the policy, policy gradient methods can sidestep many of these issues since it works with a much smaller set of parameters. In other words, the key difference is that the size of the parameter set in policy gradient methods is determined by the complexity of the policy representation (e.g., the architecture of the neural network), not by the size of the state or action space.
+
+For example, suppose you have a neural network with 1000 parameters. It can still process thousands or even millions of different states and output actions for each of them because the same parameters are used to evaluate every state through the network's forward pass. This means that even for complex environments, the number of parameters doesn't necessarily increase with the complexity of the state space, which is often the case with value-based methods.
+
+Thus, policy gradient methods are particularly well-suited for high-dimensional or continuous action spaces, can naturally accommodate stochastic policies, and are less sensitive to the challenges associated with value function approximation.
 
 ### The Formal Objective
 
