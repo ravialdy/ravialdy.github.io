@@ -26,7 +26,7 @@ h3 {
 
 ## Introduction
 
-Welcome to my blog post! Today we're going to discuss about a very fascinating topic in the world of AI and Reinforcement Learning (RL) — the Policy Gradient REINFORCE Method. This method is quite famous for solving some complex problems in RL. Don't worry if you're new to this field; I'll try to keep things simple and easy to understand. First of all, I will be focusing on the background of the REINFORCE method and why it was proposed in the first place.
+Welcome to my blog post! Today we are going to discuss about a very fascinating topic in the world of AI and Reinforcement Learning (RL) — the Policy Gradient REINFORCE Method. This method is quite famous for solving some complex problems in RL. Don't worry if you're new to this field; I'll try to keep things simple and easy to understand. First of all, I will be focusing on the background of the REINFORCE method and why it was proposed in the first place.
 
 ### Brief Recap about Reinforcement Learning
 
@@ -65,19 +65,19 @@ For a long time, people used something called a "value-function approach" to do 
 
   - **Sensitive Choices**: A tiny change in the calculated value can dramatically change the action taken by the robot. This is risky because we want the robot to learn stable behavior.
 
-  - **Convergence Issues**: Looks like a fancy term, but it simply means that using the value-function approach does not always guarantee that the robot will find the best way to act in all situations.
+  - **Convergence Issues**: This simply means that using the value-function approach does not always guarantee that the robot will find the best way to act in all situations.
 
 ## The Policy Gradient Theorem
 
-Before we delve into the details of REINFORCE algorithm, let's clarify why policy gradients can be a game-changer in the world of RL. The reason for this is that REINFORCE itself belongs to this approach. Unlike traditional value-based methods which assess the "goodness" of states or state-action pairs, policy gradients aim to directly optimize the policy. This approach can avoid at least three potential problems:
+Before we delve into the details of REINFORCE algorithm, we need to understand what policy gradient really is and why it can be a game-changer in the world of RL. The reason for this is that REINFORCE itself belongs to this approach. Unlike traditional value-based methods which assess the "goodness" of states or state-action pairs, policy gradients aim to directly optimize the policy. Let's take a look at what kind of potential problems this approach has and how policy gradient methods can avoid those issues:
 
-  - **Curse of Dimensionality**: Value-based methods require you to estimate a value for every possible state or state-action pair. As the number of states and actions increases, the size of the value function grows exponentially.
+  - **Curse of Dimensionality**: Value-based methods require an estimated value for every possible state or state-action pair. As the number of states and actions increases, the size of the value function grows exponentially. By focusing directly on optimizing the policy, policy gradient methods can avoid this issue since it works with a much smaller set of parameters.
 
   - **Non-Markovian Environments**: In some cases, the environment is not following the Markov Property, where the future state depends only on the current state and action. Policy gradient methods do not rely on the Markov property because they do not predict future values; they only need to evaluate the outcomes of current actions.
 
   - **Exploration vs. Exploitation**: Value-based methods often cause the agent to stick to known high-value states and actions, missing out on potentially better options. By adjusting the policy parameters, policy gradient methods can encourage the agent to explore different actions with probabilities, rather than committing to the action with the highest estimated value.
 
-In simpler terms, by focusing directly on optimizing the policy, policy gradient methods can sidestep many of these issues since it works with a much smaller set of parameters. In other words, the key difference is that the size of the parameter set in policy gradient methods is determined by the complexity of the policy representation (e.g., the architecture of the neural network), not by the size of the state or action space.
+In other words, the key difference is that the size of the parameter set in policy gradient methods is determined by the complexity of the policy representation (e.g., the architecture of the neural network), not by the size of the state or action space.
 
 For example, suppose you have a neural network with 1000 parameters. It can still process thousands or even millions of different states and output actions for each of them because the same parameters are used to evaluate every state through the network's forward pass. This means that even for complex environments, the number of parameters doesn't necessarily increase with the complexity of the state space, which is often the case with value-based methods.
 
@@ -107,55 +107,45 @@ This equation essentially tells us how a change in $$ \theta $$ will influence t
 
 ### The Log-Derivative Trick
 
-For effective computation of the gradient, the log-derivative trick is often employed. This trick allows us to rephrase the gradient as an expectation:
+For effective computation of the gradient, the log-derivative trick is often employed. It allows us to express the derivative of the policy with respect to its parameters $$ \theta $$ in a simpler form. The trick is based on the identity:
 
 $$
-\frac{\partial \rho(\pi)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) Q^{\pi}(s_t, a_t) \right]
+\nabla_{\theta} \pi(a | s) = \pi(a | s) \nabla_{\theta} \log \pi(a | s)
 $$
 
-This is essentially a restatement of the gradient of a function with respect to its logarithm, which can be formally described as:
+This identity is derived from the property of logarithms that the derivative of the log of a function is the derivative of the function divided by the function itself:
 
 $$
-\nabla_{\theta} \pi(a \mid s) = \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s)
+\nabla_{\theta} \log \pi(a | s) = \frac{\nabla_{\theta} \pi(a | s)}{\pi(a | s)}
 $$
 
-To prove this, we'll take the derivative of $$ \log \pi(a \mid s) $$ with respect to $$ \theta $$:
+Therefore, multiplying both sides by $$ \pi(a | s) $$, we get:
 
 $$
-\nabla_{\theta} \log \pi(a \mid s) = \frac{\nabla_{\theta} \pi(a \mid s)}{\pi(a \mid s)}
+\nabla_{\theta} \pi(a | s) = \pi(a | s) \nabla_{\theta} \log \pi(a | s)
 $$
 
-Rearranging the terms gives:
+### The Role of Log-Derivative Trick
+
+Now, let's see how this trick fits into the policy gradient equation. When we substitute $$ \nabla_{\theta} \pi(s, a) $$ using the log-derivative trick into the Policy Gradient Theorem, we get:
 
 $$
-\nabla_{\theta} \pi(a \mid s) = \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s)
+\frac{\partial \rho(\pi)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \pi(s, a) \nabla_{\theta} \log \pi(s, a) Q^{\pi}(s, a)
 $$
 
-Now, let's see how this trick fits into the policy gradient equation. The original policy gradient theorem can be expressed as:
+The sum over states and actions weighted by the state distribution $$ d^{\pi}(s) $$ and the policy $$ \pi(s, a) $$ can be seen as an expectation. This is because the expectation of a random variable is the sum of the possible values of the random variable weighted by their probabilities. Thus, we can rewrite the above sum as:
 
 $$
-\frac{\partial \rho(\pi)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \nabla_{\theta} \pi(s, a) Q^{\pi}(s, a)
+\frac{\partial \rho(\pi)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t | s_t) Q^{\pi}(s_t, a_t) \right]
 $$
 
-Here, $$ d^{\pi}(s) $$ represents the stationary distribution of states when following the policy $$ \pi $$.
+Here, $$ \mathbb{E}_{\tau \sim \pi_{\theta}} $$ denotes the expected value when the trajectory $$ \tau $$ (a sequence of states and actions) is sampled according to the policy $$ \pi $$ parameterized by $$ \theta $$. This form is computationally more convenient because we can estimate the expectation by sampling trajectories and calculating the average over them, which is the basis for Monte Carlo methods used in REINFORCE and other policy gradient algorithms.
 
-When you apply the Log-Derivative Trick to $$ \nabla_{\theta} \pi(s, a) $$, it becomes $$ \pi(s, a) \nabla_{\theta} \log \pi(s, a) $$. Substituting this into the policy gradient theorem, and then rewriting the sum as an expectation, we obtain:
+For those who are not familiar with Monte Carlo approach, it is basically the process of sampling and averaging for estimating expected values in situations with large or infinite state spaces.
 
-$$
-\frac{\partial \rho(\pi)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) Q^{\pi}(s_t, a_t) \right]
-$$
+This formulation allows us to sample trajectories by running the policy in the environment, calculate the return $$ Q^{\pi}(s_t, a_t) $$ for each state-action pair in the trajectory, and then adjust the parameters $$ \theta $$ in the direction that increases the probability of good actions (those with high returns).
 
-In this expression, $$ \tau $$ symbolizes a trajectory, and $$ \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) $$ is the gradient of the log-probability of the action taken at time $$ t $$.
-
-This brings us to the policy gradient equation that I mentioned earlier. But why is this necessary? Computing gradients directly can be computationally expensive or even infeasible, especially when you are dealing with complex policies parameterized by neural networks.
-
-Let's say you have a term like $$ \pi(a \mid s) $$ that depends on some parameters $$ \theta $$. Taking the derivative of this term directly with respect to $$ \theta $$ might be challenging. However, the Log-Derivative Trick provides a workaround. It transforms this term into:
-
-$$
-\nabla_{\theta} \pi(a \mid s) = \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s)
-$$
-
-Notice that $$ \nabla_{\theta} \log \pi(a \mid s) $$ is usually easier to compute. Also, this trick allows us to rephrase the Policy Gradient Theorem in a more computationally friendly manner.
+Thus, the log-derivative trick turns the gradient computation into a weighted sum where the weights are the returns $$ Q^{\pi}(s_t, a_t) $$, and the sum is over the log probabilities of the actions taken. This allows us to sample actions according to the policy and adjust the parameters in a way that increases the expected return, which is exactly what we want to achieve in policy gradient methods.
 
 ### Why Should We Care About Policy Gradients?
 
@@ -165,7 +155,7 @@ Notice that $$ \nabla_{\theta} \log \pi(a \mid s) $$ is usually easier to comput
 
 3. **Sample Efficiency**: Because the focus is on policy improvement, fewer samples are often required to learn a good policy, making the method generally more efficient.
 
-By understanding the Policy Gradient Theorem and its underlying principles, you'll find that it's a fundamental building block for more advanced algorithms in the RL domain. Not only does it provide a method to directly optimize the policy, but it also offers the flexibility, stability, and efficiency required for real-world applications.
+By understanding the Policy Gradient Theorem and its underlying principles, you'll find that it's a fundamental building block for more advanced algorithms in the RL domain. Now, we can continue to the next section which is discussing about REINFORCE algorithm.
 
 
 ## Introducing REINFORCE Algorithm
