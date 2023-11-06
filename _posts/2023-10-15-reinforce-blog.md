@@ -55,10 +55,6 @@ The agent follows a "policy" $$ \pi(s, a) $$, which tells it what action $$ a $$
 
 - **Reward**: A scalar value, often denoted by $$ r $$ or $$ r_t $$, that the environment returns in response to the agent's action.
 
-### What Are We Trying to Optimize?
-
-The ultimate goal in the RL method is to maximize the long-term reward. We often denote this as $$ \rho(\pi) $$. This is the average reward the agent expects to get over time while following policy $$ \pi $$.
-
 ## The Problem with Traditional Methods
 
 In RL, we often want a computer to learn how to make decisions by itself. For instance, think of a game where a robot must find its way out of a maze. The robot learns by trying different paths and seeing which ones get it out of the maze faster. Sounds simple, right? But when the maze is large and complicated, the number of decisions the robot must make becomes huge. This is where function approximators like neural networks come in handy; they help the robot generalize from its experience to make better decisions.
@@ -95,7 +91,7 @@ In this equation, $$ \gamma $$ is the discount factor, $$ \theta $$ are the para
 
 ### The Policy Gradient Theorem in Detail
 
-To find the maximum of this objective function, we need its gradient concerning $$ \theta $$. The Policy Gradient Theorem provides this invaluable piece of information. Formally, it is expressed as:
+To find the maximum of this objective function, we need its gradient w.r.t $$ \theta $$. The Policy Gradient Theorem provides this invaluable piece of information. Formally, it is expressed as:
 
 $$
 \frac{\partial \rho(\pi)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \frac{\partial \pi(s, a)}{\partial \theta} Q^{\pi}(s, a)
@@ -103,7 +99,7 @@ $$
 
 Here, $$ d^{\pi}(s) $$ represents the stationary distribution of states when following policy $$ \pi $$, and $$ Q^{\pi}(s, a) $$ is the expected return of taking action $$ a $$ in state $$ s $$ while following $$ \pi $$.
 
-This equation essentially tells us how a minute change in $$ \theta $$ will influence the expected return $$ \rho(\pi) $$.
+This equation essentially tells us how a change in $$ \theta $$ will influence the expected return $$ \rho(\pi) $$.
 
 ### The Log-Derivative Trick
 
