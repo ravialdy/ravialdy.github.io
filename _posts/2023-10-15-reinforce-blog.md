@@ -13,6 +13,17 @@ toc:
   sidebar: left  # or 'right'
 ---
 
+<style>
+h2 {
+    margin-top: 1.25em; /* Increased margin-top */
+    margin-bottom: 0.5em;
+}
+h3 {
+    margin-top: 1.0em; /* Added margin-top for h3 */
+    margin-bottom: 0.5em;
+}
+</style>
+
 ## Introduction
 
 Welcome to my blog post! Today we're going to discuss about a very fascinating topic in the world of AI and Reinforcement Learning (RL) — the Policy Gradient REINFORCE Method. This method is quite famous for solving some complex problems in RL. Don't worry if you're new to this field; I'll try to keep things simple and easy to understand. First of all, I will be focusing on the background of the REINFORCE method and why it was proposed in the first place.
