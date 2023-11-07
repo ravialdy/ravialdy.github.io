@@ -1,6 +1,6 @@
 ---
 layout: cv
-title: cV
+title: cv
 nav: true
 nav_order: 3
 cv_pdf: /assets/pdf/CV_Ravialdy (October 2023) (3).pdf
