@@ -110,19 +110,19 @@ This equation essentially tells us how a change in $$ \theta $$ will influence t
 For effective computation of the gradient, the log-derivative trick is often employed. It allows us to express the derivative of the policy with respect to its parameters $$ \theta $$ in a simpler form. The trick is based on the identity:
 
 $$
-\nabla_{\theta} \pi(a | s) = \pi(a | s) \nabla_{\theta} \log \pi(a | s)
+\nabla_{\theta} \pi(a \mid s) = \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s)
 $$
 
 This identity is derived from the property of logarithms that the derivative of the log of a function is the derivative of the function divided by the function itself:
 
 $$
-\nabla_{\theta} \log \pi(a | s) = \frac{\nabla_{\theta} \pi(a | s)}{\pi(a | s)}
+\nabla_{\theta} \log \pi(a \mid s) = \frac{\nabla_{\theta} \pi(a \mid s)}{\pi(a \mid s)}
 $$
 
-Therefore, multiplying both sides by $$ \pi(a | s) $$, we get:
+Therefore, multiplying both sides by $$ \pi(a \mid s) $$, we get:
 
 $$
-\nabla_{\theta} \pi(a | s) = \pi(a | s) \nabla_{\theta} \log \pi(a | s)
+\nabla_{\theta} \pi(a \mid s) = \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s)
 $$
 
 ### The Role of Log-Derivative Trick
@@ -136,7 +136,7 @@ $$
 The sum over states and actions weighted by the state distribution $$ d^{\pi}(s) $$ and the policy $$ \pi(s, a) $$ can be seen as an expectation. This is because the expectation of a random variable is the sum of the possible values of the random variable weighted by their probabilities. Thus, we can rewrite the above sum as:
 
 $$
-\frac{\partial \rho(\pi)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t | s_t) Q^{\pi}(s_t, a_t) \right]
+\frac{\partial \rho(\pi)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) Q^{\pi}(s_t, a_t) \right]
 $$
 
 Here, $$ \mathbb{E}_{\tau \sim \pi_{\theta}} $$ denotes the expected value when the trajectory $$ \tau $$ (a sequence of states and actions) is sampled according to the policy $$ \pi $$ parameterized by $$ \theta $$. This form is computationally more convenient because we can estimate the expectation by sampling trajectories and calculating the average over them, which is the basis for Monte Carlo methods used in REINFORCE and other policy gradient algorithms.
