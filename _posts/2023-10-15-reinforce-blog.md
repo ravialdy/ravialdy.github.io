@@ -26,7 +26,7 @@ h3 {
 
 ## Introduction
 
-Welcome to my blog post! Today we are going to discuss about a very fascinating topic in the world of AI and Reinforcement Learning (RL) — the Policy Gradient REINFORCE Method. This method is quite famous for solving some complex problems in RL. Don't worry if you're new to this field; I'll try to keep things simple and easy to understand. First of all, I will be focusing on the background of the REINFORCE method and why it was proposed in the first place.
+Welcome to my blog post! Today we are going to discuss about a very fascinating and important topic in the world of Reinforcement Learning (RL) — the Policy Gradient REINFORCE Method. This method is quite famous for solving some complex problems in RL. Don't worry if you're new to this field, I will try to keep things simple and easy to understand. First of all, I will be focusing on the background of the Policy Gradient Theorem and why it was proposed in the first place.
 
 ### Brief Recap about Reinforcement Learning
 
@@ -57,7 +57,7 @@ The agent follows a "policy" $$ \pi(a \mid s) $$, which tells it what action $$ 
 
 ## The Problem with Traditional Methods
 
-In RL, we often want a computer to learn how to make decisions by itself. For instance, think of a game where a robot must find its way out of a maze. The robot learns by trying different paths and seeing which ones get it out of the maze faster. Sounds simple, right? But when the maze is large and complicated, the number of decisions the robot must make becomes huge. This is where function approximators like neural networks come in handy; they help the robot generalize from its experience to make better decisions.
+In RL, we often want a computer to learn how to make decisions by itself. For instance, imagine a game where a robot must find its way out of a maze. The robot learns by trying different paths and seeing which ones get it out of the maze faster. It sounds simple right? But what if the maze is large and complicated? Then the number of decisions the robot must make becomes huge. This is where function approximators like neural networks come into play, they can help the robot to generalize from its experience to make better decisions.
 
 For a long time, people used something called a "value-function approach" to do this. In this approach, all the effort is put into calculating a value for each decision or "action" the robot can make. The robot then chooses the action with the highest value. However, this approach has some downsides:
 
@@ -180,6 +180,8 @@ $$
 \nabla J(\theta) = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) G_t \right]
 $$
 
+Here, $$ G_t $$ is the return obtained using a Monte Carlo estimate, providing a sample-based approximation of $$ Q^{\pi}(s_t, a_t) $$.
+
 In essence, REINFORCE is a concrete implementation of the Policy Gradient method that uses Monte Carlo sampling to estimate the otherwise intractable or unknown quantities in the Policy Gradient Theorem. By doing so, it provides a computationally efficient, model-free method to optimize policies in complex environments.
 
 ### Mathematical Details of REINFORCE
@@ -199,10 +201,8 @@ The REINFORCE algorithm can be understood through a sequence of mathematical ste
 The key equation that governs this update is:
 
 $$
-\nabla J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \sum_{t=0}^{T-1} \nabla_\theta \log \pi_{\theta}(a_t \mid s_t) G_t \right]
+\nabla J(\theta) = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_\theta \log \pi_{\theta}(a_t \mid s_t) G_t \right]
 $$
-
-Here, $$ G_t $$ is the return obtained using a Monte Carlo estimate, providing a sample-based approximation of $$ Q^{\pi}(s_t, a_t) $$.
 
 ### Conclusion and Limitations
 
