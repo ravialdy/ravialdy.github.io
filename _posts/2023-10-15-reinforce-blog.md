@@ -41,7 +41,7 @@ Before diving into the core method, it's important to get some basics right. Ima
     Figure 1. Illustration of an agent (robot) tries to reach the cheese as soon as possible (Image source : DALLE-3).
 </div>
 
-The agent follows a "policy" $$ \pi(s, a) $$, which tells it what action $$ a $$ to take when in state $$ s $$. This policy is controlled by some parameters $$ \theta $$, which we adjust to make the policy better. Here are the more formal definitions of important terms in RL:
+The agent follows a "policy" $$ \pi(a \mid s) $$, which tells it what action $$ a $$ to take when in state $$ s $$. This policy is controlled by some parameters $$ \theta $$, which we adjust to make the policy better. Here are the more formal definitions of important terms in RL:
 
 - **Environment**: The space or setting in which the agent operates.
 
@@ -85,10 +85,10 @@ Thus, policy gradient methods are particularly well-suited for high-dimensional 
 
 ### The Formal Objective
 
-The objective is to maximize the expected return $$ \rho(\pi) $$, defined as the average sum of rewards an agent can expect to receive while following a specific policy $$ \pi $$.
+The objective is to maximize the expected return $$ J(\theta) $$, defined as the average sum of rewards an agent can expect to receive while following a specific policy $$ \pi $$.
 
 $$
-\max_{\theta} \mathbb{E}_{\pi_{\theta}}\left[\sum_{t=0}^{T-1} \gamma^{t} r_{t}\right]
+\max_{\theta} \mathbb{E}_{\tau \sim \pi_{\theta}}\left[\sum_{t=0}^{T-1} \gamma^{t} r_{t}\right]
 $$
 
 In this equation, $$ \gamma $$ is the discount factor, $$ \theta $$ are the parameters governing the policy $$ \pi $$, and $$ T $$ is the time horizon.
@@ -98,12 +98,12 @@ In this equation, $$ \gamma $$ is the discount factor, $$ \theta $$ are the para
 To find the maximum of this objective function, we need its gradient w.r.t $$ \theta $$. The Policy Gradient Theorem provides this invaluable piece of information. Formally, it is expressed as:
 
 $$
-\frac{\partial \rho(\pi)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \frac{\partial \pi(s, a)}{\partial \theta} Q^{\pi}(s, a)
+\frac{\partial J(\theta)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \frac{\partial \pi(a \mid s)}{\partial \theta} Q^{\pi}(s, a)
 $$
 
 Here, $$ d^{\pi}(s) $$ represents the stationary distribution of states when following policy $$ \pi $$, and $$ Q^{\pi}(s, a) $$ is the expected return of taking action $$ a $$ in state $$ s $$ while following $$ \pi $$.
 
-This equation essentially tells us how a change in $$ \theta $$ will influence the expected return $$ \rho(\pi) $$.
+This equation essentially tells us how a change in $$ \theta $$ will influence the expected return $$ J(\theta) $$.
 
 ### The Log-Derivative Trick
 
@@ -127,16 +127,16 @@ $$
 
 ### The Role of Log-Derivative Trick
 
-Now, let's see how this trick fits into the policy gradient equation. When we substitute $$ \nabla_{\theta} \pi(s, a) $$ using the log-derivative trick into the Policy Gradient Theorem, we get:
+Now, let's see how this trick fits into the policy gradient equation. When we substitute $$ \nabla_{\theta} \pi(a \mid s) $$ using the log-derivative trick into the Policy Gradient Theorem, we get:
 
 $$
-\frac{\partial \rho(\pi)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \pi(s, a) \nabla_{\theta} \log \pi(s, a) Q^{\pi}(s, a)
+\frac{\partial J(\theta)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s) Q^{\pi}(s, a)
 $$
 
-The sum over states and actions weighted by the state distribution $$ d^{\pi}(s) $$ and the policy $$ \pi(s, a) $$ can be seen as an expectation. This is because the expectation of a random variable is the sum of the possible values of the random variable weighted by their probabilities. Thus, we can rewrite the above sum as:
+The sum over states and actions weighted by the state distribution $$ d^{\pi}(s) $$ and the policy $$ \pi(a \mid s) $$ can be seen as an expectation. This is because the expectation of a random variable is the sum of the possible values of the random variable weighted by their probabilities which in this case is the product of $$ d^{\pi}(s) $$ and $$ \pi(a \mid s) $$. Thus, we can rewrite the above sum as:
 
 $$
-\frac{\partial \rho(\pi)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) Q^{\pi}(s_t, a_t) \right]
+\frac{\partial J(\theta)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) Q^{\pi}(s_t, a_t) \right]
 $$
 
 Here, $$ \mathbb{E}_{\tau \sim \pi_{\theta}} $$ denotes the expected value when the trajectory $$ \tau $$ (a sequence of states and actions) is sampled according to the policy $$ \pi $$ parameterized by $$ \theta $$. This form is computationally more convenient because we can estimate the expectation by sampling trajectories and calculating the average over them, which is the basis for Monte Carlo methods used in REINFORCE and other policy gradient algorithms.
@@ -149,22 +149,20 @@ Thus, the log-derivative trick turns the gradient computation into a weighted su
 
 ### Why Should We Care About Policy Gradients?
 
-1. **Direct Optimization**: Unlike value-based methods, policy gradients directly tweak what actually matters—the policy itself.
+1. **Direct Optimization**: Unlike value-based methods, policy gradients directly optimize what actually matters—the policy itself.
 
 2. **Stochasticity Handling**: Policy gradients can optimize stochastic policies, crucial for situations where the optimal action can differ due to inherent randomness.
 
 3. **Sample Efficiency**: Because the focus is on policy improvement, fewer samples are often required to learn a good policy, making the method generally more efficient.
 
-By understanding the Policy Gradient Theorem and its underlying principles, you'll find that it's a fundamental building block for more advanced algorithms in the RL domain. Now, we can continue to the next section which is discussing about REINFORCE algorithm.
+By understanding the Policy Gradient Theorem and its underlying principles, you'll find that it's a fundamental building block for more advanced algorithms in the RL domain. Now, we can continue to the next section which we will discuss about REINFORCE algorithm.
 
 
 ## Introducing REINFORCE Algorithm
 
-After understanding the power and flexibility of Policy Gradient methods, it's time to delve into one of its most famous implementations: the REINFORCE algorithm which stands for REward Increment = Nonnegative Factor x Offset Reinforcement x Characteristic Eligibility, this algorithm is not just a fancy acronym; it's often considered as one of the fundamental building block in the world of Reinforcement Learning.
+After understanding the power and flexibility of Policy Gradient methods, it's time to delve into one of its most famous implementations: the REINFORCE algorithm which stands for REward Increment = Nonnegative Factor x Offset Reinforcement x Characteristic Eligibility, this algorithm is often considered as one of the most important and fundamental building block in the world of Reinforcement Learning.
 
 ### Main Idea of REINFORCE
-
-Remember that the Policy Gradient methods aim to optimize the policy in a way that increases the expected return from any state $$ s $$. However, calculating the true gradient of this expected return is often computationally infeasible or requires a model of the environment, which we usually don't have. REINFORCE is one of the Policy Gradient algorithms that makes us possible to directly optimizing the policy function $$ \pi(a \mid s) $$ to maximize the cumulative reward. While there are many algorithms under the Policy Gradient category, REINFORCE stands out for its simplicity and directness in estimating the gradient.
 
 The core idea of REINFORCE that differentiate it with other methods is in its utilization of Monte Carlo methods to estimate the gradients needed for policy optimization. By taking sample paths through the state and action space, REINFORCE avoids the need for a model of the environment and sidesteps the computational bottleneck of calculating the true gradients. This is particularly useful when the state and/or action spaces are large or continuous, making other methods infeasible.
 
@@ -173,13 +171,13 @@ The core idea of REINFORCE that differentiate it with other methods is in its ut
 Recall that the Policy Gradient Theorem provides an expression for the gradient of the expected return with respect to the policy parameters. REINFORCE directly employs this theorem but takes it a step further by providing a practical way to estimate this gradient through sampling. The mathematical equation for obtaining expected return $$ J(\theta) $$ using this theorem can be written as:
 
 $$
-\nabla J(\theta) = \mathbb{E}_{\pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(A_t \mid S_t) Q^{\pi}(S_t, A_t) \right]
+\nabla J(\theta) = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) Q^{\pi}(s_t, a_t) \right]
 $$
 
-REINFORCE simplifies this expression by utilizing the Monte Carlo estimate for $$ Q^{\pi}(S_t, A_t) $$, which is the sampled return $$ G_t $$:
+REINFORCE simplifies this expression by utilizing the Monte Carlo estimate for $$ Q^{\pi}(s_t, a_t) $$, which is the sampled return $$ G_t $$:
 
 $$
-\nabla J(\theta) = \mathbb{E}_{\pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(A_t \mid S_t) G_t \right]
+\nabla J(\theta) = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) G_t \right]
 $$
 
 In essence, REINFORCE is a concrete implementation of the Policy Gradient method that uses Monte Carlo sampling to estimate the otherwise intractable or unknown quantities in the Policy Gradient Theorem. By doing so, it provides a computationally efficient, model-free method to optimize policies in complex environments.
@@ -194,17 +192,17 @@ The REINFORCE algorithm can be understood through a sequence of mathematical ste
 
 3. **Compute Gradients**: For each step $$ t $$ in the episode,
     - Compute the return $$ G_t $$.
-    - Compute the policy gradient $$ \Delta \theta_t = \alpha \gamma^t G_t \nabla_\theta \log \pi_\theta(A_t  \mid  S_t) $$.
+    - Compute the policy gradient $$ \Delta \theta_t = \alpha \gamma^t G_t \nabla_\theta \log \pi_{\theta}(a_t \mid s_t) $$.
     
 4. **Update Policy**: Update the policy parameters $$ \theta $$ using $$ \Delta \theta $$.
 
 The key equation that governs this update is:
 
 $$
-\nabla J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \sum_{t=0}^{T-1} \nabla_\theta \log \pi_\theta(A_t \mid S_t) G_t \right]
+\nabla J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \sum_{t=0}^{T-1} \nabla_\theta \log \pi_{\theta}(a_t \mid s_t) G_t \right]
 $$
 
-Here, $$ G_t $$ is the return obtained using a Monte Carlo estimate, providing a sample-based approximation of $$ Q^\pi(S_t, A_t) $$.
+Here, $$ G_t $$ is the return obtained using a Monte Carlo estimate, providing a sample-based approximation of $$ Q^{\pi}(s_t, a_t) $$.
 
 ### Conclusion and Limitations
 
