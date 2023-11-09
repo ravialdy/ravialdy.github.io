@@ -77,7 +77,9 @@ The paper aims to overcome a specific limitation in vehicle trajectory forecasti
     Figure 2. Illustration of the "mode blur" problem in VAE-based generated trajectory forecasts (Image source : D. Choi & K. Min [1]).
 </div>
 
-As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are sometimes between defined lane paths, representing an average of all potential future paths rather than distinct possibilities. This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
+As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are sometimes between defined lane paths.
+
+This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
 
 <div class="row mt-4">
     <div class="col-12 col-lg mt-4 img-container">
@@ -88,7 +90,7 @@ As you can see from the figure above, the red vehicle is attempting to forecast 
     Figure 3. Example of "mode blur" problem that exists in the previous SOTA model (Image source: Cui et al, 2021 [2]).
 </div>
 
-If you wonder why the "mode blur" problem can be very important, consider the above figure example taken from the previous SOTA model as observed by D. Choi & K. Min [1]. Before analyzing that figure in more detail, assume that the green bounding box represents the Autonomous Vehicle (AV), the light blue bounding boxes represent surrounding vehicles, and the trajectories (path predictions) of the surrounding vehicles are shown using the solid lines with light blue dots.
+If you still wonder why the "mode blur" problem can be very important, consider the above figure example taken from the previous SOTA model as observed by D. Choi & K. Min [1]. Before analyzing that figure in more detail, assume that the green bounding box represents the Autonomous Vehicle (AV), the light blue bounding boxes represent surrounding vehicles, and the trajectories (path predictions) of the surrounding vehicles are shown using the solid lines with light blue dots.
 
 <div class="row mt-4 justify-content-center">
     <div class="col-12 col-md-8 mx-auto mt-4">
@@ -99,7 +101,9 @@ If you wonder why the "mode blur" problem can be very important, consider the ab
     Figure 4. Scenario 2 of the "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
 </div>
 
-In scenario 2, a clear observation here is the overlapping and intersecting trajectories, especially around the intersection. These trajectories seem to be "blurred" between the lanes rather than being clearly defined in one lane or another. While in the scenario 3, despite the clearer trajectory forecasts than the previous one, we can still observe "mode blur" problems. Some predicted trajectories seem to be dispersed across the lane without a distinct path. This issue can lead to the Autonomous Vehicle (AV) having to make frequent adjustments to its path. This is indeed problematic as the AV might need to execute sudden brakes and make abrupt steering changes. This not only results in an uncomfortable ride for the passengers but also raises safety concerns.
+In scenario 2, a clear observation here is the overlapping and intersecting trajectories, especially around the intersection. These trajectories seem to be "blurred" between the lanes rather than being clearly defined in one lane or another. While in the scenario 3, despite the clearer trajectory forecasts than the previous one, we can still observe "mode blur" problems. Some predicted trajectories seem to be dispersed across the lane without a distinct path. 
+
+This issue can lead to the Autonomous Vehicle (AV) having to make frequent adjustments to its path. This is indeed problematic as the AV might need to execute sudden brakes and make abrupt steering changes. This not only results in an uncomfortable ride for the passengers but also raises safety concerns.
 
 <div class="row mt-4 justify-content-center">
     <div class="col-12 col-md-8 mx-auto mt-4">
@@ -110,9 +114,11 @@ In scenario 2, a clear observation here is the overlapping and intersecting traj
     Figure 5. Scenario 3 of the "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
 </div>
 
-The reason for this problem is the use of Variational Autoencoders (VAEs) in the trajectory forecasting models. Even though VAEs are theoretically beautiful, simple to train, and can produce quite good manifold representations (meaning they can capture complex patterns and relationships in data), they have a well-known limitation: the outputs that they generate can often be "blurry". The authors of paper [1] observed that similar problem also found in the trajectory planning case, not only in the tasks involving image reconstruction and synthesis. 
+The reason for this problem is the use of Variational Autoencoders (VAEs) in the trajectory forecasting models since they have a well-known limitation: the outputs that they generate can often be "blurry". The authors of paper [1] observed that similar problem also found in the trajectory planning case, not only in the tasks involving image reconstruction and synthesis. 
 
-This is the result of the VAE trying to generate an output that's an average representation of potential outcomes. Remember that the main objective of the VAE is to optimize the Evidence Lower Bound Objective (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
+VAEs aim to learn a probabilistic latent space representation of the data. When dealing with complex distributions such as future vehicle trajectories, the latent space needs to capture the multi-modal nature of the data, representing different possible future states (modes). If the latent space is constrained too much by the KL divergence term towards a simple prior distribution (like a unimodal Gaussian), the model may not capture the distinct modes effectively. Instead, it averages them, which is seen as "mode blur" in the output.
+
+Remember that the main objective of the VAE is to optimize the Evidence Lower Bound Objective (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
 
 $$ 
 \text{ELBO} = \mathbb{E}_{q_\phi(\mathbf{z} \mid \mathbf{x})}[\log p_\theta(\mathbf{x} \mid \mathbf{z})] - D_{KL}(q_\phi(\mathbf{z}|\mathbf{x}) \| p_\theta(\mathbf{z})) 
@@ -144,11 +150,9 @@ For more detailed understanding, you can take a look at this very good blogpost 
 
 As you can see from the objective function above, the VAE wants to minimize reconstruction loss, while the KL divergence term encourages the VAE not to create very distinct and separate clusters for each mode in the latent space but to keep them close to the prior. When the VAE learns to represent data in the latent space, it must balance these two terms. It wants to spread out the representations to minimize reconstruction loss but is also constrained by the KL divergence to keep these representations from getting too dispersed.
 
-If the model emphasize too much on minimizing the KL divergence (i.e., ensuring that the latent representations stay close to a standard Gaussian prior), it might not create very distinct clusters for different modes in the latent space. In other words, it might exceed the amount of dispersion needed to clearly separate distinct data modalities or "modes."
+As a consequence, during the generation phase, when the model samples from these latent representations, it also may end up sampling from "in-between" spaces if the distinct modes are not well-separated. This results in outputs that are a blend of several possible outcomes rather than committing to a single, distinct outcome.
 
-As a consequence, during the generation phase, when the model samples from these latent representations, it may end up sampling from "in-between" spaces if the distinct modes are not well-separated. This results in outputs that are a blend of several possible outcomes rather than committing to a single, distinct outcome.
-
-So in the context of trajectory planning, the "mode blur" problem is most likely happened due to the balancing act between reconstruction loss and the KL divergence done by the ELBO objective function. When generating data, the VAE may generate a predicted trajectory that doesn't clearly commit to any of the possible paths (like staying in the lane, changing lanes, turning, etc.). Instead, it generates a trajectory that lies somewhere in between.
+So in the context of trajectory planning, the "mode blur" problem is most likely happened due to the balancing act between reconstruction loss and the KL divergence done by the ELBO objective function. When generating data, the VAE may generate a predicted trajectory that doesn't clearly commit to any of the possible paths (like staying in the lane, changing lanes, turning, etc). Instead, it generates a trajectory that lies somewhere in between.
 
 
 ## Key Contributions
