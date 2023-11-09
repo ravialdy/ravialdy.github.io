@@ -26,6 +26,8 @@ h3 {
 
 ## Introduction
 
+**Disclaimer** : This review is based on my understanding when reading the paper [1]. While I have made much effort to ensure the accuracy of this article, there may things that I have not fully captured. If you notice any misinterpretation or error, please feel free to point them out in the comments section or contact me directly for a discussion.
+
 I'm very excited to present a review of the paper titled "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting" [1] authored by Dooseop Choi and KyoungWook Min. This paper is a very good work proved by its acceptance at the European Conference on Computer Vision (ECCV) 2022. 
 
 For you who are not familiar with academia world in the AI field yet, ECCV is one of the most prestigious conferences in the domain of computer vision and having a paper accepted there indicates the importance of this work. I truly believe this research paper is crucial for the autonomous driving topic, particularly in trajectory forecasting.
@@ -75,7 +77,7 @@ The paper aims to overcome a specific limitation in vehicle trajectory forecasti
     Figure 2. Illustration of the "mode blur" problem in VAE-based generated trajectory forecasts (Image source : D. Choi & K. Min [1]).
 </div>
 
-As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are more often or tend on a "central" path, representing an average of all potential future paths rather than distinct possibilities. This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
+As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are sometimes between defined lane path, representing an average of all potential future paths rather than distinct possibilities. This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
 
 <div class="row mt-4">
     <div class="col-12 col-lg mt-4 img-container">
