@@ -26,7 +26,7 @@ h3 {
 
 ## Introduction
 
-**Disclaimer** : This review is based on my understanding when reading the paper [1]. While I have made much effort to ensure the accuracy of this article, there may things that I have not fully captured. If you notice any misinterpretation or error, please feel free to point them out in the comments section.
+**Disclaimer** : This review is based on my understanding of the reference paper [1]. While I have made much effort to ensure the accuracy of this article, there may things that I have not fully captured. If you notice any misinterpretation or error, please feel free to point them out in the comments section.
 
 I'm very excited to present a review of the paper titled "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting" [1] authored by Dooseop Choi and KyoungWook Min. This paper is a very good work proved by its acceptance at the European Conference on Computer Vision (ECCV) 2022. 
 
@@ -207,7 +207,7 @@ The equation above indicates that the trajectory distribution $$ p(\mathbf{Y}_{i
 
 Remember that in a standard VAE, the generation process can sometimes collapse to the mean, resulting in less diverse samples. However, in a hierarchical Conditional VAE (C-VAE) which we will discuss later, the lower levels of the hierarchy are responsible for generating multiple potential trajectories and the higher levels can assign probabilities to the generated trajectories given a certain condition (like the current state of the car and its environment). This doesn’t mean picking the "average" path but selecting from a distribution of paths where each path is weighted according to its fit to the current context.
 
-So, the paper is not only "mixing all possible paths"; it is also considering each possible path (mode) and associating a weight with it to represent its likelihood. 
+So, the paper is also considering each possible path (mode) and associating a weight with it to represent its likelihood. 
 
 ### HLS to Avoid "Mode Blur"
 
@@ -228,9 +228,9 @@ The HLS approach consists of two latent variables within a conditional VAE frame
 
 2. **High-level latent variable ($$\mathbf{z}_{h}$$)**: Represents the weights for different modes. This is the output of a mode selection network that determines the probabilities associated with different lanes.
 
-The low-level latent variable helps the forecasting model define the mode distribution. This captures the variation within a mode – essentially the variety of possible trajectories given that a vehicle has chosen a particular lane. The high-level latent variable models the weights of the modes, deciding which trajectories are more likely than others based on the current situation.
+The low-level latent variable helps the forecasting model define the mode distribution. This captures the variation within a mode, essentially the variety of possible trajectories given that a vehicle has chosen a particular lane. The high-level latent variable models the weights of the modes, deciding which trajectories are more likely than others based on the current situation.
 
-The C-VAE framework is applied, making the model generate realistic trajectories based on the provided past data and scene context by optimizing a modified ELBO. This is done by training the model to reconstruct the future trajectories ($$ \mathbf{Y}_i $$) from the latent variables, while also ensuring that the latent variables are regularized to follow a prior distribution. Here is the mathematical equation of that new objective function :
+The C-VAE framework is applied, making the model generate realistic trajectories based on the provided past data and scene context by optimizing a modified ELBO. This is done by training the model to reconstruct the future trajectories $$ \mathbf{Y}_i $$ from the latent variables, while also ensuring that the latent variables are regularized to follow a prior distribution. Here is the mathematical equation of that new objective function :
 
 $$
 \begin{aligned}
