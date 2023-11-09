@@ -26,7 +26,7 @@ h3 {
 
 ## Introduction
 
-**Disclaimer** : This review is based on my understanding when reading the paper [1]. While I have made much effort to ensure the accuracy of this article, there may things that I have not fully captured. If you notice any misinterpretation or error, please feel free to point them out in the comments section or contact me directly for a discussion.
+**Disclaimer** : This review is based on my understanding when reading the paper [1]. While I have made much effort to ensure the accuracy of this article, there may things that I have not fully captured. If you notice any misinterpretation or error, please feel free to point them out in the comments section.
 
 I'm very excited to present a review of the paper titled "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting" [1] authored by Dooseop Choi and KyoungWook Min. This paper is a very good work proved by its acceptance at the European Conference on Computer Vision (ECCV) 2022. 
 
@@ -77,7 +77,7 @@ The paper aims to overcome a specific limitation in vehicle trajectory forecasti
     Figure 2. Illustration of the "mode blur" problem in VAE-based generated trajectory forecasts (Image source : D. Choi & K. Min [1]).
 </div>
 
-As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are sometimes between defined lane path, representing an average of all potential future paths rather than distinct possibilities. This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
+As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are sometimes between defined lane paths, representing an average of all potential future paths rather than distinct possibilities. This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
 
 <div class="row mt-4">
     <div class="col-12 col-lg mt-4 img-container">
@@ -99,7 +99,7 @@ If you wonder why the "mode blur" problem can be very important, consider the ab
     Figure 4. Scenario 2 of the "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
 </div>
 
-In scenario 2, a clear observation here is the overlapping and intersecting trajectories, especially around the intersection. These trajectories seem to be "blurred" between the lanes rather than being clearly defined in one lane or another. While in the scenario 3, despite the clearer trajectory forecasts than the previous one, we can still observe "mode blur" problems, especially with the trajectories of the vehicle immediately in front of the AV. Some predicted trajectories seem to be dispersed across the lane without a distinct path. This issue can lead to the Autonomous Vehicle (AV) having to make frequent adjustments to its path. This is indeed problematic as the AV might need to execute sudden brakes and make abrupt steering changes. This not only results in an uncomfortable ride for the passengers but also raises safety concerns.
+In scenario 2, a clear observation here is the overlapping and intersecting trajectories, especially around the intersection. These trajectories seem to be "blurred" between the lanes rather than being clearly defined in one lane or another. While in the scenario 3, despite the clearer trajectory forecasts than the previous one, we can still observe "mode blur" problems. Some predicted trajectories seem to be dispersed across the lane without a distinct path. This issue can lead to the Autonomous Vehicle (AV) having to make frequent adjustments to its path. This is indeed problematic as the AV might need to execute sudden brakes and make abrupt steering changes. This not only results in an uncomfortable ride for the passengers but also raises safety concerns.
 
 <div class="row mt-4 justify-content-center">
     <div class="col-12 col-md-8 mx-auto mt-4">
@@ -110,7 +110,7 @@ In scenario 2, a clear observation here is the overlapping and intersecting traj
     Figure 5. Scenario 3 of the "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
 </div>
 
-The reason for this problem is the use of Variational Autoencoders (VAEs) in the trajectory forecasting models. Even though VAEs are theoretically beautiful, simple to train, and can produce quite good manifold representations (meaning they can capture complex patterns and relationships in data), they have a well-known limitation: the outputs that they generate can often be "blurry", particularly in tasks involving image reconstruction and synthesis. 
+The reason for this problem is the use of Variational Autoencoders (VAEs) in the trajectory forecasting models. Even though VAEs are theoretically beautiful, simple to train, and can produce quite good manifold representations (meaning they can capture complex patterns and relationships in data), they have a well-known limitation: the outputs that they generate can often be "blurry". The authors of paper [1] observed that similar problem also found in the trajectory planning case, not only in the tasks involving image reconstruction and synthesis. 
 
 This is the result of the VAE trying to generate an output that's an average representation of potential outcomes. Remember that the main objective of the VAE is to optimize the Evidence Lower Bound Objective (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
 
@@ -128,7 +128,7 @@ Two components in the ELBO:
     </div>
 </div>
 <div class="caption text-center mb-4">
-    Figure 6. Variational Autoencoder (VAE) which uses variational bayesian principle ((Image source : <a href="https://sebastianraschka.com/teaching/stat453-ss2021/">Sebastian Raschka slide</a>)).
+    Figure 6. Variational Autoencoder (VAE) which uses variational bayesian principle (Image source : <a href="https://sebastianraschka.com/teaching/stat453-ss2021/">Sebastian Raschka slide</a>).
 </div>
 
 <div class="row mt-4">
@@ -137,7 +137,7 @@ Two components in the ELBO:
     </div>
 </div>
 <div class="caption text-center mb-4">
-    Figure 7. Generated latent variable from common Autoencoder (fixed value) vs. VAE (probability distribution) ((Image source : <a href="https://www.jeremyjordan.me/variational-autoencoders/">Jeremy Jordan</a>)).
+    Figure 7. Generated latent variable from common Autoencoder (fixed value) vs. VAE (probability distribution) (Image source : <a href="https://www.jeremyjordan.me/variational-autoencoders/">Jeremy Jordan</a>).
 </div>
 
 For more detailed understanding, you can take a look at this very good blogpost [Lil'Log](https://lilianweng.github.io/posts/2018-08-12-vae/) or excellent explanation by [Ahlad Kumar](https://www.youtube.com/watch?v=YHldNC1SZVk).
