@@ -98,13 +98,13 @@ In this equation, $$ \gamma $$ is the discount factor, $$ \theta $$ are the para
 To find the maximum of this objective function, we need its gradient w.r.t $$ \theta $$. But first we need to understand that the probability of observing a trajectory $$ \tau = (s_0, a_0, ..., s_{T+1}) $$ under policy $$ \pi_{\theta} $$ can be expressed as :
 
 $$
-P(\tau \mid \theta) = \rho_0 (s_0) \prod_{t=0}^{T} P(s_{t+1}\mids_t, a_t) \pi_{\theta}(a_t \mids_t)
+P(\tau \mid \theta) = \rho_0 (s_0) \prod_{t=0}^{T} P(s_{t+1}\mid s_t, a_t) \pi_{\theta}(a_t \mid s_t)
 $$
 
 If we apply the log function to both sides of equation, we will get : 
 
 $$
-\log P(\tau \mid \theta) = \log \rho_0 (s_0) + \sum_{t=0}^{T} \left( \log P(s_{t+1}\mids_t, a_t)  + \log \pi_{\theta}(a_t \mids_t)\right)
+\log P(\tau \mid \theta) = \log \rho_0 (s_0) + \sum_{t=0}^{T} \left( \log P(s_{t+1}\mid s_t, a_t)  + \log \pi_{\theta}(a_t \mid s_t)\right)
 $$
 
 Next, we will use the Log-Derivative trick which is a simple calculus rule that states the derivative of $$ \log x $$ w.r.t. $$ x $$ is $$ \frac{1}{x} $$. Thus, 
@@ -128,7 +128,7 @@ $$
 &= \int_{\tau} \nabla_{\theta} P(\tau \mid \theta) R(\tau) \quad & \text{(Linearity of gradient w/ integral)} \\
 &= \int_{\tau} P(\tau \mid \theta) \nabla_{\theta} \log P(\tau \mid \theta) R(\tau) \quad & \text{(Use Log-derivative trick)} \\
 &= \mathbb{E}_{\tau \sim \pi_{\theta}}[\nabla_{\theta} \log P(\tau \mid \theta) R(\tau)] \quad & \text{(By definition of expectation)} \\
-\therefore \nabla_{\theta} J(\theta) &= \mathbb{E}_{\tau \sim \pi_{\theta}}\left[\sum_{t=0}^{T} \nabla_{\theta} \log \pi_{\theta}(a_t \mids_t) R(\tau)\right] \
+\therefore \nabla_{\theta} J(\theta) &= \mathbb{E}_{\tau \sim \pi_{\theta}}\left[\sum_{t=0}^{T} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) R(\tau)\right] \
 
 quad & \text{(Policy Gradient Theorem :))}
 \end{align*}
