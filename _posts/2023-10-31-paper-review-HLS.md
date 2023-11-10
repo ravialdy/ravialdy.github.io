@@ -146,7 +146,13 @@ Two components in the ELBO:
 
 For more detailed understanding, you can take a look at this very good blogpost [Lil'Log](https://lilianweng.github.io/posts/2018-08-12-vae/) or excellent explanation by [Ahlad Kumar](https://www.youtube.com/watch?v=YHldNC1SZVk).
 
-As you can see from the objective function above, the VAE wants to minimize reconstruction loss, while the KL divergence term encourages the VAE not to create very distinct and separate clusters for each mode in the latent space but to keep them close to the prior. When the VAE learns to represent data in the latent space, it must balance these two terms. It wants to spread out the representations to minimize reconstruction loss (since the trajectory distribution is multi-modal) but is also constrained by the KL divergence to keep these representations from getting too dispersed.
+As you can see from the objective function above, the VAE wants to minimize reconstruction loss, while the KL divergence term encourages the VAE not to create very distinct and separate clusters for each mode in the latent space but to keep them close to the prior.
+
+As far as i know, many previous works assume the prior distribution for the latent variables, $$ Z $$, to be a standard Gaussian distribution, $$ \mathcal{N}(0, I) $$, which is fixed and does not depend on the input context. The reason for using this assumption is to simplify the learning process. The latent variables here are considered to capture the latent scene dynamics that influence the trajectories of multiple actors in the scene.
+
+This can be problematic because a standard Gaussian prior assumes that the latent space is unimodal and therefore does not capture the multi-modal nature of the future trajectories where multiple distinct future paths (modes) are possible.
+
+When the VAE learns to represent data in the latent space, it must balance the reconstruction and KL divergence terms. It wants to spread out the representations to minimize the reconstruction loss (since the trajectory distribution is multi-modal) but it is also constrained by the KL divergence to keep these representations from getting too dispersed (since the prior is unimodal).
 
 As a consequence, during the generation phase, when the model samples from these latent representations, it also may end up sampling from "in-between" spaces if the distinct modes are not well-separated. This results in outputs that are a blend of several possible outcomes rather than committing to a single, distinct outcome.
 
