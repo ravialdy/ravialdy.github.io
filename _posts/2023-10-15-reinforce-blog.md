@@ -95,51 +95,44 @@ In this equation, $$ \gamma $$ is the discount factor, $$ \theta $$ are the para
 
 ### The Policy Gradient Theorem in Detail
 
-To find the maximum of this objective function, we need its gradient w.r.t $$ \theta $$. The Policy Gradient Theorem provides this invaluable piece of information. Formally, it is expressed as:
+To find the maximum of this objective function, we need its gradient w.r.t $$ \theta $$. But first we need to understand that the probability of observing a trajectory $$ \tau = (s_0, a_0, ..., s_{T+1}) $$ under policy $$ \pi_{\theta} $$ can be expressed as :
 
 $$
-\frac{\partial J(\theta)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \frac{\partial \pi(a \mid s)}{\partial \theta} Q^{\pi}(s, a)
+P(\tau \mid \theta) = \rho_0 (s_0) \prod_{t=0}^{T} P(s_{t+1}\mids_t, a_t) \pi_{\theta}(a_t \mids_t)
 $$
 
-Here, $$ d^{\pi}(s) $$ represents the stationary distribution of states when following policy $$ \pi $$, and $$ Q^{\pi}(s, a) $$ is the expected return of taking action $$ a $$ in state $$ s $$ while following $$ \pi $$.
-
-This equation essentially tells us how a change in $$ \theta $$ will influence the expected return $$ J(\theta) $$.
-
-### The Log-Derivative Trick
-
-For effective computation of the gradient, the log-derivative trick is often employed. It allows us to express the derivative of the policy with respect to its parameters $$ \theta $$ in a simpler form. The trick is based on the identity:
+If we apply the log function to both sides of equation, we will get : 
 
 $$
-\nabla_{\theta} \pi(a \mid s) = \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s)
+\log P(\tau \mid \theta) = \log \rho_0 (s_0) + \sum_{t=0}^{T} \left( \log P(s_{t+1}\mids_t, a_t)  + \log \pi_{\theta}(a_t \mids_t)\right)
 $$
 
-This identity is derived from the property of logarithms that the derivative of the log of a function is the derivative of the function divided by the function itself:
+Next, we will use the Log-Derivative trick which is a simple calculus rule that states the derivative of $$ \log x $$ w.r.t. $$ x $$ is $$ \frac{1}{x} $$. Thus, 
 
 $$
-\nabla_{\theta} \log \pi(a \mid s) = \frac{\nabla_{\theta} \pi(a \mid s)}{\pi(a \mid s)}
+\nabla_{\theta} P(\tau \mid \theta) = P(\tau \mid \theta) \nabla_{\theta} \log P(\tau \mid \theta)
 $$
 
-Therefore, multiplying both sides by $$ \pi(a \mid s) $$, we get:
+Notice that if we take the derivative w.r.t $$ \theta $$, then the gradient of environment-specific functions like $$ \rho_0(s_0) $$, $$ P(s_{t+1} \mid s_t, a_t) $$, which do not depend on $$ \theta $$, are zero. Thus, applying that and implementing the Log-Derivative trick into the equation above will generate the equation below : 
 
 $$
-\nabla_{\theta} \pi(a \mid s) = \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s)
+\nabla_{\theta} \log P(\tau \mid \theta) = \sum_{t=0}^{T} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t)
 $$
 
-### The Role of Log-Derivative Trick
-
-Now, let's see how this trick fits into the policy gradient equation. When we substitute $$ \nabla_{\theta} \pi(a \mid s) $$ using the log-derivative trick into the Policy Gradient Theorem, we get:
+So now we are ready to calculate the gradient of the expected return w.r.t model parameters $$ \theta $$ which is the essence of the policy gradient theorem that we have discussed so far. Combining the facts that we have gotten before, we can derive the policy gradient theorem as follows:
 
 $$
-\frac{\partial J(\theta)}{\partial \theta} = \sum_{s} d^{\pi}(s) \sum_{a} \pi(a \mid s) \nabla_{\theta} \log \pi(a \mid s) Q^{\pi}(s, a)
-$$
+\begin{align*}
+\nabla_{\theta} J(\theta) &= \nabla_{\theta} \mathbb{E}_{\tau \sim \pi_{\theta}}[R(\tau)] \\
+&= \nabla_{\theta} \int_{\tau} P(\tau \mid \theta) R(\tau) \quad & \text{(By definition of expectation)} \\
+&= \int_{\tau} \nabla_{\theta} P(\tau \mid \theta) R(\tau) \quad & \text{(Linearity of gradient w/ integral)} \\
+&= \int_{\tau} P(\tau \mid \theta) \nabla_{\theta} \log P(\tau \mid \theta) R(\tau) \quad & \text{(Use Log-derivative trick)} \\
+&= \mathbb{E}_{\tau \sim \pi_{\theta}}[\nabla_{\theta} \log P(\tau \mid \theta) R(\tau)] \quad & \text{(By definition of expectation)} \\
+\therefore \nabla_{\theta} J(\theta) &= \mathbb{E}_{\tau \sim \pi_{\theta}}\left[\sum_{t=0}^{T} \nabla_{\theta} \log \pi_{\theta}(a_t \mids_t) R(\tau)\right] \
 
-The sum over states and actions weighted by the state distribution $$ d^{\pi}(s) $$ and the policy $$ \pi(a \mid s) $$ can be seen as an expectation. This is because the expectation of a random variable is the sum of the possible values of the random variable weighted by their probabilities which in this case is the product of $$ d^{\pi}(s) $$ and $$ \pi(a \mid s) $$. Thus, we can rewrite the above sum as:
-
+quad & \text{(Policy Gradient Theorem :))}
+\end{align*}
 $$
-\frac{\partial J(\theta)}{\partial \theta} = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) Q^{\pi}(s_t, a_t) \right]
-$$
-
-Here, $$ \mathbb{E}_{\tau \sim \pi_{\theta}} $$ denotes the expected value when the trajectory $$ \tau $$ (a sequence of states and actions) is sampled according to the policy $$ \pi $$ parameterized by $$ \theta $$. This form is computationally more convenient because we can estimate the expectation by sampling trajectories and calculating the average over them, which become an unbiased estimator for that expectation. We will use this in the REINFORCE algorithm.
 
 
 ## Introducing REINFORCE Algorithm
