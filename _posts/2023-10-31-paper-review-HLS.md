@@ -116,9 +116,7 @@ This issue can lead to the Autonomous Vehicle (AV) having to make frequent adjus
 
 The reason for this problem is the use of Variational Autoencoders (VAEs) in the trajectory forecasting models since they have a well-known limitation: the outputs that they generate can often be "blurry". The authors of paper [1] observed that similar problem also found in the trajectory planning case, not only in the tasks involving image reconstruction and synthesis. 
 
-VAEs aim to learn a probabilistic latent space representation of the data. When dealing with complex distributions such as future vehicle trajectories, the latent space needs to capture the multi-modal nature of the data, representing different possible future states (modes). If the latent space is constrained too much by the KL divergence term towards a simple prior distribution (like a unimodal Gaussian), the model may not capture the distinct modes effectively. Instead, it averages them, which is seen as "mode blur" in the output illustrated in figure 2.
-
-Another possiblity can be explained like this. But, first remember that the main objective of the VAE is to optimize the Evidence Lower Bound Objective (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
+VAEs aim to learn a probabilistic latent space representation of the data. When dealing with complex distributions such as future vehicle trajectories, the latent space needs to capture the multi-modal nature of the data, representing different possible future states (modes). Recall that the main objective of the VAEs is to optimize the Evidence Lower Bound Objective (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
 
 $$ 
 \text{ELBO} = \mathbb{E}_{q_\phi(\mathbf{z} \mid \mathbf{x})}[\log p_\theta(\mathbf{x} \mid \mathbf{z})] - D_{KL}(q_\phi(\mathbf{z}|\mathbf{x}) \| p_\theta(\mathbf{z})) 
