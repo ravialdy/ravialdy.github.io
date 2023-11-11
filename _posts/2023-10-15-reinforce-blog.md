@@ -205,7 +205,7 @@ $$
 \nabla J(\theta) = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ \sum_{t=0}^{T-1} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) G_t \right]
 $$
 
-Here, $$ G_t $$ is the return obtained using a Monte Carlo estimate, providing a sample-based approximation of $$ Q^{\pi}(s_t, a_t) $$.
+Here, $$ G_t $$ is the return obtained using a Monte Carlo estimate. Note that while $$ R(\tau) $$ is used in the theoretical derivation to denote the total return of a trajectory, $$ G_t $$ in REINFORCE serves as a practical, sampled estimate of the return from time $$ t $$ onwards.
 
 In essence, REINFORCE is a concrete implementation of the Policy Gradient method that uses Monte Carlo sampling to estimate the otherwise intractable or unknown quantities in the Policy Gradient Theorem. By doing so, it provides a computationally efficient, model-free method to optimize policies in complex environments.
 
