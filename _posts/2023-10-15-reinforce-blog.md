@@ -101,6 +101,10 @@ $$
 P(\tau \mid \theta) = \rho_0 (s_0) \prod_{t=0}^{T} P(s_{t+1}\mid s_t, a_t) \pi_{\theta}(a_t \mid s_t)
 $$
 
+where $$ \rho_0(s_0) $$ represents the probability of starting in the initial state, $$ \pi_{\theta}(a_t \mid s_t) $$ is the probability of taking action $$ a_t $$ in state $$ s_t $$, as dictated by the policy, and $$ P(s_{t+1} \mid s_t, a_t) $$ represents the probability of transitioning to state $$ s_{t+1} $$ after taking action $$ a_t $$ in state $$ s_t $$.
+
+The reason for getting the expression $$ P(\tau \mid \theta) $$ is due to Markov Decision Process (MDP). Since each state-action pair and subsequent state transition is considered an independent event, the probability of the entire trajectory $$ \tau $$ occurring is the product of the probabilities of each of these events. This includes the probability of the initial state, the probability of each action taken according to the policy, and the probability of each state transition as dictated by the environment's dynamics.
+
 If we apply the log function to both sides of equation, we will get : 
 
 $$
@@ -119,20 +123,39 @@ $$
 \nabla_{\theta} \log P(\tau \mid \theta) = \sum_{t=0}^{T} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t)
 $$
 
-So now we are ready to calculate the gradient of the expected return w.r.t model parameters $$ \theta $$ which is the essence of the policy gradient theorem that we have discussed so far. Combining the facts that we have gotten before, we can derive the policy gradient theorem as follows:
+So now we are ready to calculate the gradient of the expected return w.r.t model parameters $$ \theta $$ which is the essence of the policy gradient theorem that we have discussed so far. 
+
+Recall that by definition, $$J(\theta) $$ is the expectation of the return $$R(\tau) $$ over all possible trajectories $$\tau $$ under the policy $$\pi_{\theta} $$. Mathematically, this expectation can be represented as an integral over all possible trajectories, weighted by the probability of each trajectory under our policy, which can be expressed as : 
 
 $$
-\begin{align*}
-\nabla_{\theta} J(\theta) &= \nabla_{\theta} \mathbb{E}_{\tau \sim \pi_{\theta}}[R(\tau)] \\
-&= \nabla_{\theta} \int_{\tau} P(\tau \mid \theta) R(\tau) \quad & \text{(By definition of expectation)} \\
-&= \int_{\tau} \nabla_{\theta} P(\tau \mid \theta) R(\tau) \quad & \text{(Linearity of gradient w/ integral)} \\
-&= \int_{\tau} P(\tau \mid \theta) \nabla_{\theta} \log P(\tau \mid \theta) R(\tau) \quad & \text{(Use Log-derivative trick)} \\
-&= \mathbb{E}_{\tau \sim \pi_{\theta}}[\nabla_{\theta} \log P(\tau \mid \theta) R(\tau)] \quad & \text{(By definition of expectation)} \\
-\therefore \nabla_{\theta} J(\theta) &= \mathbb{E}_{\tau \sim \pi_{\theta}}\left[\sum_{t=0}^{T} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) R(\tau)\right] \
-
-& \text{(Policy Gradient Theorem :))}
-\end{align*}
+\mathbb{E}_{\tau \sim \pi_{\theta}}[R(\tau)] = \int_{\tau} P(\tau \mid \theta) R(\tau)
 $$
+
+After that, we want to bring the gradient inside the integral. This is possible due to the linearity property of gradients, allowing us to interchange the order of differentiation and integration. Thus, we can rewrite the above expression as : 
+
+$$ 
+\int_{\tau} \nabla_{\theta} P(\tau \mid \theta) R(\tau)
+$$
+
+Next, we apply the log-derivative trick in order to change the focus from the gradient of the probability to the gradient of its logarithm, yielding :
+
+$$
+\int_{\tau} P(\tau \mid \theta) \nabla_{\theta} \log P(\tau \mid \theta) R(\tau)
+$$
+
+Notice that the equation above essentially can be seen as the expected value of the gradient of the log-probability of the trajectory times the return, under our policy. Thus, we can say : 
+
+$$ 
+\mathbb{E}_{\tau \sim \pi_{\theta}}[\nabla_{\theta} \log P(\tau \mid \theta) R(\tau)]
+$$
+
+Then, we can apply the expression that we have derived before into the above equation as follows : 
+
+$$
+\therefore \nabla_{\theta} J(\theta) = \mathbb{E}_{\tau \sim \pi_{\theta}}\left[\sum_{t=0}^{T} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) R(\tau)\right]
+$$
+
+As you can see above, that expression is very special since it provides a gradient of the expected return with respect to the policy parameters. This allows the policy gradient theorem to directly optimize the policy parameters $$ \theta $$ ignoring the parts of the trajectory probability that are independent of the policy which can be crucial for some scenarios as previously discussed.
 
 
 ## Introducing REINFORCE Algorithm
