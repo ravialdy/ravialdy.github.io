@@ -148,7 +148,7 @@ For more detailed understanding, you can take a look at this very good blogpost 
 
 As you can see from the objective function above, the VAE wants to minimize reconstruction loss, while the KL divergence term encourages the VAE not to create very distinct and separate clusters for each mode in the latent space but to keep them close to the prior.
 
-As far as i know, many previous works assume the prior distribution for the latent variables, $$ Z $$, to be a standard Gaussian distribution, $$ \mathcal{N}(0, I) $$, which is fixed and does not depend on the input context. The reason for using this assumption is to simplify the learning process. The latent variables here are considered to capture the latent scene dynamics that influence the trajectories of multiple actors in the scene.
+As far as i know, many previous works assume the prior distribution for the latent variables, $$ Z $$, to be a standard Gaussian distribution, $$ \mathcal{N}(0, I) $$, which is fixed and does not depend on the input context. The reason for using this assumption is to simplify the learning process.
 
 This can be problematic because a standard Gaussian prior assumes that the latent space is unimodal and therefore does not capture the multi-modal nature of the future trajectories where multiple distinct future paths (modes) are possible.
 
