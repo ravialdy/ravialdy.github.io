@@ -243,11 +243,11 @@ $$
 
 Notice that the modified ELBO objective function has two main components:
 
-- **Reconstruction Term**: The $$ -\mathbb{E}_{\mathbf{z}_l \sim q_{\phi}}[\log p_{\theta}(\mathbf{Y}_i | \mathbf{z}_l, \mathbf{X}_i, \mathcal{C}_i^m)] $$ term is responsible for reconstructing the future trajectories ($$ \mathbf{Y}_i $$) from the low-level latent variables ($$ \mathbf{z}_l $$), the input ($$ \mathbf{X}_i $$), and the context ($$ \mathcal{C}_i^m $$). This term ensures that the model can generate trajectories that are consistent with the observed data and the given context.
+- **Reconstruction Term**: The $$ -\mathbb{E}_{\mathbf{z}_l \sim q_{\phi}}[\log p_{\theta}(\mathbf{Y}_i \mid \mathbf{z}_l, \mathbf{X}_i, \mathcal{C}_i^m)] $$ term is responsible for reconstructing the future trajectories ($$ \mathbf{Y}_i $$) from the low-level latent variables ($$ \mathbf{z}_l $$), the input ($$ \mathbf{X}_i $$), and the context ($$ \mathcal{C}_i^m $$). This term ensures that the model can generate trajectories that are consistent with the observed data and the given context.
 
 - **Regularization Term**: The $$ +\beta KL $$ term regularizes the latent space by encouraging the distribution of the latent variables to be close to some prior distribution. This is essential to avoid overfitting and to ensure that the latent space is well-structured and interpretable.
 
-The key aspect here is that the prior $$ p_{\gamma}(\mathbf{z}_l | \mathbf{X}_{i}, \mathcal{C}_{i}^{m}) $$ is conditional on the input and the context. This implies that the model isn't learning a single static prior for all data but rather a dynamic prior that adapts based on the specific input $$ \mathbf{X}_i $$ and context $$ \mathcal{C}_{i}^{m} $$.
+The key aspect here is that the prior $$ p_{\gamma}(\mathbf{z}_l \mid \mathbf{X}_{i}, \mathcal{C}_{i}^{m}) $$ is conditional on the input and the context. This implies that the model isn't learning a single static prior for all data but rather a dynamic prior that adapts based on the specific input $$ \mathbf{X}_i $$ and context $$ \mathcal{C}_{i}^{m} $$.
 
 This conditionality allows the model to learn different representations for different subsets of data, guided by the vehicle's past trajectory and additional scene information relevant to the vehicle. By doing so, the model can capture the nuances and variations in trajectory distributions that are specific to different traffic situations and lane configurations. 
 
