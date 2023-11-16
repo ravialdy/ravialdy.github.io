@@ -60,8 +60,8 @@ For you who are not familiar with academia world in the AI field yet, ECCV is on
 | $$ \mathcal{L}_{E L B O} $$          | Modified ELBO objective |
 | $$ q_{\phi} $$                       | Approximated posterior network |
 | $$ f_{\varphi} $$                    | Proposed mode selection network |
-| VLI                                  | Vehicle-Lane Interaction |
-| V2I                                  | Vehicle-to-Vehicle Interaction |
+| `VLI`                                  | Vehicle-Lane Interaction |
+| `V2I`                                  | Vehicle-to-Vehicle Interaction |
 
 
 ## The Main Problem : "Mode Blur"
@@ -207,8 +207,6 @@ $$
 
 The equation above indicates that the trajectory distribution $$ p(\mathbf{Y}_{i} \mid \mathbf{X}_{i}, \mathcal{C}_{i}) $$ can be expressed as a weighted sum of distributions called modes. The term "mode" represents a plausible path, and the term "weight" represents the probability of each mode occurring. 
 
-Remember that in a standard VAE, the generation process can sometimes collapse to the mean, resulting in less diverse samples. However, in a hierarchical Conditional VAE (C-VAE) which we will discuss in more detail later, the low-level latent variable will be used to generate multiple potential trajectories and the high-level latent variable can be leveraged to assign probabilities to the generated trajectories given a certain condition (like the current state of the car and its environment). This doesn’t mean picking the "average" path but selecting from a distribution of paths where each path is weighted according to its fit to the current context.
-
 ### HLS to Avoid "Mode Blur"
 
 The paper assumes that the trajectory distribution can be approximated as a mixture of simpler distributions. Each of these simpler distributions, or "modes", represents a distinct pattern or type of trajectory that a vehicle could follow.
@@ -226,9 +224,9 @@ The key intuition here is to consider each possible trajectory (mode) separately
 
 To capture this mixture of distributions, the HLS model employs two levels of latent variables:
 
-1. **Low-level latent variable ($$\mathbf{z}_{l}$$)**: Used to model individual modes of the trajectory distributions. This is done through a decoder network that generates the vehicle's future positions and a prior network that defines the distribution of the latent variable given the past positions and scene context.
+1. **Low-level latent variable $$\mathbf{z}_{l}$$**: Used to model individual modes of the trajectory distributions. This is done through a decoder network that generates the vehicle's future positions and a prior network that defines the distribution of the latent variable given the past positions and scene context.
 
-2. **High-level latent variable ($$\mathbf{z}_{h}$$)**: Represents the weights for different modes. This is the output of a mode selection network that determines the probabilities associated with different lanes.
+2. **High-level latent variable $$\mathbf{z}_{h}$$**: Represents the weights for different modes. This is the output of a mode selection network that determines the probabilities associated with different lanes.
 
 Note that $$\mathbf{z}_{l}$$ is conditioned on both the vehicle's past trajectory and the contextual information, allowing the model to generate diverse and realistic trajectories within each mode. This aligns with the 'simple distributions' aspect of the assumption, as each latent variable models a distinct, simpler trajectory pattern.
 
@@ -243,15 +241,62 @@ $$
 
 Notice that the modified ELBO objective function has two main components:
 
-- **Reconstruction Term**: The $$ -\mathbb{E}_{\mathbf{z}_l \sim q_{\phi}}[\log p_{\theta}(\mathbf{Y}_i \mid \mathbf{z}_l, \mathbf{X}_i, \mathcal{C}_i^m)] $$ term is responsible for reconstructing the future trajectories ($$ \mathbf{Y}_i $$) from the low-level latent variables ($$ \mathbf{z}_l $$), the input ($$ \mathbf{X}_i $$), and the context ($$ \mathcal{C}_i^m $$). This term ensures that the model can generate trajectories that are consistent with the observed data and the given context.
+- **Reconstruction Term**: The $$ -\mathbb{E}_{\mathbf{z}_l \sim q_{\phi}}[\log p_{\theta}(\mathbf{Y}_i \mid \mathbf{z}_l, \mathbf{X}_i, \mathcal{C}_i^m)] $$ term is responsible for reconstructing the future trajectories ($$ \mathbf{Y}_i $$) from $$ \mathbf{z}_l $$,  $$ \mathbf{X}_i $$, and the context $$ \mathcal{C}_i^m $$.
 
-- **Regularization Term**: The $$ +\beta KL $$ term regularizes the latent space by encouraging the distribution of the latent variables to be close to some prior distribution. This is essential to avoid overfitting and to ensure that the latent space is well-structured and interpretable.
+- **Regularization Term**: The $$ +\beta KL $$ term regularizes the latent space by encouraging the distribution of the latent variables to be close to some prior distribution.
 
 The key aspect here is that the prior $$ p_{\gamma}(\mathbf{z}_l \mid \mathbf{X}_{i}, \mathcal{C}_{i}^{m}) $$ is conditional on the input and the context. This implies that the model isn't learning a single static prior for all data but rather a dynamic prior that adapts based on the specific input $$ \mathbf{X}_i $$ and context $$ \mathcal{C}_{i}^{m} $$.
 
 This conditionality allows the model to learn different representations for different subsets of data, guided by the vehicle's past trajectory and additional scene information relevant to the vehicle. By doing so, the model can capture the nuances and variations in trajectory distributions that are specific to different traffic situations and lane configurations. 
 
 By structuring the model in this way, the HLS method can generate trajectory predictions that are not just an average of all possible paths but are instead a combination of distinct, plausible paths that a vehicle might realistically take, each with its own probability. This approach effectively addresses the mode blur problem by maintaining the distinctness of each trajectory mode.
+
+### Generating `VLI` and `V2I` Context Vectors
+
+Now, we will discuss how the `VLI` and `V2I` context vectors are generated in the HLS paper. This process is done in the Scene Context Extraction module of the proposed trajectory forecasting model:
+
+<div class="row mt-4">
+    <div class="col-sm mt-4 mt-md-0">
+        {% include figure.html path="/assets/img/HLS_Paper/scene_extraction_module.png" zoomable=true %}
+    </div>
+</div>
+<div class="caption">
+    Figure 11. Diagram of Scene Context Extraction module of HLS method (Image source : D. Choi & K. Min [1]).
+</div>
+
+#### `VLI` Context Vector:
+
+The `VLI` context vector, denoted as $$ \mathbf{a}_{i}^{m} $$, is built around the idea that a vehicle’s trajectory is influenced by its reference lane ($$ \mathbf{L}^{m} $$) and the surrounding lanes. The model first identifies the reference lane for the vehicle $$V_{i} $$ and then calculates weights ($$\alpha_{l} $$) for the surrounding lanes. These weights signify the relative importance of each surrounding lane compared to the reference lane.
+
+The weights ($$ \alpha_{l} $$) are determined through an attention mechanism between $$ \tilde{\mathbf{X}}_{i} $$ and $$ \tilde{\mathbf{L}}^{(1: M)} $$. The attention operation assesses how relevant each surrounding lane is in the context of the vehicle’s past motion and the current trajectory.
+
+Then, the final `VLI` context vector is a concatenation of the encoded reference lane $$ \tilde{\mathbf{L}}^{m} $$ and a weighted sum of the encoded surrounding lanes, where the weights are the attention scores $$ \alpha_{l} $$. 
+
+The final mathematical expression for generating `VLI` context vector can be written : 
+
+$$
+\mathbf{a}_{i}^{m}=\left[\tilde{\mathbf{L}}^{m} ; \sum_{l=1, l \neq m}^{M} \alpha_{l} \tilde{\mathbf{L}}^{l}\right]
+$$
+
+#### `V2I` Context Vector:
+
+The `V2I` context vector, denoted as $$ \mathbf{b}_{i}^{m} $$, captures the interactions between the vehicle $$ V_{i} $$ and its neighboring vehicles within a certain distance (defined by a threshold $$ \tau $$). This subset of neighboring vehicles is represented by $$ \mathcal{N}_{i}^{m} $$.
+
+<div class="row mt-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4 img-container">
+        {% include figure.html path="/assets/img/HLS_Paper/neighbor_vehicles.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+<div class="caption text-center mb-4">
+    Figure 12. Illustration of surrounding vehicles chosen for generating `V2I` context vector (Image source : D. Choi & K. Min [1]).
+</div>
+
+The interactions itself are modeled using a Graph Neural Network (GNN). Message passing occurs from each neighboring vehicle $$ V_{j} $$ to the vehicle $$ V_{i} $$, defined by $$ \mathbf{m}_{j \rightarrow i} $$. These messages are a function of the relative positions and hidden states of $$ V_{i} $$ and $$ V_{j} $$ at each time step, processed through a Multi-Layer Perceptron (MLP).
+
+Then, the messages are aggregated, and the aggregated output is fed into a Gated Recurrent Unit (GRU) to update the hidden state of $$ V_{i} $$. The process repeats for $$ K $$ rounds, capturing the evolving interaction over time.
+
+Finally, the `V2I` context vector is the sum of the final hidden states of all neighboring vehicles, representing the cumulative effect of the vehicle-vehicle interactions on $$ V_{i} $$’s future trajectory.
+
 
 ### HLS Overall Architecture
 
@@ -261,35 +306,22 @@ By structuring the model in this way, the HLS method can generate trajectory pre
     </div>
 </div>
 <div class="caption">
-    Figure 11. Diagram of HLS architecture (Image source : D. Choi & K. Min [1]).
+    Figure 13. Diagram of HLS architecture (Image source : D. Choi & K. Min [1]).
 </div>
 
-The proposed method from the paper focuses on predicting the future trajectory of vehicles by considering the interaction with the surrounding environment, particularly lanes and other vehicles. The approach is organized into the following modules:
+####  Encoder, Prior, and Decoder:
 
-1. **Feature Extraction Module**: 
-   - This module uses three LSTM networks to encode positional data for vehicles and lanes.
-   - Data preprocessing involves calculating speed, heading for vehicles, and tangent vectors for lanes. This is to capture the motion history and lane's orientation, making predictions more accurate.
+- **Encoder**:  Approximate the posterior distributions with Multi-Layer Perceptrons (MLPs) where the encoding $$\tilde{\mathbf{Y}}_{i}$$ and $$\mathbf{c}_{i}^{m}$$ become inputs. Thus, it outputs two vectors, mean $$\mu_{e}$$ and standard deviation $$\sigma_{e}$$. Notably, the encoder is used only during the training phase because $$\mathbf{Y}_{i}$$ is not available during inference.
 
+- **Prior**: Represents the prior distribution over the latent variable and is also implemented as MLPs. It takes $$\mathbf{c}_{i}^{m}$$ as its input and outputs mean $$\mu_{p}$$ and standard deviation $$\sigma_{p}$$ vectors.
 
-2. **Scene Context Extraction Module**:
-   - It considers the interactions of a vehicle with its reference lane `VLI` and other surrounding vehicles `V2I`.
-   - For the lane interaction, it uses attention mechanisms to weigh the importance of surrounding lanes relative to the reference lane.
-   - For vehicle-to-vehicle interactions, a Graph Neural Network (GNN) is employed. Only vehicles within a certain distance from the reference lane are considered. The interactions are captured through multiple rounds of message passing, and the final context vector represents the interaction history.
-   - There's an emphasis on the distance threshold, which is empirically set to 5 meters, representing the typical distance between two nearby lane centerlines in straight roads.
+- **Decoder**: Generates $$\hat{\mathbf{Y}}_{i}$$ via an LSTM network. The input consists of an embedding of the predicted position $$\mathbf{e}_{i}^{t}$$ along with $$\mathbf{c}_{i}^{m}$$ and $$\mathbf{z}_{l}$$. The LSTM updates its $$\mathbf{h}_{i}^{t+1}$$ based on these inputs, and the new predicted position $$\hat{\mathbf{p}}_{i}^{t+1}$$ is generated from this hidden state.
 
+Note that the lane-level scene context vector is just the concatenation of 
 
-3. **Mode Selection Network**:
-   - Determines the weights for different modes of trajectory distribution. Each mode corresponds to a lane, capturing the assumption that the lanes heavily influence the vehicle's motion.
-   - It uses lane-level scene context vectors, which contain information about both lane and vehicle interactions.
-   - A softmax operation is applied to get the final weights, representing the probability distribution over different modes.
-
-
-4. **Encoder, Prior, and Decoder**:
-   - **Encoder**: This is often referred to as the recognition network. It is responsible for approximating the posterior distribution and is implemented as Multi-Layer Perceptrons (MLPs) with the encoding of the future trajectory $$\tilde{\mathbf{Y}}_{i}$$ and the lane-level scene context vector $$\mathbf{c}_{i}^{m}$$ as inputs. The encoder outputs two vectors, mean $$\mu_{e}$$ and standard deviation $$\sigma_{e}$$. Notably, the encoder is used only during the training phase because the future trajectory $$\mathbf{Y}_{i}$$ is not available during inference.
-
-   - **Prior**: This represents the prior distribution over the latent variable and is also implemented as MLPs. It takes the lane-level scene context vector $$\mathbf{c}_{i}^{m}$$ as its input and outputs mean $$\mu_{p}$$ and standard deviation $$\sigma_{p}$$ vectors.
-
-   - **Decoder**: This network is responsible for generating predictions for the future trajectory $$\hat{\mathbf{Y}}_{i}$$. It does so via an LSTM network. The input to the LSTM consists of an embedding of the predicted position $$\mathbf{e}_{i}^{t}$$ along with the lane-level scene context vector $$\mathbf{c}_{i}^{m}$$ and the latent variable $$\mathbf{z}_{l}$$. The LSTM updates its hidden state $$\mathbf{h}_{i}^{t+1}$$ based on these inputs, and the new predicted position $$\hat{\mathbf{p}}_{i}^{t+1}$$ is generated from this hidden state.
+$$
+\mathbf{c}_{i}^{m}=\left[\tilde{\mathbf{X}}_{i} ; \mathbf{a}_{i}^{m} ; \mathbf{b}_{i}^{m}\right]
+$$
 
 The design of this method aims to provide a holistic understanding of the vehicle's motion by considering both lane and vehicle interactions. Lanes guide the general direction of movement, while nearby vehicles influence more immediate decisions like lane changes or speed adjustments.
 
@@ -301,7 +333,7 @@ The design of this method aims to provide a holistic understanding of the vehicl
     </div>
 </div>
 <div class="caption">
-    Figure 12. Example of trajectory forecasting generated by HLS on nuScenes dataset (Image source : D. Choi & K. Min [1]).
+    Figure 14. Example of trajectory forecasting generated by HLS on nuScenes dataset (Image source : D. Choi & K. Min [1]).
 </div>
 
 This paper proposes a novel and unique way to tackle the problem of "mode blur" predictions in trajectory forecasting. Instead of just mixing all possible paths, it uses a system of weights to represent different possible futures. This is achieved by introducing a hierarchy in latent variables which can make the model to be more accurate in representing different possible outcomes. The use of lane-level context vectors can add more precision, especially in understanding vehicle-lane and vehicle-vehicle interactions. With the additional techniques like positional data processing and GAN-based regularization, this work not only sharpens the predictions but also can outperform the previous SOTA models in terms of accuracy.
