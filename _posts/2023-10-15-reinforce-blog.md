@@ -168,27 +168,6 @@ The core idea of REINFORCE that differentiate it with other methods is in its ut
 
 For those who are not familiar with Monte Carlo approach, it is basically the process of sampling and averaging for estimating expected values in situations with large or infinite state spaces. By doing this, we can get the estimates that are unbiased without incorporating all available data.
 
-For better understanding, imagine we have a standard six-sided dice, and we want to estimate the expected value of a roll. The true expected value, $$ E(X) $$, for a fair dice roll is the average of all possible outcomes:
-
-$$
-E(X) = \frac{1 + 2 + 3 + 4 + 5 + 6}{6} = 3.5
-$$
-
-However, suppose we don't know this formula or we are dealing with a more complex system where the expected value isn't straightforward to calculate. This is where Monte Carlo estimation comes into play. 
-
-Let's say we perform a series of dice rolls and record the results after each roll. We'll then calculate the cumulative average after each roll and see how this average converges to the true expected value of 3.5 as we increase the number of rolls.
-
-<div class="row mt-4">
-    <div class="col-12 col-lg mt-4 img-container">
-        {% include figure.html path="/assets/img/reinforce/graph_montecarlo_sample.jpg" class="img-fluid" zoomable=true %}
-    </div>
-</div>
-<div class="caption text-center mb-4">
-    Figure 2. Convergence plot for dice rolls when we increase number of samples.
-</div>
-
-In the plot above, you can observe the cumulative average of the dice rolls as the number of rolls increases. This line represents the average of the rolled numbers after each roll. The red dashed line marks the true expected value of a fair die roll, which is 3,5. As you can see, if we take enough samples, then it will give us similar result as the true expected value of that roll. This example demonstrates that taking enough sampling can lead us to have results that are close enough to the true expected value.
-
 To understand more about the role of Monte Carlo in the REINFORCE, see the explanation below.
 
 ### REINFORCE & Policy Gradient Theorem

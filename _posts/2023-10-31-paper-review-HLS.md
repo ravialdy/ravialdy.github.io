@@ -30,7 +30,7 @@ h3 {
 
 I'm very excited to present a review of the paper titled "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting" [1] authored by Dooseop Choi and KyoungWook Min. This paper is a very good work proved by its acceptance at the European Conference on Computer Vision (ECCV) 2022. 
 
-For you who are not familiar with academia world in the AI field yet, ECCV is one of the most prestigious conferences in the AI field. I truly believe this research paper is crucial for the autonomous driving topic, particularly in trajectory forecasting.
+For you who are not familiar with academia world in the AI field yet, ECCV is one of the most prestigious conferences in the domain. I truly believe this research paper is crucial for the autonomous driving topic, particularly in trajectory forecasting.
 
 <div class="row mt-4">
     <div class="col-sm mt-4 mt-md-0">
