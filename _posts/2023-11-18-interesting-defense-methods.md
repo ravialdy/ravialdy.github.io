@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Lots of Interesting Defense Methods
-date: 2023-11-18 09:56:00-0400
+date: 2023-11-17 09:56:00-0400
 description:
 tags: Adversarial Defense, Adversarial, Machine Learning Security
 categories: blogpost
