@@ -116,7 +116,18 @@ This issue can lead to the Autonomous Vehicle (AV) having to make frequent adjus
 
 The reason for this problem is the use of Variational Autoencoders (VAEs) in the trajectory forecasting models since they have a well-known limitation: the outputs that they generate can often be "blurry". The authors of paper [1] observed that similar problem also found in the trajectory planning case, not only in the tasks involving image reconstruction and synthesis. 
 
-VAEs aim to learn a probabilistic latent space representation of the data. When dealing with complex distributions such as future vehicle trajectories, the latent space needs to capture the multi-modal nature of the data, representing different possible future states (modes). Recall that the main objective of the VAEs is to optimize the Evidence Lower Bound Objective (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
+VAEs aim to learn a probabilistic latent space representation of the data. So instead of generating fixed value of latent variable, what VAE does is to learn the latent space distribution and sample from it in order to get the latent vector that can be used to reconstruct the input.
+
+<div class="row mt-4">
+    <div class="col-12 col-lg mt-4 img-container">
+        {% include figure.html path="/assets/img/HLS_Paper/AEvsVAE_Latent.png" class="img-fluid" zoomable=true %}
+    </div>
+</div>
+<div class="caption text-center mb-4">
+    Figure 6. Generated latent variable from common Autoencoder (fixed value) vs. VAE (probability distribution) (Image source : <a href="https://www.jeremyjordan.me/variational-autoencoders/">Jeremy Jordan</a>).
+</div>
+
+When dealing with complex distributions such as future vehicle trajectories, the latent space needs to capture the multi-modal nature of the data, representing different possible future states (modes). Recall that the main objective of the VAEs is to optimize the Evidence Lower Bound Objective (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
 
 $$ 
 \text{ELBO} = \mathbb{E}_{q_\phi(\mathbf{z} \mid \mathbf{x})}[\log p_\theta(\mathbf{x} \mid \mathbf{z})] - D_{KL}(q_\phi(\mathbf{z}|\mathbf{x}) \| p_\theta(\mathbf{z})) 
@@ -132,16 +143,7 @@ Two components in the ELBO:
     </div>
 </div>
 <div class="caption text-center mb-4">
-    Figure 6. Variational Autoencoder (VAE) which uses variational bayesian principle (Image source : <a href="https://sebastianraschka.com/teaching/stat453-ss2021/">Sebastian Raschka slide</a>).
-</div>
-
-<div class="row mt-4">
-    <div class="col-12 col-lg mt-4 img-container">
-        {% include figure.html path="/assets/img/HLS_Paper/AEvsVAE_Latent.png" class="img-fluid" zoomable=true %}
-    </div>
-</div>
-<div class="caption text-center mb-4">
-    Figure 7. Generated latent variable from common Autoencoder (fixed value) vs. VAE (probability distribution) (Image source : <a href="https://www.jeremyjordan.me/variational-autoencoders/">Jeremy Jordan</a>).
+    Figure 7. Variational Autoencoder (VAE) which uses variational bayesian principle (Image source : <a href="https://sebastianraschka.com/teaching/stat453-ss2021/">Sebastian Raschka slide</a>).
 </div>
 
 For more detailed understanding, you can take a look at this very good blogpost [Lil'Log](https://lilianweng.github.io/posts/2018-08-12-vae/) or excellent explanation by [Ahlad Kumar](https://www.youtube.com/watch?v=YHldNC1SZVk).
@@ -224,11 +226,10 @@ The key intuition here is to consider each possible trajectory (mode) separately
 
 To capture this mixture of distributions, the HLS model employs two levels of latent variables:
 
-1. **Low-level latent variable $$\mathbf{z}_{l}$$**: Used to model individual modes of the trajectory distributions. This is done through a decoder network that generates the vehicle's future positions and a prior network that defines the distribution of the latent variable given the past positions and scene context.
+1. **Low-level latent variable $$\mathbf{z}_{l}$$**: Used to model individual modes of the trajectory distributions.
+2. **High-level latent variable $$\mathbf{z}_{h}$$**: Employed to determine the weights for different modes.
 
-2. **High-level latent variable $$\mathbf{z}_{h}$$**: Represents the weights for different modes. This is the output of a mode selection network that determines the probabilities associated with different lanes.
-
-Note that $$\mathbf{z}_{l}$$ is conditioned on both the vehicle's past trajectory and the contextual information, allowing the model to generate diverse and realistic trajectories within each mode. This aligns with the 'simple distributions' aspect of the assumption, as each latent variable models a distinct, simpler trajectory pattern.
+Note that $$\mathbf{z}_{l}$$ is conditioned on both the vehicle's past trajectory and the contextual information, allowing the model to generate diverse and realistic trajectories within each mode. This aligns with the 'simple distributions' aspect of the paper's assumption, as each latent variable models a distinct, simpler trajectory pattern.
 
 The mathematical equation of the new objective function can be expressed as below :
 
@@ -239,17 +240,11 @@ $$
 \end{aligned}
 $$
 
-Notice that the modified ELBO objective function has two main components:
-
-- **Reconstruction Term**: The $$ -\mathbb{E}_{\mathbf{z}_l \sim q_{\phi}}[\log p_{\theta}(\mathbf{Y}_i \mid \mathbf{z}_l, \mathbf{X}_i, \mathcal{C}_i^m)] $$ term is responsible for reconstructing the future trajectories ($$ \mathbf{Y}_i $$) from $$ \mathbf{z}_l $$,  $$ \mathbf{X}_i $$, and the context $$ \mathcal{C}_i^m $$.
-
-- **Regularization Term**: The $$ +\beta KL $$ term regularizes the latent space by encouraging the distribution of the latent variables to be close to some prior distribution.
-
 The key aspect here is that the prior $$ p_{\gamma}(\mathbf{z}_l \mid \mathbf{X}_{i}, \mathcal{C}_{i}^{m}) $$ is conditional on the input and the context. This implies that the model isn't learning a single static prior for all data but rather a dynamic prior that adapts based on the specific input $$ \mathbf{X}_i $$ and context $$ \mathcal{C}_{i}^{m} $$.
 
 This conditionality allows the model to learn different representations for different subsets of data, guided by the vehicle's past trajectory and additional scene information relevant to the vehicle. By doing so, the model can capture the nuances and variations in trajectory distributions that are specific to different traffic situations and lane configurations. 
 
-By structuring the model in this way, the HLS method can generate trajectory predictions that are not just an average of all possible paths but are instead a combination of distinct, plausible paths that a vehicle might realistically take, each with its own probability. This approach effectively addresses the mode blur problem by maintaining the distinctness of each trajectory mode.
+By structuring the model in this way, the HLS method can generate trajectory predictions that are not just an average of all possible paths but are instead a combination of distinct, plausible paths that a vehicle might realistically take, each with its own probability.
 
 ### Generating `VLI` and `V2I` Context Vectors
 
