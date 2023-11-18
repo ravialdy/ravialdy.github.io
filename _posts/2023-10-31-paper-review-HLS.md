@@ -127,7 +127,7 @@ VAEs aim to learn a probabilistic latent space representation of the data. So in
     Figure 6. Generated latent variable from common Autoencoder (fixed value) vs. VAE (probability distribution) (Image source : <a href="https://www.jeremyjordan.me/variational-autoencoders/">Jeremy Jordan</a>).
 </div>
 
-When dealing with complex distributions such as future vehicle trajectories, the latent space needs to capture the multi-modal nature of the data, representing different possible future states (modes). Recall that the main objective of the VAEs is to optimize the Evidence Lower Bound Objective (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
+The main objective of the VAEs is to optimize the Evidence Lower Bound Objective (ELBO) on the marginal likelihood of data $$ p_\theta(\mathbf{x}) $$. This lower bound is formulated as:
 
 $$ 
 \text{ELBO} = \mathbb{E}_{q_\phi(\mathbf{z} \mid \mathbf{x})}[\log p_\theta(\mathbf{x} \mid \mathbf{z})] - D_{KL}(q_\phi(\mathbf{z}|\mathbf{x}) \| p_\theta(\mathbf{z})) 
@@ -148,17 +148,15 @@ Two components in the ELBO:
 
 For more detailed understanding, you can take a look at this very good blogpost [Lil'Log](https://lilianweng.github.io/posts/2018-08-12-vae/) or excellent explanation by [Ahlad Kumar](https://www.youtube.com/watch?v=YHldNC1SZVk).
 
-As you can see from the objective function above, the VAE wants to minimize reconstruction loss, while the KL divergence term encourages the VAE not to create very distinct and separate clusters for each mode in the latent space but to keep them close to the prior.
+As far as i know, several previous works assume the prior distribution for the latent variables, $$ Z $$, to be a standard Gaussian distribution, $$ \mathcal{N}(0, I) $$, which is fixed and does not depend on the input context. The reason for using this assumption is to simplify the learning process.
 
-As far as i know, many previous works assume the prior distribution for the latent variables, $$ Z $$, to be a standard Gaussian distribution, $$ \mathcal{N}(0, I) $$, which is fixed and does not depend on the input context. The reason for using this assumption is to simplify the learning process.
-
-This can be problematic because a standard Gaussian prior assumes that the latent space is unimodal and therefore does not capture the multi-modal nature of the future trajectories where multiple distinct future paths (modes) are possible.
+This can be problematic because a standard Gaussian prior assumes that the latent space is unimodal and therefore does not fully capture the multi-modal nature of the future trajectories where multiple distinct future paths (modes) are possible.
 
 When the VAE learns to represent data in the latent space, it must balance the reconstruction and KL divergence terms. It wants to spread out the representations to minimize the reconstruction loss (since the trajectory distribution is multi-modal) but it is also constrained by the KL divergence to keep these representations from getting too dispersed (since the prior is unimodal).
 
-As a consequence, during the generation phase, when the model samples from these latent representations, it also may end up sampling from "in-between" spaces if the distinct modes are not well-separated. This results in outputs that are a blend of several possible outcomes rather than committing to a single, distinct outcome.
+As a consequence, during the generation phase, when the model samples from these latent representations, it also may end up sampling from "in-between" spaces if the distinct modes are not well-separated.
 
-So in the context of trajectory planning, the "mode blur" problem is most likely happened due to the balancing act between reconstruction loss and the KL divergence done by the ELBO objective function. When generating data, the VAE may generate a predicted trajectory that doesn't clearly commit to any of the possible paths (like staying in the lane, changing lanes, turning, etc). Instead, it generates a trajectory that lies somewhere in between.
+So in this case, the "mode blur" problem is most likely happened due to the balancing act between reconstruction loss and the KL divergence done by the ELBO objective function. When generating data, the VAE may generate a predicted trajectory that doesn't clearly commit to any of the possible paths. Instead, it generates a trajectory that lies somewhere in between.
 
 
 ## Key Contributions
@@ -197,9 +195,7 @@ Based on my understanding so far, there are 4 major contributions of this paper 
 
 ### Introduction to HLS
 
-In the complex traffic scenes with `N` vehicles, predicting the future trajectory of each vehicle can be challenging. The Hierarchical Latent Structure (HLS) proposed by D. Choi & K. Min [1] aims to generate plausible trajectory distributions, taking into consideration both individual vehicle history and the overall scene.
-
-You may wonder how that kind of approach can avoid the "mode blur" problem that happens in the previous work. The goal of the proposed method is to generate a trajectory distribution $$p\left(\mathbf{Y}_{i} \mid \mathbf{X}_{i}, \mathcal{C}_{i}\right)$$ for vehicles. This distribution is supposed to predict the future positions $$\mathbf{Y}_{i}$$ based on the past positional history $$\mathbf{X}_{i}$$ and the scene context $$\mathcal{C}_{i}$$.
+You may wonder how that kind of approach can avoid the "mode blur" problem that happens in the previous work. Basically they implement Conditional-VAE with the input $$ \mathbf{X}_{i} $$ and $$ \mathcal{C}_{i} $$ as conditional variable. The goal of the proposed method is to generate a trajectory distribution $$p\left(\mathbf{Y}_{i} \mid \mathbf{X}_{i}, \mathcal{C}_{i}\right)$$ for vehicles.
 
 The generated trajectory distribution is represented as a sum of modes, weighted by their probability or importance. Mathematically, it can be defined like below :
 
@@ -207,13 +203,13 @@ $$
 p\left(\mathbf{Y}_{i} \mid \mathbf{X}_{i}, \mathcal{C}_{i}\right)=\sum_{m=1}^{M} \underbrace{p\left(\mathbf{Y}_{i} \mid E_{m}, \mathbf{X}_{i}, \mathcal{C}_{i}\right)}_{\text {mode }} \underbrace{p\left(E_{m} \mid \mathbf{X}_{i}, \mathcal{C}_{i}\right)}_{\text {weight }}
 $$
 
-The equation above indicates that the trajectory distribution $$ p(\mathbf{Y}_{i} \mid \mathbf{X}_{i}, \mathcal{C}_{i}) $$ can be expressed as a weighted sum of distributions called modes. The term "mode" represents a plausible path, and the term "weight" represents the probability of each mode occurring. 
+Note that the term "mode" represents a plausible path, and the term "weight" represents the probability of each mode occurring. 
 
 ### HLS to Avoid "Mode Blur"
 
 The paper assumes that the trajectory distribution can be approximated as a mixture of simpler distributions. Each of these simpler distributions, or "modes", represents a distinct pattern or type of trajectory that a vehicle could follow.
 
-The key intuition here is to consider each possible trajectory (mode) separately. It does this through a model that uses latent variables to represent different modes. By modeling each mode with a latent variable, the model can sample trajectories from these modes based on their weights or importance. This allows for diverse trajectory predictions rather than a blurred average.
+The key intuition here is that instead of learning the overall distributions of the future trajectories, the proposed method tries to consider each possible trajectory (mode) separately and then approximate the trajectory distributions by combining all possible modes with its own probability.
 
 <div class="row mt-4 justify-content-center">
     <div class="col-12 col-md-8 mx-auto mt-4 img-container">
@@ -229,8 +225,6 @@ To capture this mixture of distributions, the HLS model employs two levels of la
 1. **Low-level latent variable $$\mathbf{z}_{l}$$**: Used to model individual modes of the trajectory distributions.
 2. **High-level latent variable $$\mathbf{z}_{h}$$**: Employed to determine the weights for different modes.
 
-Note that $$\mathbf{z}_{l}$$ is conditioned on both the vehicle's past trajectory and the contextual information, allowing the model to generate diverse and realistic trajectories within each mode. This aligns with the 'simple distributions' aspect of the paper's assumption, as each latent variable models a distinct, simpler trajectory pattern.
-
 The mathematical equation of the new objective function can be expressed as below :
 
 $$
@@ -244,7 +238,7 @@ The key aspect here is that the prior $$ p_{\gamma}(\mathbf{z}_l \mid \mathbf{X}
 
 This conditionality allows the model to learn different representations for different subsets of data, guided by the vehicle's past trajectory and additional scene information relevant to the vehicle. By doing so, the model can capture the nuances and variations in trajectory distributions that are specific to different traffic situations and lane configurations. 
 
-By structuring the model in this way, the HLS method can generate trajectory predictions that are not just an average of all possible paths but are instead a combination of distinct, plausible paths that a vehicle might realistically take, each with its own probability.
+By structuring the model in this way, the HLS method can generate trajectory predictions that are a combination of distinct, plausible paths that a vehicle might realistically take, each with its own probability.
 
 ### Generating `VLI` and `V2I` Context Vectors
 
