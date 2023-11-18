@@ -49,7 +49,7 @@ How can we defend our model against such kind of attack? Let's discuss some of t
 
 <div class="row mt-4">
     <div class="col-12 col-lg mt-4 img-container">
-        {% include figure.html path="/assets/img/defense_methods/adversarial_attack.png" class="img-fluid" zoomable=true %}
+        {% include figure.html path="/assets/img/defense_methods/defense-gan_overview.png" class="img-fluid" zoomable=true %}
     </div>
 </div>
 <div class="caption text-center mb-4">
@@ -72,11 +72,11 @@ But, there is an additional challenge. It turns out that the minimization proble
 
 <div class="row mt-4">
     <div class="col-12 col-lg mt-4 img-container">
-        {% include figure.html path="/assets/img/defense_methods/adversarial_attack.png" class="img-fluid" zoomable=true %}
+        {% include figure.html path="/assets/img/defense_methods/defense-gan_lstepGD.png" class="img-fluid" zoomable=true %}
     </div>
 </div>
 <div class="caption text-center mb-4">
-    Figure 3. Overview of $$ L $$-steps GD used in Defense-GAN algorithm. (Image source : Samangouei et al [1]).
+    Figure 3. Overview of multiple steps GD used in Defense-GAN algorithm. (Image source : Samangouei et al [1]).
 </div>
 
 To address this, Defense-GAN uses $$ L $$-steps GD, an iterative optimization algorithm, to navigate the latent space. At each step, this method will update the current estimate of $$ \mathbf{z} $$ to reduce the difference $$ \|G(\mathbf{z})-\mathbf{x}\|_{2}^{2} $$. The $$ L $$ steps indicate the number of iterations GD will run to refine the solution.
