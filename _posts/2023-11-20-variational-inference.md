@@ -34,12 +34,12 @@ I often found the explanation on the internet about this topic is not clear enou
 
 This post is based on my understanding of the topic, so if you find any mistake please let me know :)
 
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="/assets/img/VI/DALL·E 2023-11-23 17.07.41.png" zoomable=true %}
+<div class="row mt-4 justify-content-center">
+    <div class="col-12 col-md-8 mx-auto mt-4 img-container">
+        {% include figure.html path="/assets/img/VI/DALL·E 2023-11-23 17.07.41.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
-<div class="caption">
+<div class="caption text-center mb-4">
     Figure 1. Illustration of the output from text-to-image model (Image source : DALLE-3).
 </div>
 
