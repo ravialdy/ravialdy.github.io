@@ -26,7 +26,7 @@ h3 {
 
 ## Introduction
 
-Hi guys, welcome to my blogpost again :) Today, I want to discuss about the magical and how wonderful variational inference is. This approach is widely used in many applications, such as text-to-image generation, motion planning, Reinforcement Learning (RL), etc. 
+Hi guys, welcome to my blogpost again :) Today, I want to discuss about the magical and how wonderful Variational Inference (VI) is. This approach is widely used in many applications, such as text-to-image generation, motion planning, Reinforcement Learning (RL), etc. 
 
 The reason for this is that in many cases the distribution of generated output that we want is very complex, e.g., images, text, video, etc. This is where VI can help us through latent variables. I believe that once we can master this concept well, then we can understand many recent AI techniques more easily and intuitively.
 
