@@ -240,8 +240,8 @@ After that, by using the log property we can also write above equation as,
 
 $$
 \begin{aligned}
-D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) &= -E_{z \sim q_i(z)}\left[\log p\left(x_i \mid z\right) + \log p(z)\right] \\
-&\quad + E_{z \sim q_i(z)}\left[\log q_i(z)\right] + E_{z \sim q_i(z)}\left[\log p\left(x_i\right)\right]
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) = & -E_{z \sim q_i(z)}\left[\log p\left(x_i \mid z\right) + \log p(z)\right] \\
+& + E_{z \sim q_i(z)}\left[\log q_i(z)\right] + E_{z \sim q_i(z)}\left[\log p\left(x_i\right)\right]
 \end{aligned}
 $$
 
@@ -249,8 +249,8 @@ Since $$ - E_{z \sim q_i(z)}\left[\log q_i(z) \right] $$ is the entropy $$ \math
 
 $$
 \begin{aligned}
-D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) &= -E_{z \sim q_i(z)}\left[\log p\left(x_i \mid z\right) + \log p(z)\right] \\
-&\quad - \mathcal{H}\left(q_i\right) + \log p\left(x_i\right)
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) = & -E_{z \sim q_i(z)}\left[\log p\left(x_i \mid z\right) + \log p(z)\right] \\
+& - \mathcal{H}\left(q_i\right) + \log p\left(x_i\right)
 \end{aligned}
 $$
 
