@@ -191,7 +191,7 @@ $$
 If we apply log operation for both sides of the equation, we can get the expression like below,
 
 $$
-\log p\left(x_i\right) & =\log E_{z \sim q_i(z)}\left[\frac{p\left(x_i \mid z\right) p(z)}{q_i(z)}\right]
+\log p\left(x_i\right) = \log E_{z \sim q_i(z)}\left[\frac{p\left(x_i \mid z\right) p(z)}{q_i(z)}\right]
 $$
 
 Then, we can implement jensen's inequality $$ \log E[y] \geq E[\log y] $$ into our case, then we can get,
@@ -213,7 +213,7 @@ So how we can make that lower bound to be tighter? The answer lies on how we can
 The mathematical equation for implementing KL divergence between approximate and the true posterior can be written like this,
 
 $$
-D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) & =E_{z \sim q_i(z)}\left[\log \frac{q_i(z)}{p\left(z \mid x_i\right)}\right]
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) = E_{z \sim q_i(z)}\left[\log \frac{q_i(z)}{p\left(z \mid x_i\right)}\right]
 $$
 
 For those who are not familiar with KL divergence before, so basically the equation above measures how one probability distribution diverges from a second, expected probability distribution.
@@ -233,31 +233,31 @@ $$
 where $$ p(x_i \mid z) p(z) = p(x_i, z) $$ is derived from the definition of joint probability. By inserting above expression into inside our KL divergence, we can get,
 
 $$
-D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) & =E_{z \sim q_i(z)}\left[\log \frac{q_i(z) p\left(x_i\right)}{p\left(x_i, z\right)}\right]
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) = E_{z \sim q_i(z)}\left[\log \frac{q_i(z) p\left(x_i\right)}{p\left(x_i, z\right)}\right]
 $$
 
 After that, by using the log property we can also write above equation as, 
 
 $$
-D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) & =-E_{z \sim q_i(z)}\left[\log p\left(x_i \mid z\right)+\log p(z)\right]+E_{z \sim q_i(z)}\left[\log q_i(z)\right]+E_{z \sim q_i(z)}\left[\log p\left(x_i\right)\right]
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) = -E_{z \sim q_i(z)}\left[\log p\left(x_i \mid z\right)+\log p(z)\right]+E_{z \sim q_i(z)}\left[\log q_i(z)\right]+E_{z \sim q_i(z)}\left[\log p\left(x_i\right)\right]
 $$
 
 Since $$ - E_{z \sim q_i(z)}\left[\log q_i(z) \right] $$ is the entropy $$ \mathcal{H}\left(q_i\right) $$, we can also write,
 
 $$
-D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) & =-E_{z \sim q_i(z)}\left[\log p\left(x_i \mid z\right)+\log p(z)\right]-\mathcal{H}\left(q_i\right)+\log p\left(x_i\right)
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) = -E_{z \sim q_i(z)}\left[\log p\left(x_i \mid z\right)+\log p(z)\right]-\mathcal{H}\left(q_i\right)+\log p\left(x_i\right)
 $$
 
 Then, we can also express above equation as, 
 
 $$
-D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) & =-\mathcal{L}_i\left(p, q_i\right)+\log p\left(x_i\right)
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) = -\mathcal{L}_i\left(p, q_i\right)+\log p\left(x_i\right)
 $$
 
 Rearranging above equation give us,
 
 $$
-\log p\left(x_i\right)=D_{\mathrm{KL}}\left(q_i(z) \| p\left(z \mid x_i\right)\right)+\mathcal{L}_i\left(p, q_i\right)
+\log p\left(x_i\right) = D_{\mathrm{KL}}\left(q_i(z) \| p\left(z \mid x_i\right)\right)+\mathcal{L}_i\left(p, q_i\right)
 $$
 
 As you can see, from the equation above we can say that if we successfully minimize the KL divergence part into 0 (which means our approximate posterior is exactly same with the true one), then the loglikelihood of our marginal or data distribution is also exactly same with the variational lower bound that we have defined before. 
