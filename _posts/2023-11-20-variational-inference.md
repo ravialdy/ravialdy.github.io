@@ -172,8 +172,96 @@ $$
 p(\mathbf{x}) = E_{\mathbf{z} \sim q_i(\mathbf{z})}\left[\frac{p(\mathbf{x} \mid \mathbf{z}) \, p(\mathbf{z})}{q_i(\mathbf{z})}\right]
 $$
 
-By using this formulation, we can avoid the direct computation of the integral for the marginal likelihood, which is typically intractable. Instead, we can focus on finding the optimal $$ q_i(\mathbf{z}) $$ that minimizes the difference from the true posterior, as measured by the Kullback-Leibler divergence. 
+By using this formulation, we can avoid the direct computation of the integral for the marginal likelihood, which is typically intractable. Instead, we can focus on finding the optimal $$ q_i(\mathbf{z}) $$ that minimizes the difference from the true posterior, as measured by the Kullback-Leibler (KL) divergence. 
 
 This approach is the essence of variational inference, transforming a challenging integration problem into a more manageable optimization problem via expected value calculation.
+
+## Evidence Lower Bound Objective (ELBO)
+
+It turns out that if we approximate the true posterior by doing what we discussed before, then we can construct a lower bound for the marginal distribution $$ p(x_i) $$ of each $$ x_i $$ point. This can be a very powerful idea because by having that lower bound we can also maximize the loglikelihood of $$ p(x_i) $$.
+
+Note that generally increasing the lower bound does not necessarily mean also increase the loglikelihood of $$ p(x_i) $$, but if some conditions are satisfied, then it does (we will discuss more about this later).
+
+Recall that by looking at the previous equation, we can also derive the mathematical equation for each data point $$ x_i $$ of the distribution $$ p(x_i) $$ as, 
+
+$$
+p(x_i) = E_{\mathbf{z} \sim q_i(z)}\left[\frac{p(x_i \mid z) \, p(z)}{q_i(z)}\right]
+$$
+
+If we apply log operation for both sides of the equation, we can get the expression like below,
+
+$$
+\log p\left(x_i\right) & =\log E_{z \sim q_i(z)}\left[\frac{p\left(x_i \mid z\right) p(z)}{q_i(z)}\right]
+$$
+
+Then, we can implement jensen's inequality $$ \log E[y] \geq E[\log y] $$ into our case, then we can get,
+
+$$
+\log p\left(x_i\right) \geq  E_{z \sim q_i(z)}\left[\log \frac{p\left(x_i \mid z\right) p(z)}{q_i(z)}\right]
+$$
+
+By leveraging log property, the above equation can also be expressed as,
+
+$$
+\log p\left(x_i\right) \geq  E_{z \sim q_i(z)}\left[\log p\left(x_i \mid z\right)+\log p(z)\right] - E_{z \sim q_i(z)}\left[\log q_i(z) \right]
+$$
+
+where $$ - E_{z \sim q_i(z)}\left[\log q_i(z) \right] $$ is the entropy $$ \mathcal{H}\left(q_i\right) $$. The above inequality is also called as variational lower bound $$ \mathcal{L}_i\left(p, q_i\right) $$.
+
+So how we can make that lower bound to be tighter? The answer lies on how we can find a good approximation for $$ q_i(z) $$. So how we can do that? Yes you are right, the answer is by using KL divergence!
+
+The mathematical equation for implementing KL divergence between approximate and the true posterior can be written like this,
+
+$$
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) & =E_{z \sim q_i(z)}\left[\log \frac{q_i(z)}{p\left(z \mid x_i\right)}\right]
+$$
+
+For those who are not familiar with KL divergence before, so basically the equation above measures how one probability distribution diverges from a second, expected probability distribution.
+
+Recall that the bayes theorem tells us, 
+
+$$
+p(z \mid x_i) = \frac{p(x_i \mid z) p(z)}{p(x_i)}
+$$
+
+Therefore, we can use that to rewrite the term inside our KL divergence as:
+
+$$
+\frac{q_i(z)}{p\left(z \mid x_i\right)} = \frac{q_i(z)}{\frac{p(x_i \mid z) p(z)}{p(x_i)}} = \frac{q_i(z) p(x_i)}{p(x_i, z)}
+$$
+
+where $$ p(x_i \mid z) p(z) = p(x_i, z) $$ is derived from the definition of joint probability. By inserting above expression into inside our KL divergence, we can get,
+
+$$
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) & =E_{z \sim q_i(z)}\left[\log \frac{q_i(z) p\left(x_i\right)}{p\left(x_i, z\right)}\right]
+$$
+
+After that, by using the log property we can also write above equation as, 
+
+$$
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) & =-E_{z \sim q_i(z)}\left[\log p\left(x_i \mid z\right)+\log p(z)\right]+E_{z \sim q_i(z)}\left[\log q_i(z)\right]+E_{z \sim q_i(z)}\left[\log p\left(x_i\right)\right]
+$$
+
+Since $$ - E_{z \sim q_i(z)}\left[\log q_i(z) \right] $$ is the entropy $$ \mathcal{H}\left(q_i\right) $$, we can also write,
+
+$$
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) & =-E_{z \sim q_i(z)}\left[\log p\left(x_i \mid z\right)+\log p(z)\right]-\mathcal{H}\left(q_i\right)+\log p\left(x_i\right)
+$$
+
+Then, we can also express above equation as, 
+
+$$
+D_{\mathrm{KL}}\left(q_i\left(x_i\right) \| p\left(z \mid x_i\right)\right) & =-\mathcal{L}_i\left(p, q_i\right)+\log p\left(x_i\right)
+$$
+
+Rearranging above equation give us,
+
+$$
+\log p\left(x_i\right)=D_{\mathrm{KL}}\left(q_i(z) \| p\left(z \mid x_i\right)\right)+\mathcal{L}_i\left(p, q_i\right)
+$$
+
+As you can see, from the equation above we can say that if we successfully minimize the KL divergence part into 0 (which means our approximate posterior is exactly same with the true one), then the loglikelihood of our marginal or data distribution is also exactly same with the variational lower bound that we have defined before. 
+
+Thus, we already have a way to make that lower bound more tight by minimizing the KL divergence part.
 
 For the next part of this post, stay tune :) I will complete this as soon as I can :)
