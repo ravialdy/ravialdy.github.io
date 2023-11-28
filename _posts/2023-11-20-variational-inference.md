@@ -58,7 +58,7 @@ Let's say we want to build a regression model that can fit a simple data distrib
     Figure 2. Regression model that tries to fit simple data distribution (Image source : <a href="https://www.analyticsvidhya.com/blog/2022/01/different-types-of-regression-models/">Analytics Vidhya</a>).
 </div>
 
-What we basically try to do from the image above is to model $$ p_(\mathbf{y} \mid \mathbf{x}) $$ where $$ y $$ is our data given $$ x $$. It seems very simple right? But now let's imagine we have quite complex data dsitribution like below,
+What we basically try to do from the image above is to model $$ p(\mathbf{y} \mid \mathbf{x}) $$ where $$ y $$ is our data given $$ x $$. It seems very simple right? But now let's imagine we have quite complex data dsitribution like below,
 
 <div class="row mt-4 justify-content-center">
     <div class="col-12 col-md-8 mx-auto mt-4 img-container">
@@ -73,7 +73,7 @@ You might be confused initially on how we can build a model that fits that distr
 
 Fortunately, we can approximate that distribution through multiplication of two simple distributions. How we can do that? This is where the concept of latent variable models comes into play. 
 
-The data distribution itself $$ p_(\mathbf{x}) $$ can be expressed mathematically as,
+The data distribution itself $$ p(\mathbf{x}) $$ can be expressed mathematically as,
 
 $$
 p(\mathbf{x})=\sum_z p(\mathbf{x} \mid \mathbf{z}) p(\mathbf{z})
@@ -125,11 +125,21 @@ So why $$ p(\mathbf{z} \mid \mathbf{x}) $$ is very difficult to calculate? The r
 
 This is because the integral used for calculating $$ p(\mathbf{x}) $$ sums over all possible values of $$ \mathbf{z} $$, and each evaluation of the joint distribution within the integral can also be computationally expensive, leading to an intractable integral.
 
-For example, let's imagine we have a mixture model with $$ K $$ clusters and $$ n $$ data points, each data point can belong to any of the $$ K $$ clusters as illustrated in figure 3. This is similar to having $$ n $$ slots (data points), where each slot can be filled with one of $$ K $$ options (clusters). The total number of ways to assign clusters to data points is $$ K^n $$.
+For example, let's imagine we have a mixture model with $$ K = 2 $$ clusters as our latent variable and $$ n = 3 $$ data points which represents our observed data $$ \mathbf{x} $$. Thus, we will have 8 combinations as follows: (1,1,1), (1,1,2), (1,2,1), (1,2,2), (2,1,1), (2,1,2), (2,2,1), (2,2,2). Here, each tuple represents the cluster assignments for the three data points.
 
-Let's say we just have $$ K = 3 $$ clusters and $$ n = 10 $$ data points, the total number of cluster assignments is $$ 3^{10} $$. Mathematically, $$ 3^{10} = 59,049 $$. This is the total number of ways to assign each of the 10 data points to one of the 3 clusters. For each of these 59,049 combinations, we need to compute an integral over the means of the Gaussian components. 
+For each of the 8 combinations of cluster assignments, we have to evaluate the likelihood of the entire data set given these assignments and the cluster means. The integral for every combination will be a two-dimensional integral over the two means ($$ \mu_1 $$ and $$ \mu_2 $$). Then, the integral for each cluster assignment can be written as,
 
-Recall that this integral involves calculating the likelihood of the data given a specific set of cluster assignments and means. If there are $$ K $$ clusters, then the integral is also $$ K $$-dimensional. Thus, you now can imagine how much resources that we need to solve that simple example !!
+$$
+\int \int \prod_{i=1}^{3} p(x_i \mid \mu_{c_i}, \sigma^2) \, p(\mu_1) \, p(\mu_2) \, d\mu_1 \, d\mu_2
+$$
+
+Here, $$ p(x_i \mid \mu_{c_i}, \sigma^2) $$ is the likelihood of the data point $$ x_i $$ given its assigned cluster mean $$ \mu_{c_i} $$ and variance $$ \sigma^2 $$, and $$ p(\mu_1) $$, $$ p(\mu_2) $$ are the priors on the means $$ \mu_1 $$ and $$ \mu_2 $$.
+
+Notice that the number of integral follows the total dimensions that our latent variable $$ \mathbf{z} $$ has. In reality, we can have up to thousands of latent dimensions which means that we need to calculate thousands-dimensional integral!!
+
+Even for our very simple example, the cost can be computationally intensive, particularly when the likelihood and prior distributions do not have closed-form solutions!!
+
+Note* : closed-form solutions refers to the exact results from using standard math operations.
 
 ## Approximate Posterior Distribution
 
