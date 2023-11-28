@@ -147,7 +147,7 @@ Now you understand why calculating the exact posterior distribution is often ver
 
 Remember that the root cause is not the posterior itself, but its requirement to calculate marginal distribution $$ p(\mathbf{x}) $$ to derive $$ p(\mathbf{z} \mid \mathbf{x}) $$ which involves integrations. Thus, the key idea here is to approximate the posterior by replacing the annoying integral operations with the optimization process of expected value $$ E_{z \sim q_i(\mathbf{z})} $$ with respect to approximate posterior $$ q_i(\mathbf{z}) $$.
 
-Specifically, the optimization is used to find the best approximation $$ q(\mathbf{z} ; \boldsymbol{v*}) $$  where $$ \boldsymbol{v} $$ are the variational parameters from a chosen family of distributions that minimizes the difference (specifically, the Kullback-Leibler divergence) from the true posterior $$ p(\mathbf{z} \mid \mathbf{x}) $$. 
+Specifically, the optimization is used to find the best approximation $$ q_i(\mathbf{z} ; \boldsymbol{v*}) $$  where $$ \boldsymbol{v*} $$ are the variational parameters from a chosen family of distributions that minimizes the difference (specifically, the Kullback-Leibler divergence) from the true posterior $$ p(\mathbf{z} \mid \mathbf{x}) $$. 
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -186,7 +186,17 @@ $$
 
 By using this formulation, we can avoid the direct computation of the integral for the marginal likelihood, which is typically intractable. Instead, we use optimization problem for finding the optimal $$ q_i(\mathbf{z}) $$ that minimizes the difference from the true posterior involving expected value calculation.
 
-This approach is the essence of variational inference, transforming a challenging integration problem into a more manageable optimization problem.
+This approach is the essence of variational inference, transforming a challenging integration problem into a more manageable optimization problem. Specifically, we want to move difficult optimization 
+
+$$
+q_i^*(\mathbf{z})=\underset{q_i(\mathbf{z}) \in Q}{\operatorname{argmin}}(D_{\mathrm{KL}}(q_i(\mathbf{z} ; \boldsymbol{v}) \| p(\mathbf{z} \mid \mathbf{x})))
+$$
+
+since we do not have true posterior $$ p(\mathbf{z} \mid \mathbf{x}) $$ into easier one by replacing KL divergence with variational lower bound $$ \mathcal{L}_i\left(p, q_i^*\right) $$ (Don't worry, we will discuss this notation in more detail in the next section) like below, 
+
+$$
+q_i^*(\mathbf{z})=\underset{q_i(\mathbf{z}) \in Q}{\operatorname{argmax}}(\mathcal{L}_i\left(p, q_i^*\right))
+$$
 
 ## Evidence Lower Bound Objective (ELBO)
 
@@ -278,7 +288,7 @@ $$
 \log p\left(x_i\right) = D_{\mathrm{KL}}\left(q_i(z) \| p\left(z \mid x_i\right)\right)+\mathcal{L}_i\left(p, q_i\right)
 $$
 
-As you can see, from the equation above we can say that if we successfully minimize the KL divergence part into 0 (which means our approximate posterior is exactly same with the true one), then the loglikelihood of our marginal or data distribution is also exactly same with the variational lower bound that we have defined before. 
+As you can see, from the equation above we can say that if we successfully minimize the KL divergence part into 0 (which means our approximate posterior is exactly same with the true one), then the loglikelihood of our marginal or data distribution is also exactly same with the variational lower bound $$ \mathcal{L}_i\left(p, q_i\right) $$.
 
 Thus, we already have a way to make that lower bound more tight by minimizing the KL divergence part.
 
@@ -288,4 +298,10 @@ This means that if we maximize variational lower bound (we can also call it as E
 
 Thus, we can say that we can make the lower bound more tight by maximizing ELBO with respect to $$ q_i(z) $$ since it minimizes KL divergence. Similarly, we can also maximizes our likelihood / model by maximizing the same ELBO w.r.t. $$ p $$. 
 
-For the next part of this post, stay tune :) I will complete this as soon as I can :)
+## Conclusion
+
+After long discussion, you may still wonder what Variational Inference (VI) essentially tells us about? At its core, VI is a powerful method for making the intractable tractable. By introducing a variational distribution $$ q_i(\mathbf{z}) $$ and optimizing it, VI transforms the challenging problem of computing the true posterior $$ p(\mathbf{z} \mid \mathbf{x}) $$ into an optimization problem that is much more manageable computationally.
+
+This transformation rely on the replacement of the computationally intensive KL divergence with the variational lower bound $$ \mathcal{L}_i\left(p, q_i^*\right) $$, or ELBO. The key idea here is that instead of directly handle the high-dimensional integrals to define the true posterior, we work with a surrogate optimization problem that is much easier to solve but still retains the essential characteristics of the original problem.
+
+In essence, VI is about approximation and efficiency. By approximating the intractable posterior distribution with a more tractable form and maximizing the ELBO, we can indirectly estimate the true posterior. 
