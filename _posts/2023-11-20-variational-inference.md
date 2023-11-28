@@ -127,13 +127,13 @@ This is because the integral used for calculating $$ p(\mathbf{x}) $$ sums over 
 
 For example, let's imagine we have a mixture model with $$ K = 2 $$ clusters as our latent variable and $$ n = 3 $$ data points which represents our observed data $$ \mathbf{x} $$. Thus, we will have 8 combinations as follows: (1,1,1), (1,1,2), (1,2,1), (1,2,2), (2,1,1), (2,1,2), (2,2,1), (2,2,2). Here, each tuple represents the cluster assignments for the three data points.
 
-For each of the 8 combinations of cluster assignments, we have to evaluate the likelihood of the entire data set given these assignments and the cluster means. The integral for every combination will be a two-dimensional integral over the two means ($$ \mu_1 $$ and $$ \mu_2 $$). Then, the integral for each cluster assignment can be written as,
+For each of the 8 combinations of cluster assignments, we have to evaluate the likelihood of the entire data set given these assignments and the cluster means. The integral for every combination will be a two-dimensional integral over the two means ($$ \mu_1 $$ and $$ \mu_2 $$). Then, the integral for marginal distribution can be written as,
 
 $$
-\int \int \prod_{i=1}^{3} p(x_i \mid \mu_{c_i}, \sigma^2) \, p(\mu_1) \, p(\mu_2) \, d\mu_1 \, d\mu_2
+p(\mathbf{x}) = \int \int \prod_{i=1}^{3} p(x_i \mid \mu_{c_i}) \, p(\mu_1) \, p(\mu_2) \, d\mu_1 \, d\mu_2
 $$
 
-Here, $$ p(x_i \mid \mu_{c_i}, \sigma^2) $$ is the likelihood of the data point $$ x_i $$ given its assigned cluster mean $$ \mu_{c_i} $$ and variance $$ \sigma^2 $$, and $$ p(\mu_1) $$, $$ p(\mu_2) $$ are the priors on the means $$ \mu_1 $$ and $$ \mu_2 $$.
+Here, $$ p(x_i \mid \mu_{c_i}) $$ represents the likelihood of data point $$ x_i $$ given the mean of its assigned cluster $$ \mu_{c_i} $$, where $$ c_i $$ is the cluster assignment for data point $$ i $$.
 
 Notice that the number of integral follows the total dimensions that our latent variable $$ \mathbf{z} $$ has. In reality, we can have up to thousands of latent dimensions which means that we need to calculate thousands-dimensional integral!!
 
@@ -170,7 +170,9 @@ $$
 p(\mathbf{x}) = \int p(\mathbf{x} \mid \mathbf{z}) \, p(\mathbf{z}) \, \mathrm{d}\mathbf{z} = \int p(\mathbf{x} \mid \mathbf{z}) \, p(\mathbf{z}) \, \frac{q_i(\mathbf{z})}{q_i(\mathbf{z})} \, \mathrm{d}\mathbf{z}
 $$
 
-The introduction of $$ \frac{q_i(\mathbf{z})}{q_i(\mathbf{z})} $$ is a mathematical trick that allows us to rewrite the marginal likelihood in terms of the variational distribution $$ q_i(\mathbf{z}) $$. By doing this, we can utilize the expected value with respect to $$ q_i(\mathbf{z}) $$ to approximate the integral. The modified expression for the marginal likelihood becomes,
+The introduction of $$ \frac{q_i(\mathbf{z})}{q_i(\mathbf{z})} $$ is a mathematical trick that allows us to rewrite the marginal likelihood in terms of the variational distribution $$ q_i(\mathbf{z}) $$. By doing this, we can utilize the expected value with respect to $$ q_i(\mathbf{z}) $$ to approximate the integral. 
+
+The modified expression for the marginal likelihood becomes,
 
 $$
 p(\mathbf{x}) = \int q_i(\mathbf{z}) \, \frac{p(\mathbf{x} \mid \mathbf{z}) \, p(\mathbf{z})}{q_i(\mathbf{z})} \, \mathrm{d}\mathbf{z}
