@@ -184,9 +184,9 @@ $$
 p(\mathbf{x}) = E_{\mathbf{z} \sim q_i(\mathbf{z})}\left[\frac{p(\mathbf{x} \mid \mathbf{z}) \, p(\mathbf{z})}{q_i(\mathbf{z})}\right]
 $$
 
-By using this formulation, we can avoid the direct computation of the integral for the marginal likelihood, which is typically intractable. Instead, we can focus on finding the optimal $$ q_i(\mathbf{z}) $$ that minimizes the difference from the true posterior, as measured by the Kullback-Leibler (KL) divergence. 
+By using this formulation, we can avoid the direct computation of the integral for the marginal likelihood, which is typically intractable. Instead, we use optimization problem for finding the optimal $$ q_i(\mathbf{z}) $$ that minimizes the difference from the true posterior involving expected value calculation.
 
-This approach is the essence of variational inference, transforming a challenging integration problem into a more manageable optimization problem via expected value calculation.
+This approach is the essence of variational inference, transforming a challenging integration problem into a more manageable optimization problem.
 
 ## Evidence Lower Bound Objective (ELBO)
 
@@ -281,5 +281,11 @@ $$
 As you can see, from the equation above we can say that if we successfully minimize the KL divergence part into 0 (which means our approximate posterior is exactly same with the true one), then the loglikelihood of our marginal or data distribution is also exactly same with the variational lower bound that we have defined before. 
 
 Thus, we already have a way to make that lower bound more tight by minimizing the KL divergence part.
+
+But, how we can minimize the KL divergence in order to make the lower bound to be more tighter? Notice that in the last equation for $$ \log p\left(x_i\right) $$ that we have derived before, $$ \log p(x_i) $$ is a constant with respect to (w.r.t.) the variational distribution $$ q_i(z) $$.
+
+This means that if we maximize variational lower bound (we can also call it as ELBO at this step) with respect to $$ q_i(z) $$, then it also means we minimize $$ D_{\mathrm{KL}}\left(q_i(z) \| p(z \mid x_i)\right) $$ since $$ \log p(x_i) $$ is constant w.r.t. $$ q_i(z) $$.
+
+Thus, we can say that we can make the lower bound more tight by maximizing ELBO with respect to $$ q_i(z) $$ since it minimizes KL divergence. Similarly, we can also maximizes our likelihood / model by maximizing the same ELBO w.r.t. $$ p $$. 
 
 For the next part of this post, stay tune :) I will complete this as soon as I can :)
