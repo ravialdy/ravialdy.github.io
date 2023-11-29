@@ -77,6 +77,8 @@ The paper aims to overcome a specific limitation in vehicle trajectory forecasti
     Figure 2. Illustration of the "mode blur" problem in VAE-based generated trajectory forecasts (Image source : D. Choi & K. Min [1]).
 </div>
 
+### What is "Mode Blur" Problem?
+
 As you can see from the figure above, the red vehicle is attempting to forecast its future trajectory represented by the branching gray paths. The challenge faced here lies in the generated forecast trajectories' that are sometimes between defined lane paths.
 
 This phenomenon is what the author mean by the "mode blur" problem.  Specifically, the VAE-based model is not committing to a specific path, but rather giving a "blurred" average of possible outcomes.
@@ -114,6 +116,8 @@ This issue can lead to the Autonomous Vehicle (AV) having to make frequent adjus
     Figure 5. Scenario 3 of the "mode blur" problem that exist in the previous SOTA model (Image source : Cui et al, 2021 [2]).
 </div>
 
+### Reason Why "Mode Blur" Happens
+
 The reason for this problem is the use of Variational Autoencoders (VAEs) in the trajectory forecasting models since they have a well-known limitation: the outputs that they generate can often be "blurry". The authors of paper [1] observed that similar problem also found in the trajectory planning case, not only in the tasks involving image reconstruction and synthesis. 
 
 VAEs aim to learn a probabilistic latent space representation of the data. So instead of generating fixed value of latent variable, what VAE does is to learn the latent space distribution and sample from it in order to get the latent vector that can be used to reconstruct the input.
@@ -150,9 +154,9 @@ For more detailed understanding, you can take a look at this very good blogpost 
 
 As far as i know, several previous works assume the prior distribution for the latent variables, $$ Z $$, to be a standard Gaussian distribution, $$ \mathcal{N}(0, I) $$, which is fixed and does not depend on the input context. The reason for using this assumption is to simplify the learning process.
 
-This can be problematic because a standard Gaussian prior assumes that the latent space is unimodal and therefore does not fully capture the multi-modal nature of the future trajectories where multiple distinct future paths (modes) are possible.
+This can be problematic because a standard Gaussian prior assumes that the latent space is unimodal and therefore does not fully capture the multi-modal nature of the future trajectories where multiple distinct future paths (modes) are possible. This will make the alignment via KL divergence much more difficult for the model.
 
-When the VAE learns to represent data in the latent space, it must balance the reconstruction and KL divergence terms. It wants to spread out the representations to minimize the reconstruction loss (since the trajectory distribution is multi-modal) but it is also constrained by the KL divergence to keep these representations from getting too dispersed (since the prior is unimodal).
+Furthermore, when the VAE learns to represent data in the latent space, it must balance the reconstruction and KL divergence terms. It wants to spread out the representations to minimize the reconstruction loss (since the trajectory distribution is multi-modal) but it is also constrained by the KL divergence to keep these representations from getting too dispersed (since the prior is assumed to be unimodal).
 
 As a consequence, during the generation phase, when the model samples from these latent representations, it also may end up sampling from "in-between" spaces if the distinct modes are not well-separated.
 
@@ -236,7 +240,9 @@ $$
 
 The key aspect here is that the prior $$ p_{\gamma}(\mathbf{z}_l \mid \mathbf{X}_{i}, \mathcal{C}_{i}^{m}) $$ is conditional on the input and the context. This implies that the model isn't learning a single static prior for all data but rather a dynamic prior that adapts based on the specific input $$ \mathbf{X}_i $$ and context $$ \mathcal{C}_{i}^{m} $$.
 
-This conditionality allows the model to learn different representations for different subsets of data, guided by the vehicle's past trajectory and additional scene information relevant to the vehicle. By doing so, the model can capture the nuances and variations in trajectory distributions that are specific to different traffic situations and lane configurations. 
+This conditionality allows the model to learn different representations for different subsets of data, guided by the vehicle's past trajectory and additional scene information relevant to the vehicle. By doing so, the model can capture the nuances and variations in trajectory distributions that are specific to different traffic situations and lane configurations.
+
+That means we can have much more richer variations in the prior distribution which hopefully can reduce the gap that can happen between it and the posterior distribution (since it is conditioned on the trajectory distributions that are known to be multi-modal).
 
 By structuring the model in this way, the HLS method can generate trajectory predictions that are a combination of distinct, plausible paths that a vehicle might realistically take, each with its own probability.
 
