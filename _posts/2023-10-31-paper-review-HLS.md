@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Paper Review "Hierarchical Latent Structure for Multi-Modal Vehicle Trajectory Forecasting"
+title: Autonomous Driving Paper Review 1, HLS for Future Trajectory!
 date: 2023-10-31 09:56:00-0400
 description:
 tags: Autonomous Driving, Trajectory Planning
