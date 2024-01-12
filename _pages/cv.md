@@ -1,6 +1,6 @@
 ---
 layout: cv
-permalink: /assets/pdf/CV_Ravialdy (October 2023) (3).pdf
+permalink: /assets/pdf/CV_Ravialdy (January 2024) (1).pdf
 title: cv
 nav: true
 newtab: true
